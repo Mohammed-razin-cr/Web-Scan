@@ -48,6 +48,14 @@ WebScan runs **30+ checks** in parallel and presents results in a beautiful maso
 | 📄 **Content** | Robots.txt, Sitemap, Social Tags, Linked Pages, Cookies, Mail Config |
 | 📸 **Extras** | Screenshot, Archive History, Quality Check, TLS Version |
 
+### 🎨 Premium UI Overhaul
+
+WebScan features a fully rebuilt user interface designed for a sleek, premium developer experience:
+- **Teal Glassmorphic Theme:** Sleek modern styling with a vibrant teal (`#4ce1d3`) primary color, custom shadows, and glassmorphic navigation.
+- **Redesigned Security Advisory Panel:** Structured collapsible dashboard layout featuring octagonal severity badges, severity counter chips, and left border accents.
+- **Interactive Action Buttons:** Quick action icons with hover glowing effects nested in card headers.
+- **Optimized Layout Grid:** Wider masonry grid optimized for desktop displays.
+
 
 
 ## 🚀 Getting Started
