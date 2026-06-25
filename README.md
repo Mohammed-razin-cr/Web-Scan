@@ -48,16 +48,7 @@ WebScan runs **30+ checks** in parallel and presents results in a beautiful maso
 | 📄 **Content** | Robots.txt, Sitemap, Social Tags, Linked Pages, Cookies, Mail Config |
 | 📸 **Extras** | Screenshot, Archive History, Quality Check, TLS Version |
 
----
 
-## 🖥️ Screenshots
-
-<p align="center">
-  <img src="public/screenshots/web-check-screenshot1.png" width="49%" />
-  <img src="public/screenshots/web-check-screenshot2.png" width="49%" />
-</p>
-
----
 
 ## 🚀 Getting Started
 
@@ -104,7 +95,7 @@ Web-Scan/
 │   │   └── styles/         # Global styles & color tokens
 │   ├── components/         # Astro components (homepage, layout)
 │   └── pages/              # Astro page routes
-├── public/                 # Static assets & screenshots
+├── public/                 # Static assets (logo, icons, etc.)
 ├── server.js               # Express server entry point
 └── astro.config.mjs        # Astro configuration
 ```
