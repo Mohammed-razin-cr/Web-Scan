@@ -41,17 +41,17 @@ const ALink = styled.a`
 `;
 
 const Footer = (props: { isFixed?: boolean }): JSX.Element => {
-  const licenseUrl = 'https://github.com/lissy93/web-check/blob/master/LICENSE';
-  const authorUrl = 'https://aliciasykes.com';
-  const githubUrl = 'https://github.com/lissy93/web-check';
+  const licenseUrl = 'https://github.com/Mohammed-razin-cr/Web-Scan/blob/main/LICENSE';
+  const authorUrl = 'https://github.com/Mohammed-razin-cr';
+  const githubUrl = 'https://github.com/Mohammed-razin-cr/Web-Scan';
   return (
     <StyledFooter style={props.isFixed ? { position: 'fixed' } : {}}>
       <span>
-        View source at <ALink href={githubUrl}>github.com/lissy93/web-check</ALink>
+        View source at <ALink href={githubUrl}>github.com/Mohammed-razin-cr/Web-Scan</ALink>
       </span>
       <span>
-        <Link to="/about">Web-Check</Link> is licensed under <ALink href={licenseUrl}>MIT</ALink> -
-        © <ALink href={authorUrl}>Alicia Sykes</ALink> 2026
+        <Link to="/about">WebScan</Link> is licensed under <ALink href={licenseUrl}>MIT</ALink> -
+        © <ALink href={authorUrl}>Mohammed Razin</ALink> 2026
       </span>
     </StyledFooter>
   );

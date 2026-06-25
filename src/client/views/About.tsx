@@ -148,7 +148,7 @@ export default function About(): JSX.Element {
       <AboutContainer>
         <Nav>
           <HeaderLinkContainer>
-            <a target="_blank" rel="noreferrer" href="https://github.com/lissy93/web-check">
+            <a target="_blank" rel="noreferrer" href="https://github.com/Mohammed-razin-cr/Web-Scan">
               <Button>View on GitHub</Button>
             </a>
           </HeaderLinkContainer>
@@ -195,7 +195,7 @@ export default function About(): JSX.Element {
             <strong>Privacy Guarantee:</strong> No user data, queried hosts, or IP addresses are ever logged. Analytics (via Plausible) only count page visits, and basic error logging (via GlitchTip) keeps the app bug-free. Your searches remain entirely yours.
           </p>
           <p style={{ fontSize: '0.92rem', color: colors.textColorSecondary }}>
-            <strong>License & Credits:</strong> WebScan is developed by <a target="_blank" rel="noreferrer" href="https://aliciasykes.com" style={{ color: '#4ce1d3', textDecoration: 'none' }}>Alicia Sykes</a>. Released under the open-source MIT License. You are free to modify, deploy, and distribute it for private or commercial use.
+            <strong>License & Credits:</strong> WebScan is developed by <a target="_blank" rel="noreferrer" href="https://github.com/Mohammed-razin-cr" style={{ color: '#4ce1d3', textDecoration: 'none' }}>Mohammed Razin</a>. Released under the open-source MIT License. You are free to modify, deploy, and distribute it for private or commercial use.
           </p>
         </BottomCard>
       </AboutContainer>

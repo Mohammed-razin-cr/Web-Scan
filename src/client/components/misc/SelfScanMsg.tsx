@@ -44,7 +44,7 @@ const SelfScanMsg = () => {
       <br />
       <span>
         But if you want to see how this site is built, why not check out the{' '}
-        <a target="_blank" rel="noreferrer" href="https://github.com/lissy93/web-check">
+        <a target="_blank" rel="noreferrer" href="https://github.com/Mohammed-razin-cr/Web-Scan">
           source code
         </a>
         ?

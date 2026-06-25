@@ -9,40 +9,38 @@ const cardData = [
     title: 'Deploy with Docker',
     description:
       "Just one command, and you'll have your own Web Check instance running on your server in minutes.",
-    command: 'docker run -p 3000:3000 lissy93/web-check',
+    command: 'docker run -p 3000:3000 mohammedrazincr/web-scan',
   },
   {
     title: '1-Click Deploy',
     description:
-      "Don't have a server? Not a problem! Deploy Web Check with one click on Vercel or Netlify.",
+      "Don't have a server? Not a problem! Deploy WebScan with one click on Vercel or Netlify.",
     buttons: [
       {
         name: 'Vercel',
         image: '/assets/images/vercel.svg',
         link:
           'https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.' +
-          'com%2Fxray-web%2Fweb-check-free&project-name=web-check-free&repository' +
-          '-name=web-check-free&demo-title=Web%20Check&demo-description=Try%20ou' +
-          't%20the%20live%20demo&demo-url=https%3A%2F%2Fweb-check.xyz%2F&demo-ima' +
-          'ge=https%3A%2F%2Fi.ibb.co%2Fr0jXN6s%2Fweb-check.png',
+          'com%2FMohammed-razin-cr%2FWeb-Scan&project-name=web-scan&repository' +
+          '-name=web-scan',
       },
       {
         name: 'Netlify',
         image: '/assets/images/netlify.svg',
         link:
           'https://app.netlify.com/start/deploy?repository=' +
-          'https://github.com/xray-web/web-check-free',
+          'https://github.com/Mohammed-razin-cr/Web-Scan',
       },
     ],
   },
   {
     title: 'Build from Source',
-    description: 'Want to customize Web Check? Clone the repository and deploy it on your server.',
+    description: 'Want to customize WebScan? Clone the repository and deploy it on your server.',
     buttons: [
       {
         name: 'GitHub',
         image: '/assets/images/github.svg',
-        link: '',
+        link: 'https://github.com/Mohammed-razin-cr/Web-Scan',
       },
     ],
   },
@@ -50,8 +48,8 @@ const cardData = [
 ---
 
 <BaseLayout
-  title="Self-Hosted Setup | Web Check"
-  description="Get started with running Web Check locally or on your own server."
+  title="Self-Hosted Setup | WebScan"
+  description="Get started with running WebScan locally or on your own server."
 >
   <div class="web-check-page">
     <NavBar />

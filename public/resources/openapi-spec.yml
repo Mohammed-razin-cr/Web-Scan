@@ -1,23 +1,20 @@
 openapi: 3.0.0
 info:
-  title: Web Check 🕵
+  title: WebScan 🕵
   description: >
-    **API documentation for the [Web Check](https://github.com/lissy93/web-check) backend endpoints.**<br>
-    _Web Check gives you x-ray vision, revealing the configration and inner workings of any website._
+    **API documentation for the [WebScan](https://github.com/Mohammed-razin-cr/Web-Scan) backend endpoints.**<br>
+    _WebScan gives you x-ray vision, revealing the configuration and inner workings of any website._
     <br><br>
-    [![Website - Web-Check.xyz](https://img.shields.io/badge/Website-webcheck.zyz-9fef00?style=flat&logo=googlecloudstorage&logoColor=white&labelColor=1c1d28)](https://web-check.xyz/)
-    [![DockerHub - Lissy93/Web-Check](https://img.shields.io/badge/DockerHub-Lissy93/Web_Check-1fb1f4?style=flat&logo=docker&logoColor=white&labelColor=1c1d28)](https://hub.docker.com/r/lissy93/web-check)
-    [![GitHub - Lissy93/Web-Check](https://img.shields.io/badge/GitHub-Lissy93/Web_Check-a832fc?style=flat&logo=github&logoColor=white&labelColor=1c1d28)](https://github.com/lissy93/web-check)
-    [![Sponsor - Alicia Sykes](https://img.shields.io/badge/Sponsor-Alicia_Sykes-f2159a?style=flat&logo=githubsponsors&logoColor=white&labelColor=1c1d28)](https://github.com/sponsors/Lissy93)
+    [![GitHub - Mohammed-razin-cr/Web-Scan](https://img.shields.io/badge/GitHub-Mohammed_Razin_Web_Scan-a832fc?style=flat&logo=github&logoColor=white&labelColor=1c1d28)](https://github.com/Mohammed-razin-cr/Web-Scan)
 
   version: 1.0.0
   license:
     name: 'License: MIT'
-    url: https://github.com/Lissy93/web-check/blob/master/LICENSE
-  termsOfService: https://web-check.xyz/about#terms-info
+    url: https://github.com/Mohammed-razin-cr/Web-Scan/blob/main/LICENSE
+  termsOfService: https://github.com/Mohammed-razin-cr/Web-Scan/blob/main/LICENSE
 externalDocs:
   description: 'Source: GitHub'
-  url: https://github.com/Lissy93/web-check
+  url: https://github.com/Mohammed-razin-cr/Web-Scan
 servers:
   - url: http://localhost:3001/api
     description: Local (Development)
