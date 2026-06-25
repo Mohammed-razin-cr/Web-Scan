@@ -1,5 +1,5 @@
 <h1 align="center">
-  <img src="public/web-check-logo.png" width="80" alt="WebScan Logo" /><br/>
+  <img src="public/logo-icon-transparent.png" width="80" alt="WebScan Logo" /><br/>
   WebScan
 </h1>
 
