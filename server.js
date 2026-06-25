@@ -55,7 +55,7 @@ const limits = [
 const makeLimiterResponseMsg = (retryAfter) => {
   const why =
     'This keeps the service running smoothly for everyone. ' +
-    'You can get around these limits by running your own instance of Web Check.';
+    'You can get around these limits by running your own instance of WebScan.';
   return `You've been rate-limited, please try again in ${retryAfter} seconds.\n${why}`;
 };
 
@@ -105,7 +105,7 @@ const renderPlaceholderPage = async (res, msgId, logs) => {
       'Server-side rendering failed to initiate, as SSR handler not found.<br />' +
       'This can be fixed by running <code>yarn build</code>, then restarting the server.<br />',
     disabledGui:
-      'Web-Check API is up and running!<br />Access the endpoints at ' +
+      'WebScan API is up and running!<br />Access the endpoints at ' +
       `<a href="${API_DIR}"><code>${API_DIR}</code></a>`,
   };
   const logOutput = logs ? `<div class="logs"><code>${logs}</code></div>` : '';
