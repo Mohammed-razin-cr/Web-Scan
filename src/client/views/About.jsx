@@ -5,7 +5,7 @@ import { useLocation } from 'react-router-dom';
 import colors from 'client/styles/colors';
 import Footer from 'client/components/misc/Footer';
 import Nav from 'client/components/Form/Nav';
-import Button from 'client/components/Form/Button';
+import Button, { AnimatedGitHubIcon } from 'client/components/Form/Button';
 import docs from 'client/utils/docs';
 
 // Styled Components
@@ -29,8 +29,8 @@ const HeaderLinkContainer = styled.nav`
 `;
 
 const HeroCard = styled.div`
-  background: linear-gradient(135deg, rgba(8, 24, 21, 0.9) 0%, rgba(17, 100, 102, 0.15) 100%);
-  border: 1px solid rgba(76, 225, 211, 0.2);
+  background: linear-gradient(135deg, ${colors.backgroundSecondary}dd 0%, ${colors.primary}15 100%);
+  border: 1px solid ${colors.primary}33;
   border-radius: 12px;
   padding: 2.5rem;
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
@@ -46,7 +46,7 @@ const HeroCard = styled.div`
     right: 0;
     width: 220px;
     height: 220px;
-    background: radial-gradient(circle, rgba(76, 225, 211, 0.08) 0%, transparent 70%);
+    background: radial-gradient(circle, ${colors.primary}15 0%, transparent 70%);
     pointer-events: none;
   }
 `;
@@ -55,10 +55,10 @@ const HeroTitle = styled.h1`
   margin: 0 0 0.75rem 0;
   font-size: 2.2rem;
   font-weight: 900;
-  color: #fff;
+  color: ${colors.textColor};
   letter-spacing: 0.05em;
   span {
-    color: #4ce1d3;
+    color: ${colors.primary};
   }
 `;
 
@@ -70,8 +70,8 @@ const HeroSubtitle = styled.p`
 `;
 
 const CompactCard = styled.section`
-  background: rgba(8, 24, 21, 0.75);
-  border: 1px solid rgba(209, 232, 226, 0.1);
+  background: ${colors.backgroundSecondary}bb;
+  border: 1px solid ${colors.border};
   border-radius: 10px;
   padding: 2rem;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
@@ -86,11 +86,11 @@ const CardTitle = styled.h2`
   margin: 0;
   font-size: 1.25rem;
   font-weight: 800;
-  color: #4ce1d3;
+  color: ${colors.primary};
   display: flex;
   align-items: center;
   gap: 0.6rem;
-  border-bottom: 1px solid rgba(209, 232, 226, 0.08);
+  border-bottom: 1px solid ${colors.primary}15;
   padding-bottom: 0.75rem;
   letter-spacing: 0.04em;
   text-transform: uppercase;
@@ -104,8 +104,8 @@ const BadgeList = styled.div`
 
 const FeatureBadge = styled.span`
   padding: 0.45rem 0.85rem;
-  background: rgba(76, 225, 211, 0.03);
-  border: 1px solid rgba(76, 225, 211, 0.14);
+  background: ${colors.primary}05;
+  border: 1px solid ${colors.primary}22;
   border-radius: 50px;
   font-size: 0.8rem;
   color: ${colors.textColor};
@@ -114,9 +114,9 @@ const FeatureBadge = styled.span`
   cursor: default;
   
   &:hover {
-    background: rgba(76, 225, 211, 0.12);
-    border-color: rgba(76, 225, 211, 0.4);
-    color: #4ce1d3;
+    background: ${colors.primary}15;
+    border-color: ${colors.primary}55;
+    color: ${colors.primary};
     transform: translateY(-1px);
   }
 `;
@@ -149,7 +149,7 @@ export default function About() {
         <Nav>
           <HeaderLinkContainer>
             <a target="_blank" rel="noreferrer" href="https://github.com/Mohammed-razin-cr/Web-Scan">
-              <Button>View on GitHub</Button>
+              <Button icon={<AnimatedGitHubIcon />}>View on GitHub</Button>
             </a>
           </HeaderLinkContainer>
         </Nav>
@@ -195,7 +195,7 @@ export default function About() {
             <strong>Privacy Guarantee:</strong> No user data, queried hosts, or IP addresses are ever logged. Analytics (via Plausible) only count page visits, and basic error logging (via GlitchTip) keeps the app bug-free. Your searches remain entirely yours.
           </p>
           <p style={{ fontSize: '0.92rem', color: colors.textColorSecondary }}>
-            <strong>License & Credits:</strong> WebScan is developed by <a target="_blank" rel="noreferrer" href="https://github.com/Mohammed-razin-cr" style={{ color: '#4ce1d3', textDecoration: 'none' }}>Mohammed Razin</a>. Released under the open-source MIT License. You are free to modify, deploy, and distribute it for private or commercial use.
+            <strong>License & Credits:</strong> WebScan is developed by <a target="_blank" rel="noreferrer" href="https://github.com/Mohammed-razin-cr" style={{ color: colors.primary, textDecoration: 'none', fontWeight: 600 }}>Mohammed Razin</a>. Released under the open-source MIT License. You are free to modify, deploy, and distribute it for private or commercial use.
           </p>
         </BottomCard>
       </AboutContainer>
