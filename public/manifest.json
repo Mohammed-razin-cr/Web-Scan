@@ -10,19 +10,19 @@
   "background_color": "#2C3531",
   "icons": [
     {
-      "src": "/favicon.svg",
-      "type": "image/svg+xml",
+      "src": "/logo-icon-transparent.png",
+      "type": "image/png",
       "sizes": "any"
     },
     {
-      "src": "/favicon-16x16.png",
+      "src": "/logo-icon-transparent.png",
       "type": "image/png",
-      "sizes": "16x16"
+      "sizes": "any"
     },
     {
-      "src": "/favicon-32x32.png",
+      "src": "/logo-icon-transparent.png",
       "type": "image/png",
-      "sizes": "32x32"
+      "sizes": "any"
     },
     {
       "src": "/apple-touch-icon.png",
