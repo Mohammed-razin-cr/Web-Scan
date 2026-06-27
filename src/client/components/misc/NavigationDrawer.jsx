@@ -72,7 +72,7 @@ const DrawerBrand = styled.div`
   gap: 0.85rem;
   margin-top: 1.5rem;
   margin-bottom: 3.5rem;
-  color: ${colors.primary};
+  color: white;
   font-weight: 850;
   font-size: 1.35rem;
   letter-spacing: 0.06em;

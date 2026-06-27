@@ -56,7 +56,7 @@ const Brand = styled.a`
   display: flex;
   align-items: center;
   gap: 0.85rem;
-  color: ${colors.primary};
+  color: white;
   font-weight: 850;
   font-size: 1.35rem;
   letter-spacing: 0.06em;
@@ -190,7 +190,7 @@ const Copy = styled.div`
 
 const Welcome = styled.p`
   margin: 0 0 3.8rem;
-  color: ${colors.primary};
+  color: white;
   font-size: 1rem;
   letter-spacing: 0.46em;
   text-transform: lowercase;
