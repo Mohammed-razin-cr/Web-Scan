@@ -62,50 +62,65 @@ const links = [
 
 <div class="about-section">
   <div class="features-wrap">
-    <h4>Ready to get started?</h4>
+    <h4>30+ Checks, One Powerful Tool</h4>
     <p class="what">
-      With over <span>30 supported checks</span>
-      you can view and analyse key website information in an instant
+      Analyze every aspect of your website with <span>{supportedChecks.length} supported checks</span> — from security and performance to DNS and history.
     </p>
   </div>
-  <hr />
+  <div class="divider"></div>
   <Features supportedChecks={supportedChecks} />
   <ButtonGroup links={links} />
-  <hr />
+  <div class="divider"></div>
   <SponsorSegment />
 </div>
 
 <style lang="scss">
+  @use '@styles/global.scss' as *;
+
   .about-section {
-    width: 80vw;
+    width: min(1200px, 92vw);
     margin: 0 auto;
+    padding: 4rem 0;
+    position: relative;
+    z-index: 10;
   }
+  
   .features-wrap {
-    width: 80vw;
+    width: 100%;
     max-width: 650px;
     margin: 0 auto;
-  }
-  h4 {
-    text-transform: capitalize;
-    font-size: 1.8rem;
     text-align: center;
-    background: linear-gradient(90deg, var(--text-color), var(--primary));
-    background-clip: text;
-    text-fill-color: transparent;
-    color: transparent;
   }
+  
+  h4 {
+    text-transform: none;
+    font-size: 2rem;
+    text-align: center;
+    background: linear-gradient(135deg, var(--primary), var(--info-light));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    letter-spacing: -0.03em;
+  }
+  
   .what {
     text-align: center;
-    font-size: 1.2rem;
-    line-height: 1.5;
+    font-size: 1.125rem;
+    line-height: 1.7;
+    color: var(--text-secondary);
+    
     span {
       color: var(--primary);
-      font-style: italic;
+      font-weight: 600;
     }
   }
-  hr {
+  
+  .divider {
     width: 3rem;
+    height: 2px;
     margin: 3rem auto;
-    color: var(--primary);
+    background: linear-gradient(90deg, transparent, var(--border), transparent);
   }
 </style>

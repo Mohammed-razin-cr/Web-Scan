@@ -6,7 +6,7 @@ const licenseText = 'MIT';
 const licenseLink = `${github}/blob/main/LICENSE`;
 
 const aboutLink = '/about';
-const projectName = 'WebScan';
+const projectName = 'WebCheck';
 
 const authorName = 'Mohammed Razin';
 const authorLink = 'https://github.com/Mohammed-razin-cr';
@@ -14,41 +14,129 @@ const currentYear = new Date().getFullYear();
 ---
 
 <footer>
-  <p>
-    View source at <a href={github}>{repo}</a>
-  </p>
-  <p>
-    <a href={aboutLink}>{projectName}</a>
-    is licensed under
-    <a href={licenseLink}>{licenseText}</a>
-    - © <a href={authorLink}>{authorName}</a>
-    {currentYear}
-  </p>
+  <div class="footer-inner">
+    <div class="footer-left">
+      <div class="footer-logo">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z" fill="var(--primary)"/>
+        </svg>
+        <span class="footer-name">{projectName}</span>
+      </div>
+      <p class="footer-tagline">X-Ray Vision for Your Website</p>
+    </div>
+    <div class="footer-right">
+      <div class="footer-links">
+        <a href={github} target="_blank" rel="noopener">GitHub</a>
+        <a href={aboutLink}>About</a>
+        <a href={licenseLink} target="_blank" rel="noopener">{licenseText} License</a>
+      </div>
+      <p class="footer-copyright">
+        © {currentYear} <a href={authorLink} target="_blank" rel="noopener">{authorName}</a>. All rights reserved.
+      </p>
+    </div>
+  </div>
 </footer>
 
 <style lang="scss">
   @use '@styles/global.scss' as *;
+
   footer {
-    margin-top: 1rem;
-    background: var(--primary);
-    color: var(--background);
-    padding: 1rem;
+    position: relative;
+    z-index: 10;
+    padding: 3rem 0 2rem;
+    margin-top: 4rem;
+  }
+
+  .footer-inner {
+    width: min(1200px, 92vw);
+    margin: 0 auto;
     display: flex;
     justify-content: space-between;
-    gap: 1rem;
-    flex-wrap: wrap;
-    p,
-    a {
-      margin: 0;
-      color: var(--background);
-      font-size: 1rem;
+    align-items: flex-start;
+    gap: 2rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--border);
+  }
+
+  .footer-left {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .footer-logo {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .footer-name {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--text-color);
+    letter-spacing: -0.02em;
+  }
+
+  .footer-tagline {
+    margin: 0;
+    color: var(--text-secondary);
+    font-size: 0.9375rem;
+  }
+
+  .footer-right {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0.75rem;
+  }
+
+  .footer-links {
+    display: flex;
+    gap: 1.5rem;
+  }
+
+  .footer-links a {
+    color: var(--text-secondary);
+    font-size: 0.9375rem;
+    text-decoration: none;
+    transition: color 0.2s ease;
+    
+    &:hover {
+      color: var(--primary);
+      text-decoration: none;
     }
+  }
+
+  .footer-copyright {
+    margin: 0;
+    color: var(--text-tertiary);
+    font-size: 0.875rem;
+    
     a {
-      text-decoration: underline;
+      color: var(--text-secondary);
+      text-decoration: none;
+      transition: color 0.2s ease;
+      
+      &:hover {
+        color: var(--primary);
+      }
     }
-    @include tablet-portrait-down {
+  }
+
+  @media (max-width: 768px) {
+    .footer-inner {
       flex-direction: column;
       align-items: center;
+      text-align: center;
+    }
+    
+    .footer-right {
+      align-items: center;
+    }
+    
+    .footer-links {
+      flex-wrap: wrap;
+      justify-content: center;
     }
   }
 </style>

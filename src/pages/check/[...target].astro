@@ -1,6 +1,6 @@
 ---
 import BaseLayout from '@layouts/Base.astro';
-import Main from '../../client/main.tsx';
+import Main from '../../client/main.jsx';
 import '../../client/styles/index.css';
 import { normalizeAddress } from '../../client/utils/address-type-checker';
 
@@ -16,7 +16,7 @@ if (searchUrl) {
 }
 
 const { target } = Astro.params;
-const pageTitle = target ? `${target} | WebScan` : 'WebScan';
+const pageTitle = target ? `${target} | WebCheck` : 'WebCheck';
 ---
 
 <BaseLayout preloadBodyFont={false} title={pageTitle}>
@@ -28,7 +28,9 @@ const pageTitle = target ? `${target} | WebScan` : 'WebScan';
     type="font/woff2"
     crossorigin="anonymous"
   />
-  <Main client:only="react" />
+  <div class="check-page">
+    <Main client:only="react" />
+  </div>
 </BaseLayout>
 
 <script>
@@ -50,3 +52,12 @@ const pageTitle = target ? `${target} | WebScan` : 'WebScan';
     });
   }
 </script>
+
+<style lang="scss">
+  @use '@styles/global.scss' as *;
+
+  .check-page {
+    position: relative;
+    z-index: 10;
+  }
+</style>

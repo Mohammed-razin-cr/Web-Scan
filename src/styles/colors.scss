@@ -1,36 +1,60 @@
 :root {
-  --primary: #d6fb41;
-  --primary-lighter: #cff97a;
-  --text-color: #ffffff;
-  --text-color-secondary: #ffffffb6;
-  --text-color-thirdly: #ffffff5b;
-  --background: #111211;
-  --background-darker: #111927;
-  // --background-lighter: #1a2332;
-  --background-lighter: #3a3b3a;
-  --background-50: #11121180;
-  --bg-shadow-color: #0f1620;
-  --fg-shadow-color: #456602;
-  --primary-transparent: #d6fb4130;
+  /* Primary Colors */
+  --primary: #10b981;
+  --primary-light: #34d399;
+  --primary-dark: #059669;
+  --primary-50: #f0fdf4;
+  --primary-100: #d1fae5;
 
-  // Action Colors
-  --info: #04e4f4;
-  --success: #20e253;
-  --warning: #f6f000;
-  --error: #fca016;
-  --danger: #f80363;
-  --neutral: #272f4d;
+  /* Neutral Colors */
+  --text-color: #f8fafc;
+  --text-secondary: #94a3b8;
+  --text-tertiary: #64748b;
+  
+  --background: #020617;
+  --background-secondary: #0f172a;
+  --background-tertiary: #1e293b;
+  
+  --border: rgba(148, 163, 184, 0.15);
+  --border-light: rgba(148, 163, 184, 0.1);
+
+  /* Glassmorphism */
+  --glass-bg: rgba(15, 23, 42, 0.6);
+  --glass-bg-strong: rgba(15, 23, 42, 0.8);
+  --glass-border: rgba(148, 163, 184, 0.18);
+  --backdrop-blur: 18px;
+
+  /* Shadows */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  --shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+
+  /* Status Colors */
+  --success: #10b981;
+  --success-light: #34d399;
+  --warning: #f59e0b;
+  --warning-light: #fbbf24;
+  --error: #ef4444;
+  --error-light: #f87171;
+  --info: #3b82f6;
+  --info-light: #60a5fa;
 }
 
 html[data-theme='light'] {
-  --primary: #4a7700;
-  --primary-lighter: #a4cf50;
-  --text-color: #333333;
-  --text-color-secondary: #57667e;
+  --text-color: #0f172a;
+  --text-secondary: #475569;
+  --text-tertiary: #64748b;
+  
   --background: #ffffff;
-  --background-darker: #f0f0f0;
-  --background-lighter: #fafafa;
-  --bg-shadow-color: #e0e0e0;
-  --fg-shadow-color: #678800;
-  --primary-transparent: #4a770033;
+  --background-secondary: #f8fafc;
+  --background-tertiary: #f1f5f9;
+  
+  --border: rgba(148, 163, 184, 0.2);
+  --border-light: rgba(148, 163, 184, 0.15);
+  
+  --glass-bg: rgba(255, 255, 255, 0.7);
+  --glass-bg-strong: rgba(255, 255, 255, 0.9);
+  --glass-border: rgba(148, 163, 184, 0.25);
 }

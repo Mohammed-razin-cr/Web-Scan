@@ -1,109 +1,155 @@
 ---
-
 ---
 
 <nav class="navbar">
-  <div class="nav-left">
-    <a href="/" class="logo-link" aria-label="Home">
-      <img width="64" src="/logo-icon-transparent.png" alt="Site Logo" />
-      <h2 class="site-title">
-        <span class="first">Web</span>
-        <span class="second">Check</span>
-      </h2>
-    </a>
-  </div>
-  <div class="nav-right">
-    <a href="/check" class="nav-link">Check</a>
-    <a href="/web-check-api" class="nav-link">API</a>
-    <a href="/account" class="nav-link">Login</a>
+  <div class="nav-inner">
+    <div class="nav-left">
+      <a href="/" class="logo-link" aria-label="Home">
+        <div class="logo-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z" fill="var(--primary)"/>
+          </svg>
+        </div>
+        <div class="logo-text">
+          <span class="web">Web</span>
+          <span class="check">Check</span>
+        </div>
+      </a>
+    </div>
+    <div class="nav-right">
+      <a href="/check" class="nav-link">Check</a>
+      <a href="/web-check-api" class="nav-link">API</a>
+      <a href="/account" class="nav-link nav-link-cta">Login</a>
+    </div>
   </div>
 </nav>
 
 <style lang="scss">
+  @use '@styles/global.scss' as *;
+
   .navbar {
+    width: 100%;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    padding: 1rem 0;
+    background: transparent;
+  }
+
+  .nav-inner {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0.5rem 1rem;
-    flex-wrap: wrap;
-    background-color: var(--background);
-    color: var(--text-color);
-    width: 80vw;
+    width: min(1200px, 92vw);
     margin: 0 auto;
-    border-radius: 2rem;
-    border: 1px solid var(--primary-transparent);
-    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
-    backdrop-filter: blur(5px);
-    -webkit-backdrop-filter: blur(5px);
-    .nav-left {
-      display: flex;
-      align-items: center;
+    padding: 0.75rem 1.5rem;
+    border-radius: 1rem;
+    background: var(--glass-bg);
+    backdrop-filter: blur(var(--backdrop-blur));
+    -webkit-backdrop-filter: blur(var(--backdrop-blur));
+    border: 1px solid var(--glass-border);
+    box-shadow: var(--shadow-lg);
+    transition: all 0.3s ease;
+  }
 
-      .logo-link {
-        display: flex;
-        align-items: center;
-        text-decoration: none;
-        color: var(--text-color);
+  .nav-left {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
 
-        img {
-          width: 2rem;
-          max-width: 64px;
-          margin-right: 0.5rem;
-        }
-
-        .site-title {
-          margin: 0;
-          font-weight: bold;
-          color: var(--primary);
-          font-size: 1.8rem;
-          .first {
-            color: var(--primary);
-          }
-          .second {
-            color: var(--text-color);
-            font-style: italic;
-          }
-        }
-      }
+  .logo-link {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    text-decoration: none;
+    color: var(--text-color);
+    transition: opacity 0.2s ease;
+    
+    &:hover {
+      text-decoration: none;
+      opacity: 0.9;
     }
+  }
 
-    .nav-right {
-      display: flex;
+  .logo-icon {
+    width: 2.25rem;
+    height: 2.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--background-secondary);
+    border-radius: 0.625rem;
+    border: 1px solid var(--border);
+  }
 
-      .nav-link {
-        text-decoration: none;
-        color: var(--text-color);
-        margin-left: 1rem;
-        padding: 0.5rem;
-        transition: background-color 0.3s;
-        position: relative;
-        &:hover {
-          background-color: var(--primary-light);
-        }
-        &:focus {
-          outline: none;
-          background-color: var(--primary-dark);
-          box-shadow: 0 0 0 3px var(--primary);
-        }
-        &:after {
-          background: none repeat scroll 0 0 transparent;
-          bottom: 0;
-          content: '';
-          display: block;
-          height: 2px;
-          left: 50%;
-          position: absolute;
-          background: var(--primary);
-          transition:
-            width 0.3s ease 0s,
-            left 0.3s ease 0s;
-          width: 0;
-        }
-        &:hover:after {
-          width: 100%;
-          left: 0;
-        }
-      }
+  .logo-text {
+    display: flex;
+    font-size: 1.25rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    
+    .web {
+      color: var(--text-color);
+    }
+    
+    .check {
+      color: var(--primary);
+    }
+  }
+
+  .nav-right {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+  }
+
+  .nav-link {
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    text-decoration: none;
+    color: var(--text-secondary);
+    font-size: 0.9375rem;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    
+    &:hover {
+      text-decoration: none;
+      color: var(--text-color);
+      background: rgba(148, 163, 184, 0.1);
+    }
+    
+    &:focus {
+      outline: none;
+      box-shadow: 0 0 0 2px var(--primary);
+    }
+  }
+
+  .nav-link-cta {
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    color: white;
+    
+    &:hover {
+      background: linear-gradient(135deg, var(--primary-light), var(--primary));
+      color: white;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
+    }
+  }
+
+  @media (max-width: 768px) {
+    .nav-inner {
+      width: 94vw;
+      padding: 0.625rem 1rem;
+    }
+    
+    .logo-text {
+      display: none;
+    }
+    
+    .nav-link {
+      padding: 0.375rem 0.75rem;
+      font-size: 0.875rem;
     }
   }
 </style>

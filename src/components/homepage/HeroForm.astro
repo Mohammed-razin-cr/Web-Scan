@@ -1,30 +1,55 @@
 ---
 import AnimatedButton from './AnimatedButton.astro';
 import AnimatedInput from './AnimatedInput.astro';
-import Screenshots from './Screenshots.astro';
 ---
 
 <div class="hero">
-  <div class="left">
-    <h1>
-      <img src="/favicon.svg" alt="Check Web" width="64" />
-      <span class="web">Web</span>
-      <span class="check">Check</span>
-    </h1>
-    <div class="homepage-action-content">
-      <h2>We give you X-Ray<br />Vision for your Website</h2>
-      <h3>
-        In just 20 seconds, you can see
-        <span>what attackers already know</span>
-      </h3>
-      <form name="live-start" autocomplete="off" action="/check" class="live-start" id="live-start">
-        <label for="url">Enter a URL to start 👇</label>
-        <AnimatedInput />
-        <AnimatedButton />
+  <div class="hero-inner">
+    <div class="hero-content">
+      <div class="hero-badge">
+        <span class="badge-dot"></span>
+        <span>Website Analysis Tool</span>
+      </div>
+      
+      <h1 class="hero-title">
+        Get <span class="gradient-text">X-Ray Vision</span> 
+        <br />for your Website
+      </h1>
+      
+      <p class="hero-description">
+        In just 20 seconds, uncover what attackers already know about your site. 
+        Check security, performance, DNS, and more — all in one place.
+      </p>
+      
+      <form name="live-start" autocomplete="off" action="/check" class="hero-form">
+        <div class="input-wrapper">
+          <AnimatedInput />
+          <AnimatedButton />
+        </div>
       </form>
+
+      <div class="hero-trust">
+        <div class="trust-item">
+          <svg class="trust-icon" width="20" height="20" viewBox="0 0 24 24" fill="none">
+            <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" stroke="var(--success)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <span>100% Free</span>
+        </div>
+        <div class="trust-item">
+          <svg class="trust-icon" width="20" height="20" viewBox="0 0 24 24" fill="none">
+            <path d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" stroke="var(--primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <span>No Signup Required</span>
+        </div>
+        <div class="trust-item">
+          <svg class="trust-icon" width="20" height="20" viewBox="0 0 24 24" fill="none">
+            <path d="M13 10V3L4 14h7v7l9-11h-7z" stroke="var(--warning-light)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <span>Instant Results</span>
+        </div>
+      </div>
     </div>
   </div>
-  <Screenshots />
 </div>
 
 <script>
@@ -42,78 +67,132 @@ import Screenshots from './Screenshots.astro';
 
 <style lang="scss">
   @use '@styles/global.scss' as *;
+
   .hero {
+    position: relative;
+    min-height: calc(100vh - 120px);
     display: flex;
-    justify-content: space-around;
-    width: 100vw;
-    @include desktop-down {
-      display: block;
-      width: 80vw;
-      margin: 0 auto;
+    align-items: center;
+    justify-content: center;
+    padding: 4rem 0;
+    overflow: hidden;
+  }
+
+  .hero-inner {
+    width: min(1200px, 92vw);
+    position: relative;
+    z-index: 10;
+  }
+
+  .hero-content {
+    max-width: 760px;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.375rem 0.875rem;
+    background: rgba(148, 163, 184, 0.08);
+    border: 1px solid var(--border);
+    border-radius: 9999px;
+    margin-bottom: 1.5rem;
+    
+    .badge-dot {
+      width: 0.5rem;
+      height: 0.5rem;
+      border-radius: 9999px;
+      background: var(--primary);
+      box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.15);
+    }
+    
+    span {
+      color: var(--text-secondary);
+      font-size: 0.875rem;
+      font-weight: 500;
     }
   }
-  .left {
-    min-height: 100vh;
+
+  .hero-title {
+    font-size: clamp(2.5rem, 5vw, 3.75rem);
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: -0.03em;
+    margin-bottom: 1.25rem;
+    color: var(--text-color);
+  }
+
+  .gradient-text {
+    background: linear-gradient(135deg, var(--primary), var(--info-light));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .hero-description {
+    font-size: 1.125rem;
+    line-height: 1.7;
+    color: var(--text-secondary);
+    margin-bottom: 2.5rem;
+  }
+
+  .hero-form {
+    width: 100%;
+    margin-bottom: 2rem;
+  }
+
+  .input-wrapper {
     display: flex;
     flex-direction: column;
-    gap: 20vh;
-    @include tablet-landscape-down {
-      gap: 6rem;
+    gap: 1rem;
+    padding: 1.25rem;
+    background: var(--glass-bg-strong);
+    backdrop-filter: blur(var(--backdrop-blur));
+    -webkit-backdrop-filter: blur(var(--backdrop-blur));
+    border: 1px solid var(--glass-border);
+    border-radius: 1.25rem;
+    box-shadow: var(--shadow-2xl);
+  }
+
+  .hero-trust {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    flex-wrap: wrap;
+  }
+
+  .trust-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--text-secondary);
+    font-size: 0.9375rem;
+    font-weight: 500;
+  }
+
+  .trust-icon {
+    width: 1.25rem;
+    height: 1.25rem;
+  }
+
+  @media (max-width: 768px) {
+    .hero {
+      padding: 2.5rem 0;
     }
-    @include mobile-down {
-      gap: 4rem;
+    
+    .hero-description {
+      font-size: 1rem;
     }
-    h1 {
-      margin: 0;
-      fontis-size: 3em;
-      z-index: 5;
-      display: flex;
-      gap: 0.1rem;
-      align-items: center;
-      img {
-        vertical-align: middle;
-        width: 3rem;
-        margin-right: 0.5rem;
-      }
-      .web {
-        color: var(--text-color);
-      }
-      .check {
-        color: var(--primary);
-        font-style: italic;
-      }
+    
+    .input-wrapper {
+      padding: 1rem;
+      border-radius: 1rem;
     }
-    .homepage-action-content {
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-      max-width: 700px;
-      z-index: 1;
-      @include tablet-landscape-down {
-        gap: 0.25rem;
-      }
-      h2 {
-        font-size: 3rem;
-        font-weight: bold;
-      }
-      h3 {
-        font-weight: normal;
-        font-size: 1.3rem;
-        span {
-          color: var(--primary);
-          font-style: italic;
-        }
-      }
-      form {
-        margin-top: 1.5rem;
-        display: flex;
-        flex-direction: column;
-        gap: 1rem;
-        label {
-          font-size: 1.3rem;
-          font-weight: bold;
-        }
-      }
+    
+    .hero-trust {
+      gap: 1.25rem;
     }
   }
 </style>
