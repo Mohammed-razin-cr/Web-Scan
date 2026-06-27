@@ -12,12 +12,17 @@ import docs from 'client/utils/docs';
 const AboutContainer = styled.div`
   width: 95vw;
   max-width: 1100px;
-  margin: 2rem auto;
+  margin: clamp(1.25rem, 4vw, 2.5rem) auto;
   padding-bottom: 2rem;
   display: flex;
   flex-direction: column;
-  gap: 2rem;
+  gap: clamp(1.5rem, 4vw, 2.25rem);
   box-sizing: border-box;
+  padding-inline: clamp(0.5rem, 2vw, 0);
+  
+  @media (max-width: 640px) {
+    width: 96vw;
+  }
 `;
 
 const HeaderLinkContainer = styled.nav`
@@ -26,13 +31,17 @@ const HeaderLinkContainer = styled.nav`
   a {
     text-decoration: none;
   }
+  @media (max-width: 480px) {
+    width: 100%;
+    justify-content: center;
+  }
 `;
 
 const HeroCard = styled.div`
-  background: linear-gradient(135deg, ${colors.backgroundSecondary}dd 0%, ${colors.primary}15 100%);
-  border: 1px solid ${colors.primary}33;
+  background: linear-gradient(135deg, rgba(8, 24, 21, 0.9) 0%, rgba(17, 100, 102, 0.15) 100%);
+  border: 1px solid rgba(76, 225, 211, 0.2);
   border-radius: 12px;
-  padding: 2.5rem;
+  padding: clamp(1.75rem, 4vw, 2.75rem);
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
   backdrop-filter: blur(20px);
   text-align: left;
@@ -46,51 +55,51 @@ const HeroCard = styled.div`
     right: 0;
     width: 220px;
     height: 220px;
-    background: radial-gradient(circle, ${colors.primary}15 0%, transparent 70%);
+    background: radial-gradient(circle, rgba(76, 225, 211, 0.08) 0%, transparent 70%);
     pointer-events: none;
   }
 `;
 
 const HeroTitle = styled.h1`
-  margin: 0 0 0.75rem 0;
-  font-size: 2.2rem;
+  margin: 0 0 clamp(0.5rem, 2vw, 0.85rem) 0;
+  font-size: clamp(1.6rem, 4.5vw, 2.4rem);
   font-weight: 900;
-  color: ${colors.textColor};
+  color: #fff;
   letter-spacing: 0.05em;
   span {
-    color: ${colors.primary};
+    color: #4ce1d3;
   }
 `;
 
 const HeroSubtitle = styled.p`
   margin: 0;
-  font-size: 1.1rem;
+  font-size: clamp(0.95rem, 2.5vw, 1.15rem);
   color: ${colors.textColorSecondary};
   line-height: 1.6;
 `;
 
 const CompactCard = styled.section`
-  background: ${colors.backgroundSecondary}bb;
-  border: 1px solid ${colors.border};
+  background: rgba(8, 24, 21, 0.75);
+  border: 1px solid rgba(209, 232, 226, 0.1);
   border-radius: 10px;
-  padding: 2rem;
+  padding: clamp(1.5rem, 4vw, 2.25rem);
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
   backdrop-filter: blur(15px);
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: clamp(1.25rem, 3.5vw, 1.75rem);
   box-sizing: border-box;
 `;
 
 const CardTitle = styled.h2`
   margin: 0;
-  font-size: 1.25rem;
+  font-size: clamp(1.05rem, 3vw, 1.35rem);
   font-weight: 800;
-  color: ${colors.primary};
+  color: #4ce1d3;
   display: flex;
   align-items: center;
   gap: 0.6rem;
-  border-bottom: 1px solid ${colors.primary}15;
+  border-bottom: 1px solid rgba(209, 232, 226, 0.08);
   padding-bottom: 0.75rem;
   letter-spacing: 0.04em;
   text-transform: uppercase;
@@ -99,24 +108,25 @@ const CardTitle = styled.h2`
 const BadgeList = styled.div`
   display: flex;
   flex-wrap: wrap;
-  gap: 0.6rem;
+  gap: 0.65rem;
+  justify-content: flex-start;
 `;
 
 const FeatureBadge = styled.span`
   padding: 0.45rem 0.85rem;
-  background: ${colors.primary}05;
-  border: 1px solid ${colors.primary}22;
+  background: rgba(76, 225, 211, 0.03);
+  border: 1px solid rgba(76, 225, 211, 0.14);
   border-radius: 50px;
-  font-size: 0.8rem;
+  font-size: clamp(0.78rem, 2vw, 0.86rem);
   color: ${colors.textColor};
   font-weight: 700;
   transition: all 0.2s ease;
   cursor: default;
-  
+
   &:hover {
-    background: ${colors.primary}15;
-    border-color: ${colors.primary}55;
-    color: ${colors.primary};
+    background: rgba(76, 225, 211, 0.12);
+    border-color: rgba(76, 225, 211, 0.4);
+    color: #4ce1d3;
     transform: translateY(-1px);
   }
 `;
@@ -126,6 +136,7 @@ const BottomCard = styled(CompactCard)`
   p {
     margin: 0;
     line-height: 1.6;
+    font-size: clamp(0.9rem, 2.2vw, 1rem);
   }
 `;
 
@@ -195,7 +206,7 @@ export default function About() {
             <strong>Privacy Guarantee:</strong> No user data, queried hosts, or IP addresses are ever logged. Analytics (via Plausible) only count page visits, and basic error logging (via GlitchTip) keeps the app bug-free. Your searches remain entirely yours.
           </p>
           <p style={{ fontSize: '0.92rem', color: colors.textColorSecondary }}>
-            <strong>License & Credits:</strong> WebScan is developed by <a target="_blank" rel="noreferrer" href="https://github.com/Mohammed-razin-cr" style={{ color: colors.primary, textDecoration: 'none', fontWeight: 600 }}>Mohammed Razin</a>. Released under the open-source MIT License. You are free to modify, deploy, and distribute it for private or commercial use.
+            <strong>License & Credits:</strong> WebScan is developed by <a target="_blank" rel="noreferrer" href="https://github.com/Mohammed-razin-cr" style={{ color: '#4ce1d3', textDecoration: 'none' }}>Mohammed Razin</a>. Released under the open-source MIT License. You are free to modify, deploy, and distribute it for private or commercial use.
           </p>
         </BottomCard>
       </AboutContainer>

@@ -7,8 +7,8 @@ const FooterContainer = styled.footer`
   position: relative;
   z-index: 10;
   width: 100%;
-  padding: 2.5rem 0;
-  margin-top: 4rem;
+  padding: clamp(1.75rem, 5vw, 2.75rem) 0;
+  margin-top: clamp(2.5rem, 5vw, 4.5rem);
 `;
 
 const FooterInner = styled.div`
@@ -17,7 +17,7 @@ const FooterInner = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding-top: 2rem;
+  padding-top: clamp(1.5rem, 4vw, 2.25rem);
   gap: 2rem;
   border-top: 1px solid ${colors.border};
   flex-wrap: wrap;
@@ -45,13 +45,13 @@ const LogoWrapper = styled.div`
   gap: 0.75rem;
   
   svg {
-    width: 26px;
-    height: 26px;
+    width: clamp(22px, 4vw, 28px);
+    height: clamp(22px, 4vw, 28px);
   }
 `;
 
 const ProjectName = styled.span`
-  font-size: 1.125rem;
+  font-size: clamp(1rem, 2.5vw, 1.25rem);
   font-weight: 700;
   color: ${colors.textColor};
   letter-spacing: -0.01em;
@@ -60,20 +60,21 @@ const ProjectName = styled.span`
 const FooterLinks = styled.div`
   display: flex;
   align-items: center;
-  gap: 1.5rem;
+  gap: 1.25rem;
   flex-wrap: wrap;
   justify-content: center;
 `;
 
 const FooterText = styled.span`
-  font-size: 0.9375rem;
+  font-size: clamp(0.825rem, 2vw, 0.975rem);
   color: ${colors.textSecondary};
   font-weight: 400;
+  line-height: 1.5;
 `;
 
 const StyledLink = styled.a`
   color: ${colors.textSecondary};
-  font-size: 0.9375rem;
+  font-size: clamp(0.825rem, 2vw, 0.975rem);
   font-weight: 500;
   text-decoration: none;
   transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
@@ -85,7 +86,7 @@ const StyledLink = styled.a`
 
 const StyledRouterLink = styled(Link)`
   color: ${colors.textSecondary};
-  font-size: 0.9375rem;
+  font-size: clamp(0.825rem, 2vw, 0.975rem);
   font-weight: 500;
   text-decoration: none;
   transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);

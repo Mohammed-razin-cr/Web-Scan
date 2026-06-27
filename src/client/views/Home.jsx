@@ -42,28 +42,32 @@ const HomeContainer = styled.main`
 const Header = styled.header`
   position: relative;
   z-index: 5;
-  height: 5.5rem;
+  height: auto;
+  min-height: 5.5rem;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 1.6rem 2.7rem;
-  @media (max-width: 720px) {
-    padding: 1.1rem 1.1rem;
+  padding: 1.2rem 2.7rem;
+  @media (max-width: 1024px) {
+    padding: 1rem 1.5rem;
+  }
+  @media (max-width: 640px) {
+    padding: 0.9rem 1rem;
   }
 `;
 
 const Brand = styled.a`
   display: flex;
   align-items: center;
-  gap: 0.85rem;
+  gap: 0.75rem;
   color: white;
   font-weight: 850;
-  font-size: 1.35rem;
+  font-size: clamp(1.1rem, 2.5vw, 1.4rem);
   letter-spacing: 0.06em;
   text-transform: uppercase;
 
   img {
-    height: 2.2rem;
+    height: clamp(1.8rem, 4vw, 2.4rem);
     width: auto;
     filter: drop-shadow(0 2px 8px rgba(76, 225, 211, 0.2));
     transition: transform 0.3s ease;
@@ -98,7 +102,7 @@ const GhostButton = styled.a`
     border-color: rgba(209, 232, 226, 0.42);
     transform: translateY(-1px);
   }
-  @media (max-width: 520px) {
+  @media (max-width: 768px) {
     display: none;
   }
 `;
@@ -112,9 +116,10 @@ const MenuButton = styled.button`
   border: 1px solid rgba(209, 232, 226, 0.18);
   background: rgba(44, 53, 49, 0.44);
   cursor: pointer;
+  touch-action: manipulation;
   svg {
-    width: 1.1rem;
-    height: 1.1rem;
+    width: 1.3rem;
+    height: 1.3rem;
     stroke: currentColor;
   }
 `;
@@ -131,21 +136,25 @@ const Stage = styled.div`
   position: relative;
   min-width: 0;
   min-height: calc(100vh - 5.5rem);
-  padding: 4.2rem clamp(1.2rem, 4vw, 5.5rem);
+  padding: clamp(2rem, 8vw, 5rem) clamp(1rem, 4vw, 5.5rem);
   border-top: 1px solid rgba(209, 232, 226, 0.04);
-  /* Strict left half — globe lives in the right 50% */
   max-width: 50%;
+  padding-bottom: 4rem;
 
-  @media (max-width: 900px) {
+  @media (max-width: 1024px) {
     max-width: 100%;
+    padding-top: 3rem;
+  }
+  @media (max-width: 640px) {
+    padding: 2.5rem 1.25rem;
   }
 `;
 
 const Frame = styled.div`
   position: absolute;
-  left: clamp(1.3rem, 7vw, 5.5rem);
-  right: clamp(1.3rem, 7vw, 5.5rem);
-  top: 4.2rem;
+  left: clamp(1rem, 5vw, 5.5rem);
+  right: clamp(1rem, 5vw, 5.5rem);
+  top: clamp(2.5rem, 8vw, 5rem);
   bottom: 6rem;
   border: 1px solid rgba(209, 232, 226, 0.18);
   opacity: 0.72;
@@ -171,7 +180,7 @@ const Frame = styled.div`
     border-top: 0;
   }
 
-  @media (max-width: 720px) {
+  @media (max-width: 1024px) {
     display: none;
   }
 `;
@@ -180,8 +189,8 @@ const Copy = styled.div`
   position: relative;
   z-index: 3;
   width: 100%;
-  max-width: 42rem;
-  margin-top: clamp(3rem, 13vh, 8rem);
+  max-width: 48rem;
+  margin-top: clamp(2rem, 10vh, 8rem);
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -189,10 +198,10 @@ const Copy = styled.div`
 `;
 
 const Welcome = styled.p`
-  margin: 0 0 3.8rem;
+  margin: 0 0 clamp(1.8rem, 5vw, 3.8rem);
   color: white;
-  font-size: 1rem;
-  letter-spacing: 0.46em;
+  font-size: clamp(0.8rem, 2vw, 1rem);
+  letter-spacing: 0.36em;
   text-transform: lowercase;
   &:after {
     content: '';
@@ -202,15 +211,18 @@ const Welcome = styled.p`
     margin-top: 0.9rem;
     background: #ffcb9a;
   }
+  @media (max-width: 640px) {
+    letter-spacing: 0.25em;
+  }
 `;
 
 const Title = styled.h1`
   margin: 0;
   color: white;
-  font-size: clamp(2.6rem, 5.4vw, 6rem);
-  line-height: 1.25;
+  font-size: clamp(1.9rem, 7vw, 6rem);
+  line-height: 1.2;
   font-weight: 900;
-  letter-spacing: 0.38em;
+  letter-spacing: clamp(0.15em, 2vw, 0.38em);
   text-transform: uppercase;
   span {
     display: block;
@@ -223,12 +235,12 @@ const Title = styled.h1`
 `;
 
 const ScanForm = styled.form`
-  width: min(46rem, 100%);
-  margin-top: 3rem;
+  width: min(100%, 46rem);
+  margin-top: clamp(1.8rem, 6vw, 3.5rem);
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
   gap: 0.75rem;
-  padding: 0.5rem;
+  padding: 0.75rem;
   border-radius: 100px;
   border: 1px solid rgba(209, 232, 226, 0.15);
   background: rgba(8, 24, 21, 0.65);
@@ -246,24 +258,28 @@ const ScanForm = styled.form`
     background: rgba(8, 26, 23, 0.8);
   }
 
-  @media (max-width: 720px) {
+  @media (max-width: 768px) {
     grid-template-columns: 1fr;
-    border-radius: 20px;
-    padding: 0.75rem;
-    gap: 0.75rem;
+    border-radius: 18px;
+    padding: 1rem;
+    gap: 0.85rem;
+  }
+  @media (max-width: 480px) {
+    border-radius: 16px;
   }
 
   input {
     border: 0;
     background: transparent;
-    padding: 1rem 1.75rem;
+    padding: 0.9rem 1.5rem;
     color: #e2f7f1;
-    font-size: 1.05rem;
+    font-size: clamp(0.95rem, 2.5vw, 1.1rem);
     letter-spacing: 0.03em;
     font-weight: 500;
     width: 100%;
     outline: none;
     box-shadow: none;
+    touch-action: manipulation;
 
     &::placeholder {
       color: rgba(209, 232, 226, 0.45);
@@ -288,14 +304,16 @@ const SubmitButton = styled.button`
   color: #051311;
   background: linear-gradient(135deg, #4ce1d3 0%, #116466 100%);
   font-weight: 800;
-  font-size: 0.95rem;
-  letter-spacing: 0.15em;
-  padding: 0 2.25rem;
-  height: 3.5rem;
+  font-size: clamp(0.85rem, 2.3vw, 1rem);
+  letter-spacing: 0.12em;
+  padding: 0 clamp(1.5rem, 4vw, 2.25rem);
+  height: clamp(3rem, 7vw, 3.75rem);
+  min-height: 3rem;
   text-transform: uppercase;
   cursor: pointer;
   box-shadow: 0 4px 20px rgba(76, 225, 211, 0.3);
   transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  touch-action: manipulation;
 
   &:hover {
     background: linear-gradient(135deg, #ffcb9a 0%, #d9b08c 100%);
@@ -308,7 +326,7 @@ const SubmitButton = styled.button`
     transform: translateY(0);
   }
 
-  @media (max-width: 720px) {
+  @media (max-width: 768px) {
     width: 100%;
     border-radius: 12px;
   }
@@ -317,12 +335,12 @@ const SubmitButton = styled.button`
 const ErrorMessage = styled.p`
   grid-column: 1 / -1;
   margin: 0.5rem 0.5rem 0;
-  padding: 0.75rem 1.25rem;
+  padding: 0.85rem 1.25rem;
   color: #ffcb9a;
   background: rgba(217, 176, 140, 0.08);
   border: 1px dashed rgba(217, 176, 140, 0.25);
   border-radius: 50px;
-  font-size: 0.85rem;
+  font-size: clamp(0.8rem, 2vw, 0.9rem);
   font-weight: 500;
   letter-spacing: 0.02em;
   text-align: center;
@@ -334,29 +352,31 @@ const Suggestions = styled.div`
   align-items: center;
   justify-content: flex-start;
   flex-wrap: wrap;
-  margin-top: 1.5rem;
+  margin-top: clamp(1rem, 4vw, 1.8rem);
   padding-left: 1.5rem;
   color: rgba(209, 232, 226, 0.55);
-  font-size: 0.85rem;
+  font-size: clamp(0.78rem, 2vw, 0.9rem);
   font-weight: 500;
   letter-spacing: 0.04em;
 
-  @media (max-width: 720px) {
-    padding-left: 0.5rem;
+  @media (max-width: 768px) {
+    padding-left: 0.75rem;
+    gap: 0.6rem;
   }
 
   button {
     border: 1px solid rgba(209, 232, 226, 0.12);
     background: rgba(209, 232, 226, 0.03);
     color: rgba(209, 232, 226, 0.8);
-    padding: 0.5rem 1.1rem;
+    padding: 0.5rem 1rem;
     border-radius: 50px;
-    font-size: 0.78rem;
+    font-size: clamp(0.72rem, 1.8vw, 0.8rem);
     font-weight: 600;
     cursor: pointer;
     text-transform: lowercase;
-    letter-spacing: 0.05em;
+    letter-spacing: 0.04em;
     transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    touch-action: manipulation;
 
     &:hover {
       color: #4ce1d3;
@@ -381,8 +401,8 @@ const BottomTools = styled.div`
   border: 1px solid rgba(209, 232, 226, 0.2);
   button,
   a {
-    min-width: 3rem;
-    height: 3rem;
+    min-width: 3.25rem;
+    height: 3.25rem;
     display: grid;
     place-items: center;
     border: 0;
@@ -392,6 +412,7 @@ const BottomTools = styled.div`
     font-size: 0.7rem;
     font-weight: 900;
     letter-spacing: 0.12em;
+    touch-action: manipulation;
   }
   a {
     padding: 0 1rem;
@@ -400,11 +421,11 @@ const BottomTools = styled.div`
     border-right: 0;
   }
   svg {
-    width: 1rem;
-    height: 1rem;
+    width: 1.1rem;
+    height: 1.1rem;
     stroke: currentColor;
   }
-  @media (max-width: 760px) {
+  @media (max-width: 1024px) {
     display: none;
   }
 `;
