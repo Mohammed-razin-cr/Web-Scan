@@ -98,7 +98,10 @@ const StyledRouterLink = styled(Link)`
 const AnimatedLink = ({ children, href, to, ...props }) => {
   const Component = to ? StyledRouterLink : StyledLink;
   return (
-    <motion.div whileHover={{ y: -1.5 } transition={{ type: 'spring', stiffness: 400, damping: 17 }}>
+    <motion.div
+      whileHover={{ y: -1.5 }}
+      transition={{ type: 'spring', stiffness: 400, damping: 17 }}
+    >
       <Component to={to} href={href} {...props}>
         {children}
       </Component>
