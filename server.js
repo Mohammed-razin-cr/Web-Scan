@@ -109,7 +109,7 @@ const renderPlaceholderPage = async (res, msgId, logs) => {
       `<a href="${API_DIR}"><code>${API_DIR}</code></a>`,
   };
   const logOutput = logs ? `<div class="logs"><code>${logs}</code></div>` : '';
-  const errorMessage = (errorMessages[msgId] || 'An mystery error occurred.') + logOutput;
+  const errorMessage = (errorMessages[msgId] || 'An unexpected error occurred.') + logOutput;
   const placeholderContent = await fs.promises.readFile(placeholderFilePath, 'utf-8');
   const htmlContent = placeholderContent.replace('<!-- CONTENT -->', errorMessage);
   res.status(500).send(htmlContent);
