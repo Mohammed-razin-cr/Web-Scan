@@ -134,8 +134,8 @@ const ViewRaw = (props) => {
       )}
       {error && <p className="error">{error}</p>}
       <small>
-        These are the raw results generated from your URL, and in JSON format. You can import these
-        into your own program, for further analysis.
+        These are the raw results generated from your URL in JSON format. You can import these
+        into your own program for further analysis and processing.
       </small>
     </Card>
   );
