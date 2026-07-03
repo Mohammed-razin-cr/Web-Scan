@@ -33,7 +33,7 @@ const messages = [
   "Just a second...wait a minute...you're scanning us?! Well, that's an interesting twist!",
   "Scanning us? It's like asking a mirror to reflect on itself.",
   'Well, this is awkward... like a dog chasing its own tail!',
-  "Ah, I see you're scanning this site... But alas, this did not cause an infinite recursive loop (this time)",
+  "Ah, I see you're scanning this site... But alas, this did not cause an infinite recursive loop (this time).",
 ];
 
 const SelfScanMsg = () => {
