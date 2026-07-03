@@ -4,7 +4,7 @@
 </h1>
 
 <p align="center">
-  <b><i>Instantly analyze any website's security, infrastructure & tech stack</i></b><br/>
+  <b><i>Instantly analyze any website's security, infrastructure, and technology stack</i></b><br/>
   <sub>Analyze. Detect. Protect.</sub>
 </p>
 
