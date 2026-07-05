@@ -398,7 +398,13 @@ const BottomTools = styled.div`
   right: 2rem;
   bottom: 2rem;
   display: flex;
-  border: 1px solid rgba(209, 232, 226, 0.2);
+  border-radius: 999px;
+  border: 1px solid rgba(209, 232, 226, 0.25);
+  background: rgba(8, 24, 21, 0.85);
+  backdrop-filter: blur(16px);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.25);
+  overflow: hidden;
+
   button,
   a {
     min-width: 3.25rem;
@@ -407,24 +413,34 @@ const BottomTools = styled.div`
     place-items: center;
     border: 0;
     border-right: 1px solid rgba(209, 232, 226, 0.16);
-    background: rgba(8, 24, 21, 0.45);
-    color: #4ce1d3;
-    font-size: 0.7rem;
-    font-weight: 900;
+    background: transparent;
+    color: rgba(255, 255, 255, 0.88);
+    font-size: 0.75rem;
+    font-weight: 700;
     letter-spacing: 0.12em;
-    touch-action: manipulation;
-  }
-  a {
+    text-transform: uppercase;
     padding: 0 1rem;
+    transition: all 0.2s ease;
+    touch-action: manipulation;
+    text-decoration: none;
   }
+
+  button:hover,
+  a:hover {
+    color: #4ce1d3;
+    background: rgba(76, 225, 211, 0.12);
+  }
+
   button:last-child {
     border-right: 0;
   }
+
   svg {
     width: 1.1rem;
     height: 1.1rem;
     stroke: currentColor;
   }
+
   @media (max-width: 1024px) {
     display: none;
   }
