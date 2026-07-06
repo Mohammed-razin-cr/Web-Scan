@@ -16,7 +16,7 @@ const VERB: Record<Outcome, string> = {
 
 const ACCENT: Record<Outcome, string> = {
   success: colors.success,
-  error: colors.danger,
+  error: colors.error,
   'timed-out': colors.info,
 };
 

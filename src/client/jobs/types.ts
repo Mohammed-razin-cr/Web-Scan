@@ -1,6 +1,7 @@
 import type { ComponentType } from 'react';
 import type { AddressType } from 'client/utils/address-type-checker';
-import type { LoadingState } from 'client/components/misc/ProgressBar';
+
+export type LoadingState = 'success' | 'loading' | 'error' | 'timed-out' | 'skipped';
 
 export interface JobContext {
   address: string;

@@ -2,8 +2,7 @@ import { useReducer, useEffect, useRef, useCallback, useState } from 'react';
 import { logJobOutcome } from 'client/utils/logger';
 import keys from 'client/utils/get-keys';
 import type { AddressType } from 'client/utils/address-type-checker';
-import type { LoadingState } from 'client/components/misc/ProgressBar';
-import type { JobSpec, JobContext, JobsState } from 'client/jobs/types';
+import type { JobSpec, JobContext, JobsState, LoadingState } from 'client/jobs/types';
 import { allCardIds } from 'client/jobs/registry';
 
 type Action =

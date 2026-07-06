@@ -1,4 +1,7 @@
-import type { RowProps } from 'client/components/Form/Row';
+export interface RowProps {
+  lbl: string;
+  val: string;
+}
 
 export interface ServerLocation {
   city: string;
