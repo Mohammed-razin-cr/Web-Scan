@@ -66,10 +66,15 @@ const FooterLinks = styled.div`
 `;
 
 const FooterText = styled.span`
-  font-size: clamp(0.825rem, 2vw, 0.975rem);
+  font-size: clamp(0.825rem, 2vw, 0.9rem);
   color: ${colors.textSecondary};
   font-weight: 400;
   line-height: 1.5;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  flex-wrap: wrap;
+  justify-content: center;
 `;
 
 const StyledLink = styled.a`
@@ -102,6 +107,7 @@ const AnimatedLink = ({ children, href, to, ...props }) => {
     <motion.div
       whileHover={{ y: -1.5 }}
       transition={{ type: 'spring', stiffness: 400, damping: 17 }}
+      style={{ display: 'inline-block' }}
     >
       <Component to={to} href={href} {...props}>
         {children}
@@ -139,16 +145,15 @@ const Footer = (props) => {
           <FooterText>
             View source at
             <AnimatedLink href={githubUrl}>
-              {' '}
               github.com/Mohammed-razin-cr/Web-Scan
             </AnimatedLink>
           </FooterText>
           <FooterText>•</FooterText>
           <FooterText>
             <AnimatedLink to="/about">WebScan</AnimatedLink> is licensed under
-            <AnimatedLink href={licenseUrl}> MIT</AnimatedLink> -
-            <AnimatedLink href={authorUrl}> © Mohammed Razin</AnimatedLink>
-            <AnimatedLink> {currentYear}</AnimatedLink>
+            <AnimatedLink href={licenseUrl}>MIT</AnimatedLink> —
+            <span>© {currentYear}</span>
+            <AnimatedLink href={authorUrl}>Mohammed Razin</AnimatedLink>
           </FooterText>
         </FooterLinks>
       </FooterInner>
