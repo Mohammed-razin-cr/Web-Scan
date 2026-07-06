@@ -145,7 +145,7 @@ PORT=3001
 ## 📦 Available Scripts
 
 ```bash
-npm run dev          # Start frontend + backend concurrently
+npm run dev          # Start frontend + backend concurrently.
 npm run dev:api      # Start backend API only (port 3001)
 npm run dev:astro    # Start frontend only (port 4321)
 npm run build        # Build for production
