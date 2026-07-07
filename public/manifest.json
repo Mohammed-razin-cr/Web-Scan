@@ -10,18 +10,18 @@
   "background_color": "#2C3531",
   "icons": [
     {
-      "src": "/logo-icon-transparent.png",
-      "type": "image/png",
+      "src": "/favicon.svg",
+      "type": "image/svg+xml",
       "sizes": "any"
     },
     {
-      "src": "/logo-icon-transparent.png",
-      "type": "image/png",
+      "src": "/favicon.svg",
+      "type": "image/svg+xml",
       "sizes": "any"
     },
     {
-      "src": "/logo-icon-transparent.png",
-      "type": "image/png",
+      "src": "/favicon.svg",
+      "type": "image/svg+xml",
       "sizes": "any"
     },
     {
