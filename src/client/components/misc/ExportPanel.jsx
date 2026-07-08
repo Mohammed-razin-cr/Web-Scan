@@ -1,4 +1,5 @@
 import styled from '@emotion/styled';
+import { memo } from 'react';
 import colors from 'client/styles/colors';
 import { toast } from 'react-toastify';
 
@@ -68,10 +69,10 @@ const Label = styled.span`
   margin-right: 0.25rem;
 `;
 
-export const ExportPanel = ({ onExportPDF, onExportCSV, onExportHistory, isLoading = false }) => {
-  const handleExport = async (handler, format) => {
+export const ExportPanel = memo(({ onExportPDF, onExportCSV, onExportHistory, isLoading = false }) => {
+  const handleExport = (handler, format) => {
     try {
-      await handler();
+      handler();
       toast.success(`✓ ${format} exported successfully!`);
     } catch (error) {
       console.error(`Export error:`, error);
@@ -107,6 +108,7 @@ export const ExportPanel = ({ onExportPDF, onExportCSV, onExportHistory, isLoadi
       </ExportButtonGroup>
     </ExportPanelContainer>
   );
-};
+});
 
+ExportPanel.displayName = 'ExportPanel';
 export default ExportPanel;
