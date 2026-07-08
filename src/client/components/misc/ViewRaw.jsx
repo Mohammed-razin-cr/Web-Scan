@@ -3,7 +3,7 @@
  * Uses: ShimmerButton, BorderBeam, GlowingCard, AnimatedCounter,
  *       SpotlightCard, framer-motion, lucide-react icons
  */
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import styled from '@emotion/styled';
 import { keyframes } from '@emotion/react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -338,6 +338,168 @@ const SuccessTag = styled(motion.div)`
   animation: ${pulseGlow} 2s ease-in-out infinite;
 `;
 
+/* ── GitHub Star Badge Styles ── */
+const GithubStarBadge = styled.a`
+  display: inline-flex;
+  align-items: center;
+  text-decoration: none;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 14px;
+  color: #24292f;
+  background-color: #f6f8fa;
+  border: 1px solid rgba(27, 31, 36, 0.15);
+  border-radius: 6px;
+  overflow: hidden;
+  transition: opacity 0.2s ease;
+  margin-left: auto;
+  &:hover {
+    opacity: 0.95;
+    text-decoration: none;
+    color: #24292f;
+  }
+`;
+
+const BadgeLeft = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 8px;
+  background-color: #ebeff2;
+  border-right: 1px solid rgba(27, 31, 36, 0.15);
+  color: #24292f;
+  svg {
+    color: #24292f;
+  }
+`;
+
+const BadgeRight = styled.div`
+  padding: 3px 8px;
+  background-color: #ffffff;
+  color: #24292f;
+`;
+
+/* ── JSON Tree Viewer Styles ── */
+const ViewerContainer = styled.div`
+  background: #060e0d;
+  color: #d1e8e2;
+  padding: 1.5rem;
+  font-family: 'Fira Code', 'JetBrains Mono', monospace;
+  font-size: 0.82rem;
+  line-height: 1.5;
+  max-height: 55vh;
+  overflow: auto;
+  border-radius: 0 0 12px 12px;
+  text-align: left;
+  &::-webkit-scrollbar { width: 6px; height: 6px; }
+  &::-webkit-scrollbar-track { background: transparent; }
+  &::-webkit-scrollbar-thumb { background: rgba(76,225,211,0.15); border-radius: 3px; }
+`;
+
+const TreeNode = styled.div`
+  margin-left: ${props => props.isRoot ? 0 : '1.5rem'};
+  border-left: 1px dashed rgba(76, 225, 211, 0.08);
+  padding-left: 0.5rem;
+  position: relative;
+`;
+
+const KeySpan = styled.span`
+  color: #8ef5ec;
+  font-weight: 600;
+  cursor: pointer;
+  &:hover {
+    color: #4ce1d3;
+  }
+`;
+
+const ValueSpan = styled.span`
+  color: ${props => {
+    if (props.type === 'string') return '#ffe0b3';
+    if (props.type === 'number') return '#4ce1d3';
+    if (props.type === 'boolean') return '#ff9f43';
+    return '#a5b1c2'; // null/undefined
+  }};
+`;
+
+const ExpandCollapseBtn = styled.span`
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 14px;
+  height: 14px;
+  color: rgba(76, 225, 211, 0.4);
+  cursor: pointer;
+  user-select: none;
+  font-size: 0.65rem;
+  margin-right: 4px;
+  transition: color 0.2s;
+  &:hover {
+    color: #4ce1d3;
+  }
+`;
+
+const JsonNode = ({ name, value, isRoot = false }) => {
+  const [expanded, setExpanded] = useState(isRoot || (name === null || name === undefined || name.length < 15));
+
+  const toggle = () => setExpanded(!expanded);
+
+  if (value === null) {
+    return (
+      <TreeNode isRoot={isRoot}>
+        {name && <KeySpan>{name}: </KeySpan>}
+        <ValueSpan type="null">null</ValueSpan>
+      </TreeNode>
+    );
+  }
+
+  const type = typeof value;
+
+  if (type === 'object') {
+    const isArray = Array.isArray(value);
+    const keys = Object.keys(value);
+    
+    if (keys.length === 0) {
+      return (
+        <TreeNode isRoot={isRoot}>
+          {name && <KeySpan>{name}: </KeySpan>}
+          <span style={{ color: 'rgba(209,232,226,0.6)' }}>{isArray ? '[]' : '{}'}</span>
+        </TreeNode>
+      );
+    }
+
+    return (
+      <TreeNode isRoot={isRoot}>
+        <div style={{ display: 'flex', alignItems: 'center' }}>
+          <ExpandCollapseBtn onClick={toggle}>
+            {expanded ? '▼' : '▶'}
+          </ExpandCollapseBtn>
+          {name && <KeySpan onClick={toggle}>{name}: </KeySpan>}
+          <span style={{ color: 'rgba(76, 225, 211, 0.4)', fontSize: '0.72rem', marginLeft: '0.25rem', cursor: 'pointer' }} onClick={toggle}>
+            {isArray ? `[${keys.length} items]` : `{${keys.length} keys}`}
+          </span>
+        </div>
+        {expanded && (
+          <div style={{ paddingLeft: '0.25rem' }}>
+            {keys.map(key => (
+              <JsonNode key={key} name={isArray ? null : key} value={value[key]} />
+            ))}
+          </div>
+        )}
+      </TreeNode>
+    );
+  }
+
+  let displayValue = JSON.stringify(value);
+  
+  return (
+    <TreeNode isRoot={isRoot}>
+      {name && <KeySpan>{name}: </KeySpan>}
+      <ValueSpan type={type}>{displayValue}</ValueSpan>
+    </TreeNode>
+  );
+};
+
 /* ── framer variants ── */
 const fadeUp = {
   hidden: { opacity: 0, y: 12, scale: 0.98 },
@@ -349,11 +511,22 @@ const fadeUp = {
 
 /* ── Component ── */
 const ViewRaw = ({ everything = [] }) => {
-  const [resultUrl, setResultUrl]   = useState(null);
-  const [loading,   setLoading]     = useState(false);
-  const [error,     setError]       = useState(null);
+  const [showViewer, setShowViewer] = useState(false);
   const [downloaded, setDownloaded] = useState(false);
   const [pdfDone,    setPdfDone]    = useState(false);
+  const [stars,      setStars]      = useState(null);
+
+  useEffect(() => {
+    fetch('https://api.github.com/repos/Mohammed-razin-cr/Web-Scan')
+      .then(res => res.json())
+      .then(data => {
+        if (data.stargazers_count !== undefined) {
+          const count = data.stargazers_count;
+          setStars(count >= 1000 ? `${(count / 1000).toFixed(1)}k` : count.toString());
+        }
+      })
+      .catch(() => {});
+  }, []);
 
   const totalKeys = everything.length;
   const totalBytes = (() => {
@@ -402,30 +575,6 @@ const ViewRaw = ({ everything = [] }) => {
     }
   };
 
-  const fetchResultsUrl = async () => {
-    setLoading(true);
-    setError(null);
-    try {
-      const res = await fetch('https://jsonhero.io/api/create.json', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          title: 'WebScan results',
-          content: makeResults(),
-          readOnly: true,
-          ttl: 3600,
-        }),
-      });
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      const data = await res.json();
-      setResultUrl(data.location);
-    } catch (e) {
-      setError(e.message);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   return (
     <SpotlightCard spotColor="rgba(76,225,211,0.06)">
       <Wrap>
@@ -461,7 +610,7 @@ const ViewRaw = ({ everything = [] }) => {
         <Body>
           <Desc>
             Raw results from your scan in <strong>JSON format</strong> — download locally
-            or view interactively via JSONHero. Import into any tool for further analysis.
+            or view interactively with the built-in tree viewer. Import into any tool for further analysis.
           </Desc>
 
           {/* ── action buttons ── */}
@@ -492,22 +641,21 @@ const ViewRaw = ({ everything = [] }) => {
             {/* view / update */}
             <GhostBtn
               type="button"
-              onClick={fetchResultsUrl}
+              onClick={() => setShowViewer(!showViewer)}
               whileTap={{ scale: 0.96 }}
-              disabled={loading}
             >
-              {loading
-                ? <><SpinIcon size={14} /> Loading…</>
-                : <><Eye size={14} /> {resultUrl ? 'Refresh View' : 'View in Browser'}</>
+              {showViewer
+                ? <><EyeOff size={14} /> Hide Viewer</>
+                : <><Eye size={14} /> Interactive Viewer</>
               }
             </GhostBtn>
 
             {/* hide */}
             <AnimatePresence>
-              {resultUrl && (
+              {showViewer && (
                 <DangerBtn
                   type="button"
-                  onClick={() => setResultUrl(null)}
+                  onClick={() => setShowViewer(false)}
                   whileTap={{ scale: 0.96 }}
                   initial={{ opacity: 0, scale: 0.85, x: -8 }}
                   animate={{ opacity: 1, scale: 1,    x: 0 }}
@@ -546,26 +694,11 @@ const ViewRaw = ({ everything = [] }) => {
             </AnimatePresence>
           </ActionRow>
 
-          {/* ── error ── */}
+          {/* ── result strip + local JSON viewer ── */}
           <AnimatePresence>
-            {error && (
-              <motion.p
-                variants={fadeUp} initial="hidden" animate="show" exit="exit"
-                style={{ margin: 0, fontSize: '0.82rem', color: '#ff6b6b',
-                  background: 'rgba(255,107,107,0.07)',
-                  border: '1px dashed rgba(255,107,107,0.25)',
-                  borderRadius: '8px', padding: '0.65rem 1rem' }}
-              >
-                ⚠ {error}
-              </motion.p>
-            )}
-          </AnimatePresence>
-
-          {/* ── result strip + iframe ── */}
-          <AnimatePresence>
-            {resultUrl && (
+            {showViewer && (
               <motion.div
-                key="iframe-block"
+                key="viewer-block"
                 variants={fadeUp}
                 initial="hidden"
                 animate="show"
@@ -579,8 +712,8 @@ const ViewRaw = ({ everything = [] }) => {
                   transition={{ delay: 0.05, duration: 0.35, ease: [0.16,1,0.3,1] }}
                 >
                   <StripItem>
-                    <Share2 size={13} />
-                    <span>Live on JSONHero</span>
+                    <Braces size={13} />
+                    <span>Interactive JSON Viewer</span>
                   </StripItem>
                   <StripItem>
                     <Database size={13} />
@@ -590,26 +723,39 @@ const ViewRaw = ({ everything = [] }) => {
                     <FileJson size={13} />
                     <span className="val">{totalBytes} KB</span>
                   </StripItem>
-                  <OpenLink href={resultUrl} target="_blank" rel="noreferrer">
-                    Open <ExternalLink size={11} />
-                  </OpenLink>
                 </ResultStrip>
 
-                {/* iframe with browser chrome */}
+                {/* browser chrome wrapper with dynamic Github Star Badge (no discord icon) */}
                 <IFrameWrap
                   initial={{ opacity: 0, scaleY: 0.96 }}
                   animate={{ opacity: 1, scaleY: 1 }}
                   transition={{ delay: 0.1, duration: 0.45, ease: [0.16,1,0.3,1] }}
                 >
-                  <IFrameBar>
-                    <div className="dots">
+                  <IFrameBar style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <div className="dots" style={{ display: 'flex', gap: '5px' }}>
                       <span className="dot r" />
                       <span className="dot y" />
                       <span className="dot g" />
                     </div>
-                    <span className="url-pill">{resultUrl}</span>
+                    
+                    <span className="url-pill" style={{ flex: 'unset', width: '40%', margin: '0 auto', textAlign: 'center' }}>Interactive JSON Viewer</span>
+                    
+                    <GithubStarBadge href="https://github.com/Mohammed-razin-cr/Web-Scan" target="_blank" rel="noreferrer">
+                      <BadgeLeft>
+                        <svg height="12" width="12" viewBox="0 0 16 16" fill="currentColor" style={{ display: 'block' }}>
+                          <path fillRule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z" />
+                        </svg>
+                        Star
+                      </BadgeLeft>
+                      <BadgeRight>
+                        {stars !== null ? stars : '10.8k'}
+                      </BadgeRight>
+                    </GithubStarBadge>
                   </IFrameBar>
-                  <StyledIframe title="WebScan results via JSONHero" src={resultUrl} />
+
+                  <ViewerContainer>
+                    <JsonNode isRoot={true} value={makeResults()} />
+                  </ViewerContainer>
                 </IFrameWrap>
               </motion.div>
             )}
