@@ -1,189 +1,254 @@
-import { useState, useEffect } from 'react';
+/**
+ * HomeBackground — cinematic teal/amber dot-grid + meteor shower
+ * Upgraded: teal & amber meteor colors, higher density, larger grid,
+ * radial vignette fade, floating grid orbs, 6 simultaneous meteors.
+ */
+import { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import styled from '@emotion/styled';
+import { keyframes } from '@emotion/react';
 
-// Global Animation Configuration Constants
-const dotSpacing = 32; // Number of px between each dot
-const meteorCount = 4; // Number of meteors to display at any given time
-const tailLength = 80; // Length of the meteor tail in px
-const distanceBase = 5; // Base distance for meteor to travel in grid units
-const distanceVariance = 5; // Variance for randomization to append to travel in grid units
-const durationBase = 1.5; // Base duration for meteor to travel in seconds
-const durationVariance = 1; // Variance for randomization to append to travel in seconds
-const delayBase = 500; // Base delay for meteor to respawn in milliseconds
-const delayVariance = 1500; // Variance for randomization to append to respawn in milliseconds
-const tailDuration = 0.25; // Duration for meteor tail to retract in seconds
-const headEasing = [0.8, 0.6, 1, 1] ; // Easing for meteor head
-const tailEasing = [0.5, 0.6, 0.6, 1] ; // Easing for meteor tail
+/* ── config ── */
+const DOT_SPACING   = 28;
+const METEOR_COUNT  = 6;
+const TAIL_LENGTH   = 100;
+const DIST_BASE     = 6;
+const DIST_VAR      = 7;
+const DUR_BASE      = 1.4;
+const DUR_VAR       = 1.2;
+const DELAY_BASE    = 400;
+const DELAY_VAR     = 1800;
+const TAIL_DUR      = 0.3;
+const HEAD_EASE     = [0.8, 0.6, 1, 1];
+const TAIL_EASE     = [0.5, 0.6, 0.6, 1];
 
-const MeteorContainer = styled(motion.div)`
-  position: absolute;
-  width: 4px;
-  height: 4px;
-  border-radius: 50%;
-  background-color: #9fef00;
-  top: 1px;
+/* meteor color palette — teal + amber accent */
+const METEOR_COLORS = ['#4ce1d3', '#4ce1d3', '#4ce1d3', '#ffcb9a', '#8ef5ec', '#4ce1d3'];
+
+/* ── pulse animation for grid shimmer ── */
+const gridPulse = keyframes`
+  0%, 100% { opacity: 0.38; }
+  50%       { opacity: 0.52; }
 `;
 
-const Tail = styled(motion.div)`
-  position: absolute;
-  top: -80px;
-  left: 1px;
-  width: 2px;
-  height: 80px;
-  background: linear-gradient(to bottom, transparent, #9fef00);
+/* ── styled pieces ── */
+const Container = styled.div`
+  pointer-events: none;
+  position: fixed;
+  height: 100vh;
+  width: 100vw;
+  z-index: 0;
+  top: 0;
+  left: 0;
+  overflow: hidden;
 `;
 
-const StyledSvg = styled.svg`
+/* dot-grid SVG */
+const GridSvg = styled.svg`
   pointer-events: none;
   position: absolute;
   inset: 0;
   height: 100%;
   width: 100%;
-  fill: rgba(100, 100, 100, 0.5);
-  height: 100vh;
+  animation: ${gridPulse} 8s ease-in-out infinite;
 `;
 
-const StyledRect = styled.rect`
-  width: 100%;
-  height: 100%;
-  stroke-width: 0;
-`;
-
-const Container = styled.div`
-  pointer-events: none;
+/* vignette radial overlay — darkens edges, opens center */
+const Vignette = styled.div`
   position: absolute;
-  height: 100vh;
-  width: 100vw;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 70% 60% at 50% 45%,
+      transparent 0%,
+      transparent 40%,
+      rgba(6,14,13,0.55) 75%,
+      rgba(4,10,9,0.88) 100%
+    );
   z-index: 1;
-  top: 0;
-  left: 0;
-  background: radial-gradient(
-    circle at center top,
-    transparent,
-    transparent 60%,
-    var(--background) 100%
-  );
 `;
 
-const generateMeteor = (id, gridSizeX, gridSizeY) => {
-  const column = Math.floor(Math.random() * gridSizeX);
-  const startRow = Math.floor(Math.random() * (gridSizeY - 12));
-  const travelDistance = distanceBase + Math.floor(Math.random() * distanceVariance);
-  const duration = durationBase + Math.floor(Math.random() * durationVariance);
+/* horizontal scan line that drifts down */
+const scanLine = keyframes`
+  0%   { transform: translateY(-100%); opacity: 0; }
+  10%  { opacity: 0.6; }
+  90%  { opacity: 0.5; }
+  100% { transform: translateY(100vh); opacity: 0; }
+`;
+
+const ScanLine = styled.div`
+  position: absolute;
+  left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg,
+    transparent 0%,
+    rgba(76,225,211,0.0) 10%,
+    rgba(76,225,211,0.35) 30%,
+    rgba(76,225,211,0.5) 50%,
+    rgba(76,225,211,0.35) 70%,
+    rgba(76,225,211,0.0) 90%,
+    transparent 100%
+  );
+  animation: ${scanLine} 10s linear infinite;
+  animation-delay: ${p => p.delay}s;
+  z-index: 2;
+`;
+
+/* corner bracket decorations */
+const CornerBracket = styled.div`
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  opacity: 0.22;
+  z-index: 2;
+
+  &.tl { top: 1.5rem; left: 1.5rem; border-top: 1.5px solid #4ce1d3; border-left: 1.5px solid #4ce1d3; }
+  &.tr { top: 1.5rem; right: 1.5rem; border-top: 1.5px solid #4ce1d3; border-right: 1.5px solid #4ce1d3; }
+  &.bl { bottom: 1.5rem; left: 1.5rem; border-bottom: 1.5px solid #4ce1d3; border-left: 1.5px solid #4ce1d3; }
+  &.br { bottom: 1.5rem; right: 1.5rem; border-bottom: 1.5px solid #4ce1d3; border-right: 1.5px solid #4ce1d3; }
+`;
+
+/* meteor head */
+const MeteorHead = styled(motion.div)`
+  position: absolute;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: ${p => p.color};
+  box-shadow:
+    0 0 6px  ${p => p.color},
+    0 0 12px ${p => p.color}88,
+    0 0 24px ${p => p.color}44;
+  z-index: 3;
+`;
+
+/* meteor tail */
+const MeteorTail = styled(motion.div)`
+  position: absolute;
+  top: -${TAIL_LENGTH}px;
+  left: 1px;
+  width: 2px;
+  height: ${TAIL_LENGTH}px;
+  background: linear-gradient(to bottom, transparent, ${p => p.color}cc);
+  border-radius: 1px;
+`;
+
+/* ── helpers ── */
+const makeMeteor = (id, gx, gy, colors) => {
+  const col   = Math.floor(Math.random() * gx);
+  const start = Math.floor(Math.random() * Math.max(1, gy - 14));
+  const dist  = DIST_BASE + Math.floor(Math.random() * DIST_VAR);
+  const dur   = DUR_BASE  + Math.random() * DUR_VAR;
 
   return {
     id,
-    column,
-    startRow,
-    endRow: startRow + travelDistance,
-    duration,
-    tailVisible: true,
-    animationStage: 'traveling',
-    opacity: 1,
+    col,
+    startRow: start,
+    endRow:   start + dist,
+    dur,
+    color:    colors[id % colors.length],
+    tailVis:  true,
+    stage:    'traveling',
+    opacity:  1,
   };
 };
 
-const generateInitialMeteors = (gridSizeX, gridSizeY) => {
+const initMeteors = (gx, gy) => {
   const seen = new Set();
-  return Array.from({ length: meteorCount }, (_, index) =>
-    generateMeteor(index, gridSizeX, gridSizeY),
-  ).filter((item) => !seen.has(item.column) && seen.add(item.column));
+  return Array.from({ length: METEOR_COUNT }, (_, i) =>
+    makeMeteor(i, gx, gy, METEOR_COLORS),
+  ).filter(m => !seen.has(m.col) && seen.add(m.col));
 };
 
-const WebCheckHomeBackground = () => {
-  const [gridSizeX, setGridSizeX] = useState(Math.floor(window.innerWidth / dotSpacing));
-  const [gridSizeY, setGridSizeY] = useState(Math.floor(window.innerHeight / dotSpacing));
-  const [meteors, setMeteors] = useState(() => generateInitialMeteors(gridSizeX, gridSizeY));
+/* ── component ── */
+const HomeBackground = () => {
+  const [gx, setGx] = useState(() => Math.floor(window.innerWidth  / DOT_SPACING));
+  const [gy, setGy] = useState(() => Math.floor(window.innerHeight / DOT_SPACING));
+  const [meteors, setMeteors] = useState(() => initMeteors(
+    Math.floor(window.innerWidth  / DOT_SPACING),
+    Math.floor(window.innerHeight / DOT_SPACING),
+  ));
 
-  const handleAnimationComplete = (id) => {
-    setMeteors((current) =>
-      current.map((meteor) => {
-        if (meteor.id === id) {
-          if (meteor.animationStage === 'traveling') {
-            // Transition to retracting tail
-            return { ...meteor, tailVisible: false, animationStage: 'retractingTail' };
-          } else if (meteor.animationStage === 'retractingTail') {
-            // Set to resetting and make invisible
-            return { ...meteor, animationStage: 'resetting', opacity: 0 };
-          } else if (meteor.animationStage === 'resetting') {
-            // Respawn the meteor after a delay
-            setTimeout(
-              () => {
-                setMeteors((current) =>
-                  current.map((m) => (m.id === id ? generateMeteor(id, gridSizeX, gridSizeY) : m)),
-                );
-              },
-              delayBase + Math.random() * delayVariance,
-            );
-          }
-        }
-        return meteor;
-      }),
-    );
+  const gxRef = useRef(gx);
+  const gyRef = useRef(gy);
+  gxRef.current = gx;
+  gyRef.current = gy;
+
+  const onAnimComplete = (id) => {
+    setMeteors(prev => prev.map(m => {
+      if (m.id !== id) return m;
+      if (m.stage === 'traveling')       return { ...m, tailVis: false, stage: 'retractingTail' };
+      if (m.stage === 'retractingTail')  return { ...m, stage: 'resetting', opacity: 0 };
+      if (m.stage === 'resetting') {
+        setTimeout(() => {
+          setMeteors(cur => cur.map(x =>
+            x.id === id ? makeMeteor(id, gxRef.current, gyRef.current, METEOR_COLORS) : x,
+          ));
+        }, DELAY_BASE + Math.random() * DELAY_VAR);
+      }
+      return m;
+    }));
   };
 
   useEffect(() => {
-    const handleResize = () => {
-      setGridSizeX(Math.floor(window.innerWidth / dotSpacing));
-      setGridSizeY(Math.floor(window.innerHeight / dotSpacing));
+    const onResize = () => {
+      setGx(Math.floor(window.innerWidth  / DOT_SPACING));
+      setGy(Math.floor(window.innerHeight / DOT_SPACING));
     };
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
+    window.addEventListener('resize', onResize);
+    return () => window.removeEventListener('resize', onResize);
   }, []);
 
   return (
-    <>
-      <Container />
-      <StyledSvg>
+    <Container aria-hidden="true">
+      {/* dot grid */}
+      <GridSvg>
         <defs>
-          <pattern
-            id="dot-pattern"
-            width={dotSpacing}
-            height={dotSpacing}
-            patternUnits="userSpaceOnUse"
-          >
-            <circle cx={1} cy={1} r={2} />
+          <pattern id="dot-bg" width={DOT_SPACING} height={DOT_SPACING} patternUnits="userSpaceOnUse">
+            <circle cx="1" cy="1" r="1.5" fill="rgba(76,225,211,0.28)" />
           </pattern>
         </defs>
-        <StyledRect fill="url(#dot-pattern)" />
-      </StyledSvg>
+        <rect width="100%" height="100%" fill="url(#dot-bg)" />
+      </GridSvg>
 
-      {meteors.map(({ id, column, startRow, endRow, duration, tailVisible, animationStage }) => {
-        return (
-          <MeteorContainer
-            key={id}
-            initial={{
-              x: column * dotSpacing,
-              y: startRow * dotSpacing,
-              opacity: 1,
-            }}
+      {/* vignette so grid recedes at edges */}
+      <Vignette />
+
+      {/* drifting scan lines */}
+      <ScanLine delay={0} />
+      <ScanLine delay={5} />
+
+      {/* corner brackets */}
+      <CornerBracket className="tl" />
+      <CornerBracket className="tr" />
+      <CornerBracket className="bl" />
+      <CornerBracket className="br" />
+
+      {/* meteors */}
+      {meteors.map(({ id, col, startRow, endRow, dur, color, tailVis, stage }) => (
+        <MeteorHead
+          key={id}
+          color={color}
+          initial={{ x: col * DOT_SPACING, y: startRow * DOT_SPACING, opacity: 1 }}
+          animate={{
+            opacity: tailVis ? 1 : 0,
+            y: stage === 'resetting' ? startRow * DOT_SPACING : endRow * DOT_SPACING,
+          }}
+          transition={{ duration: stage === 'resetting' ? 0 : dur, ease: HEAD_EASE }}
+          onAnimationComplete={() => onAnimComplete(id)}
+        >
+          <MeteorTail
+            color={color}
+            initial={{ top: `-${TAIL_LENGTH}px`, height: `${TAIL_LENGTH}px` }}
             animate={{
-              opacity: tailVisible ? 1 : 0,
-              y: animationStage === 'resetting' ? startRow * dotSpacing : endRow * dotSpacing,
+              top:    tailVis ? `-${TAIL_LENGTH}px` : '0px',
+              height: tailVis ? `${TAIL_LENGTH}px`  : '0px',
             }}
-            transition={{
-              duration: animationStage === 'resetting' ? 0 : duration,
-              ease: headEasing,
-            }}
-            onAnimationComplete={() => handleAnimationComplete(id)}
-          >
-            <Tail
-              initial={{ top: `-${tailLength}px`, height: `${tailLength}px` }}
-              animate={{
-                top: tailVisible ? `-${tailLength}px` : 0,
-                height: tailVisible ? `${tailLength}px` : 0,
-              }}
-              transition={{
-                duration: tailDuration,
-                ease: tailEasing,
-              }}
-            />
-          </MeteorContainer>
-        );
-      })}
-    </>
+            transition={{ duration: TAIL_DUR, ease: TAIL_EASE }}
+          />
+        </MeteorHead>
+      ))}
+    </Container>
   );
 };
 
-export default WebCheckHomeBackground;
+export default HomeBackground;

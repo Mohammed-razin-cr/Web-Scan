@@ -1,21 +1,32 @@
 ---
 const placeholders = [
-  'duck.com',
+  'stripe.com',
   'github.com',
+  'cloudflare.com',
+  'vercel.com',
   'google.com',
-  'x.com',
-  'bbc.co.uk',
-  'wikipedia.org',
   'openai.com',
+  'netflix.com',
+  'bbc.co.uk',
 ];
 ---
 
-<div class="input-container">
-  <div class="input-icon">
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-      <path d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" stroke="var(--text-tertiary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<div class="input-shell" id="input-shell">
+  <!-- animated teal beam that sweeps along the bottom on focus -->
+  <div class="focus-beam" aria-hidden="true"></div>
+
+  <!-- pulsing globe/search icon -->
+  <div class="input-icon" aria-hidden="true">
+    <svg class="icon-globe" width="18" height="18" viewBox="0 0 24 24" fill="none">
+      <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/>
+      <path d="M12 3c2.5 2.5 4 5.6 4 9s-1.5 6.5-4 9M12 3c-2.5 2.5-4 5.6-4 9s1.5 6.5 4 9" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/>
+      <path d="M3.5 9h17M3.5 15h17" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/>
     </svg>
+    <!-- ping ring -->
+    <span class="icon-ping" aria-hidden="true"></span>
   </div>
+
+  <!-- real input -->
   <input
     required
     id="url-input"
@@ -28,153 +39,346 @@ const placeholders = [
     spellcheck="false"
     placeholder=" "
     class="url-input"
+    aria-label="Enter a domain, IP, or full URL to scan"
   />
-  <div class="placeholder-container">
-    <span class="starter" aria-hidden="true">Enter URL:</span>
-    {
-      placeholders.map((placeholder, index) => (
-        <span class={`placeholder ${index === 0 ? 'active' : ''}`} aria-hidden="true">
-          {placeholder}
-        </span>
-      ))
-    }
+
+  <!-- animated placeholder cycling -->
+  <div class="ph-wrap" aria-hidden="true">
+    <span class="ph-label">Scan:</span>
+    <div class="ph-track">
+      {placeholders.map((p, i) => (
+        <span class={`ph-item${i === 0 ? ' active' : ''}`}>{p}</span>
+      ))}
+    </div>
   </div>
+
+  <!-- live cursor blink (shows only when input is focused + empty) -->
+  <span class="cursor-blink" id="cursor-blink" aria-hidden="true"></span>
 </div>
 
 <script>
-  document.addEventListener('DOMContentLoaded', () => {
-    const placeholders = document.querySelectorAll('.placeholder');
-    const starter = document.querySelector('.starter') as HTMLElement;
-    const inputField = document.getElementById('url-input') as HTMLInputElement;
+  const shell   = document.getElementById('input-shell') as HTMLElement;
+  const input   = document.getElementById('url-input') as HTMLInputElement;
+  const cursor  = document.getElementById('cursor-blink') as HTMLElement;
+  const label   = shell?.querySelector('.ph-label') as HTMLElement;
+  const items   = shell?.querySelectorAll<HTMLElement>('.ph-item');
 
-    let currentIndex = 0;
-    const timeBetweenPlaceholders = 2500;
-    let interval: ReturnType<typeof setInterval>;
+  if (!shell || !input || !cursor || !items?.length) throw new Error('AnimatedInput: DOM mismatch');
 
-    const changePlaceholder = () => {
-      placeholders.forEach((el, index) => {
-        if (index === currentIndex) {
-          el.classList.add('active');
-          el.classList.remove('inactive');
-        } else {
-          el.classList.add('inactive');
-          el.classList.remove('active');
-        }
-      });
-      currentIndex = (currentIndex + 1) % placeholders.length;
-    };
+  let idx      = 0;
+  let timer: ReturnType<typeof setInterval> | null = null;
 
-    const startPlaceholderAnimation = () => {
-      interval = setInterval(changePlaceholder, timeBetweenPlaceholders);
-    };
-
-    const stopPlaceholderAnimation = () => {
-      clearInterval(interval);
-      if (starter) starter.classList.add('hide');
-    };
-
-    inputField.addEventListener('focus', () => {
-      stopPlaceholderAnimation();
+  /* cycle placeholder text */
+  const cycle = () => {
+    items.forEach((el, i) => {
+      el.classList.toggle('active', i === idx);
+      el.classList.toggle('exit',   i === (idx - 1 + items.length) % items.length);
     });
+    idx = (idx + 1) % items.length;
+  };
 
-    inputField.addEventListener('blur', () => {
-      if (!inputField.value) {
-        startPlaceholderAnimation();
-        if (starter) starter.classList.remove('hide');
-      }
-    });
+  const startCycle = () => {
+    if (timer) return;
+    timer = setInterval(cycle, 2600);
+  };
 
-    inputField.addEventListener('input', () => {
-      if (inputField.value) {
-        stopPlaceholderAnimation();
-      }
-    });
+  const stopCycle = () => {
+    if (timer) clearInterval(timer);
+    timer = null;
+  };
 
-    startPlaceholderAnimation();
+  /* focus / blur */
+  input.addEventListener('focus', () => {
+    shell.classList.add('focused');
+    stopCycle();
+    label?.classList.add('hide');
+    if (!input.value) cursor.classList.add('visible');
   });
+
+  input.addEventListener('blur', () => {
+    shell.classList.remove('focused');
+    cursor.classList.remove('visible');
+    if (!input.value) {
+      label?.classList.remove('hide');
+      /* reset to first item */
+      items.forEach((el, i) => {
+        el.classList.toggle('active', i === 0);
+        el.classList.remove('exit');
+      });
+      idx = 1;
+      startCycle();
+    }
+  });
+
+  input.addEventListener('input', () => {
+    if (input.value) {
+      cursor.classList.remove('visible');
+    } else {
+      if (document.activeElement === input) cursor.classList.add('visible');
+    }
+  });
+
+  /* start on load */
+  startCycle();
 </script>
 
 <style lang="scss">
   @use '@styles/global.scss' as *;
 
-  .input-container {
+  /* ── shell ── */
+  .input-shell {
     position: relative;
     display: flex;
     align-items: center;
-    background: var(--background-secondary);
-    border: 1px solid var(--border);
-    border-radius: 0.875rem;
-    padding: 0.75rem 1rem;
-    transition: all 0.25s ease;
-    
-    &:focus-within {
-      border-color: var(--primary);
-      box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
-      background: var(--background-tertiary);
+    gap: 0;
+    height: 3.6rem;
+    background: rgba(4, 14, 13, 0.82);
+    border: 1px solid rgba(76, 225, 211, 0.18);
+    border-radius: 14px;
+    overflow: hidden;
+    transition:
+      border-color 0.3s ease,
+      box-shadow   0.3s ease,
+      background   0.3s ease;
+
+    /* ambient bottom glow at rest */
+    box-shadow:
+      0 4px 20px rgba(0, 0, 0, 0.35),
+      0 0 0 1px rgba(76, 225, 211, 0.04) inset;
+
+    &.focused {
+      border-color: rgba(76, 225, 211, 0.55);
+      background: rgba(4, 18, 16, 0.92);
+      box-shadow:
+        0 6px 32px rgba(0, 0, 0, 0.4),
+        0 0 56px rgba(76, 225, 211, 0.12),
+        0 0 0 1px rgba(76, 225, 211, 0.10) inset;
+    }
+
+    /* top shimmer line */
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 1.5rem;
+      right: 1.5rem;
+      height: 1px;
+      background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(76, 225, 211, 0.45) 40%,
+        rgba(255, 203, 154, 0.2) 60%,
+        transparent
+      );
+      background-size: 200% auto;
+      animation: top-sweep 5s linear infinite;
+      opacity: 0.6;
+    }
+
+    @keyframes top-sweep {
+      0%   { background-position: 120% center; }
+      100% { background-position: -120% center; }
     }
   }
 
+  /* ── focus beam — slides up from bottom on focus ── */
+  .focus-beam {
+    position: absolute;
+    bottom: 0;
+    left: 10%;
+    right: 10%;
+    height: 2px;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      #4ce1d3 30%,
+      #8ef5ec 50%,
+      #4ce1d3 70%,
+      transparent
+    );
+    border-radius: 1px;
+    opacity: 0;
+    transform: scaleX(0.4);
+    transition: opacity 0.3s ease, transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    pointer-events: none;
+
+    .focused & {
+      opacity: 1;
+      transform: scaleX(1);
+
+      /* shimmer ripple on focused beam */
+      &::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.5) 50%, transparent);
+        background-size: 200% auto;
+        animation: beam-ripple 1.8s linear infinite;
+      }
+
+      @keyframes beam-ripple {
+        0%   { background-position: -200% center; }
+        100% { background-position:  200% center; }
+      }
+    }
+  }
+
+  /* ── icon ── */
   .input-icon {
+    position: relative;
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-right: 0.75rem;
+    width: 3.4rem;
     flex-shrink: 0;
+    color: rgba(76, 225, 211, 0.45);
+    transition: color 0.3s ease;
+
+    .focused & {
+      color: #4ce1d3;
+
+      .icon-globe {
+        filter: drop-shadow(0 0 6px rgba(76, 225, 211, 0.7));
+        animation: globe-spin 8s linear infinite;
+      }
+    }
   }
 
+  .icon-globe {
+    transition: filter 0.3s ease;
+    transform-origin: center;
+  }
+
+  @keyframes globe-spin {
+    0%   { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+
+  /* ping ring on icon */
+  .icon-ping {
+    position: absolute;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    border: 1.5px solid rgba(76, 225, 211, 0.5);
+    opacity: 0;
+    pointer-events: none;
+
+    .focused & {
+      animation: icon-ping 1.8s ease-out infinite;
+    }
+  }
+
+  @keyframes icon-ping {
+    0%   { transform: scale(0.7); opacity: 0.7; }
+    100% { transform: scale(1.7); opacity: 0; }
+  }
+
+  /* ── actual input ── */
   .url-input {
     flex: 1;
-    width: 100%;
+    height: 100%;
     background: transparent;
     border: none;
     outline: none;
     font-size: 1rem;
-    color: var(--text-color);
+    font-weight: 500;
+    color: #e2f7f1;
     font-family: inherit;
-    padding: 0.25rem 0;
-    
+    letter-spacing: 0.01em;
+    padding: 0 0.5rem 0 0;
+    caret-color: transparent; /* custom cursor below */
+
     &::placeholder {
       color: transparent;
     }
+
+    &:focus {
+      caret-color: #4ce1d3;
+    }
   }
 
-  .placeholder-container {
+  /* ── placeholder stack ── */
+  .ph-wrap {
     position: absolute;
-    left: 3.25rem;
+    left: 3.4rem;
     top: 50%;
     transform: translateY(-50%);
     display: flex;
     align-items: center;
+    gap: 0.45rem;
     pointer-events: none;
+    overflow: hidden;
+    height: 1.6rem;
   }
 
-  .starter {
-    color: var(--text-tertiary);
-    font-size: 1rem;
-    transition: opacity 0.3s ease;
-    
+  .ph-label {
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: rgba(209, 232, 226, 0.35);
+    white-space: nowrap;
+    transition: opacity 0.25s ease;
+    flex-shrink: 0;
+
     &.hide {
       opacity: 0;
     }
   }
 
-  .placeholder {
+  .ph-track {
+    position: relative;
+    display: flex;
+    align-items: center;
+    height: 100%;
+    overflow: visible;
+  }
+
+  .ph-item {
     position: absolute;
-    left: 5.5rem;
-    font-size: 1rem;
-    color: var(--text-tertiary);
+    left: 0;
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: rgba(209, 232, 226, 0.45);
+    white-space: nowrap;
     opacity: 0;
-    transform: translateY(-8px);
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    
+    transform: translateY(8px);
+    transition:
+      opacity     0.4s cubic-bezier(0.4, 0, 0.2, 1),
+      transform   0.4s cubic-bezier(0.4, 0, 0.2, 1);
+
     &.active {
       opacity: 1;
       transform: translateY(0);
     }
-    
-    &.inactive {
+
+    &.exit {
       opacity: 0;
-      transform: translateY(8px);
+      transform: translateY(-8px);
     }
+  }
+
+  /* ── blinking cursor ── */
+  .cursor-blink {
+    position: absolute;
+    /* sits right after "Scan: " label */
+    left: calc(3.4rem + 3.8rem); /* icon + "Scan: " width approx */
+    top: 50%;
+    transform: translateY(-50%);
+    width: 2px;
+    height: 1.15rem;
+    background: #4ce1d3;
+    border-radius: 1px;
+    opacity: 0;
+    pointer-events: none;
+    box-shadow: 0 0 6px rgba(76, 225, 211, 0.8);
+
+    &.visible {
+      animation: cursor-flash 1s step-end infinite;
+    }
+  }
+
+  @keyframes cursor-flash {
+    0%, 100% { opacity: 1; }
+    50%       { opacity: 0; }
   }
 </style>

@@ -1,66 +1,196 @@
 ---
-const buttonText = 'Analyze Website';
-const buttonType = 'submit';
+const label = 'Analyze Website';
 ---
 
-<button class="button" type={buttonType}>
-  <span class="button-text">{buttonText}</span>
-  <span class="button-icon">
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-      <path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<button class="scan-btn" type="submit" id="scan-btn" aria-label="Analyze website">
+  <!-- shimmer sweep layer -->
+  <span class="btn-shimmer" aria-hidden="true"></span>
+  <!-- top highlight line -->
+  <span class="btn-top-line" aria-hidden="true"></span>
+  <!-- content -->
+  <span class="btn-inner">
+    <!-- magnifier icon -->
+    <svg class="btn-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <circle cx="11" cy="11" r="7.5" stroke="currentColor" stroke-width="2"/>
+      <path d="m20 20-3.5-3.5" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
+    </svg>
+    <span class="btn-label">{label}</span>
+    <!-- arrow that slides in on hover -->
+    <svg class="btn-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
     </svg>
   </span>
 </button>
 
+<script>
+  const btn = document.getElementById('scan-btn') as HTMLButtonElement | null;
+  if (!btn) throw new Error('scan-btn not found');
+
+  /* loading state when form submits */
+  btn.closest('form')?.addEventListener('submit', () => {
+    btn.classList.add('loading');
+    btn.disabled = true;
+  });
+</script>
+
 <style lang="scss">
   @use '@styles/global.scss' as *;
 
-  .button {
+  /* ── shell ── */
+  .scan-btn {
+    position: relative;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 0.5rem;
     width: 100%;
-    padding: 0.875rem 1.5rem;
-    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-    color: white;
+    height: 3.6rem;
+    padding: 0 2rem;
     border: none;
-    border-radius: 0.875rem;
-    font-size: 1rem;
-    font-weight: 600;
-    font-family: inherit;
+    border-radius: 14px;
     cursor: pointer;
-    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-    box-shadow: 0 4px 14px rgba(99, 102, 241, 0.4);
-    
+    overflow: hidden;
+    outline: none;
+    font-family: inherit;
+    letter-spacing: 0.06em;
+
+    /* teal gradient background */
+    background: linear-gradient(
+      135deg,
+      #0b3532 0%,
+      #116466 40%,
+      #1a8f87 70%,
+      #22b5ac 100%
+    );
+
+    /* glow pulse */
+    animation: btn-glow 3s ease-in-out infinite;
+
+    transition: filter 0.2s ease, transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+
     &:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 25px rgba(99, 102, 241, 0.5);
-      background: linear-gradient(135deg, var(--primary-light), var(--primary));
+      filter: brightness(1.14);
+      transform: translateY(-2px) scale(1.015);
+
+      .btn-arrow {
+        opacity: 1;
+        transform: translateX(0);
+      }
+      .btn-icon {
+        transform: scale(1.12);
+      }
     }
-    
+
     &:active {
-      transform: translateY(0);
-      box-shadow: 0 2px 8px rgba(99, 102, 241, 0.35);
+      transform: translateY(0) scale(0.98);
+      filter: brightness(0.96);
+      animation: none;
     }
-    
-    &:focus {
-      outline: none;
-      box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.35), 0 8px 25px rgba(99, 102, 241, 0.5);
+
+    &:focus-visible {
+      outline: 2px solid rgba(76, 225, 211, 0.7);
+      outline-offset: 3px;
+    }
+
+    &.loading {
+      cursor: wait;
+      animation: btn-loading-pulse 1s ease-in-out infinite;
+
+      .btn-label::after {
+        content: '…';
+      }
     }
   }
 
-  .button-text {
-    letter-spacing: -0.01em;
+  @keyframes btn-glow {
+    0%, 100% {
+      box-shadow:
+        0 0 0 1px rgba(76, 225, 211, 0.4),
+        0 4px 24px rgba(76, 225, 211, 0.22),
+        inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    }
+    50% {
+      box-shadow:
+        0 0 0 1px rgba(76, 225, 211, 0.7),
+        0 6px 40px rgba(76, 225, 211, 0.42),
+        0 0 80px rgba(76, 225, 211, 0.12),
+        inset 0 1px 0 rgba(255, 255, 255, 0.14);
+    }
   }
 
-  .button-icon {
+  @keyframes btn-loading-pulse {
+    0%, 100% { opacity: 1; }
+    50%       { opacity: 0.7; }
+  }
+
+  /* ── shimmer sweep — continuous ── */
+  .btn-shimmer {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: 45%;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(255, 255, 255, 0.22) 50%,
+      transparent
+    );
+    transform: translateX(-180%) skewX(-18deg);
+    animation: shimmer-sweep 2.6s ease-in-out infinite;
+    pointer-events: none;
+  }
+
+  @keyframes shimmer-sweep {
+    0%   { transform: translateX(-180%) skewX(-18deg); }
+    100% { transform: translateX( 380%) skewX(-18deg); }
+  }
+
+  /* ── top highlight line ── */
+  .btn-top-line {
+    position: absolute;
+    top: 0;
+    left: 8%;
+    right: 8%;
+    height: 1px;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(255, 255, 255, 0.38) 50%,
+      transparent
+    );
+    pointer-events: none;
+  }
+
+  /* ── inner content ── */
+  .btn-inner {
+    position: relative;
+    z-index: 1;
     display: flex;
     align-items: center;
-    transition: transform 0.25s ease;
+    justify-content: center;
+    gap: 0.6rem;
   }
 
-  .button:hover .button-icon {
-    transform: translateX(4px);
+  .btn-icon {
+    color: rgba(209, 232, 226, 0.9);
+    transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    flex-shrink: 0;
+  }
+
+  .btn-label {
+    font-size: 0.975rem;
+    font-weight: 700;
+    color: #d1e8e2;
+    letter-spacing: 0.04em;
+  }
+
+  .btn-arrow {
+    color: rgba(209, 232, 226, 0.85);
+    opacity: 0;
+    transform: translateX(-6px);
+    transition:
+      opacity   0.25s ease,
+      transform 0.3s  cubic-bezier(0.16, 1, 0.3, 1);
+    flex-shrink: 0;
   }
 </style>
