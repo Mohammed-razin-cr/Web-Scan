@@ -9,6 +9,7 @@ import { keyframes } from '@emotion/react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Download,
+  FileText,
   Eye,
   EyeOff,
   Code2,
@@ -26,6 +27,7 @@ import BorderBeam    from 'client/components/ui/BorderBeam';
 import ShimmerButton from 'client/components/ui/ShimmerButton';
 import SpotlightCard from 'client/components/ui/SpotlightCard';
 import AnimatedCounter from 'client/components/ui/AnimatedCounter';
+import { exportAsPDF } from 'client/utils/export';
 
 /* ── keyframes ── */
 const topSweep = keyframes`
@@ -351,6 +353,7 @@ const ViewRaw = ({ everything = [] }) => {
   const [loading,   setLoading]     = useState(false);
   const [error,     setError]       = useState(null);
   const [downloaded, setDownloaded] = useState(false);
+  const [pdfDone,    setPdfDone]    = useState(false);
 
   const totalKeys = everything.length;
   const totalBytes = (() => {
@@ -377,6 +380,26 @@ const ViewRaw = ({ everything = [] }) => {
     URL.revokeObjectURL(url);
     setDownloaded(true);
     setTimeout(() => setDownloaded(false), 2500);
+  };
+
+  const handleDownloadPDF = () => {
+    try {
+      exportAsPDF({
+        address: everything[0]?.id ? window.location.pathname.replace('/check/', '') : 'scan',
+        id: `scan-${Date.now()}`,
+        results: everything.map(item => ({
+          title: item.title || item.id,
+          tags: [item.title || item.id],
+          status: 'completed',
+          severity: 'info',
+          data: item.result,
+        })),
+      });
+      setPdfDone(true);
+      setTimeout(() => setPdfDone(false), 2500);
+    } catch (e) {
+      console.error('PDF error', e);
+    }
   };
 
   const fetchResultsUrl = async () => {
@@ -443,16 +466,28 @@ const ViewRaw = ({ everything = [] }) => {
 
           {/* ── action buttons ── */}
           <ActionRow>
-            {/* primary download */}
+            {/* PRIMARY: Download PDF */}
             <ShimmerButton
-              onClick={handleDownload}
+              onClick={handleDownloadPDF}
               style={{ height: '2.65rem', borderRadius: '10px', fontSize: '0.8rem', padding: '0 1.4rem', minWidth: 'unset' }}
             >
-              {downloaded
-                ? <><CheckCircle2 size={15} /> Downloaded!</>
-                : <><Download size={15} /> Download JSON</>
+              {pdfDone
+                ? <><CheckCircle2 size={15} /> PDF Saved!</>
+                : <><FileText size={15} /> Download PDF</>
               }
             </ShimmerButton>
+
+            {/* SECONDARY: Download JSON */}
+            <GhostBtn
+              type="button"
+              onClick={handleDownload}
+              whileTap={{ scale: 0.96 }}
+            >
+              {downloaded
+                ? <><CheckCircle2 size={14} /> Saved!</>
+                : <><FileJson size={14} /> Download JSON</>
+              }
+            </GhostBtn>
 
             {/* view / update */}
             <GhostBtn
@@ -484,8 +519,19 @@ const ViewRaw = ({ everything = [] }) => {
               )}
             </AnimatePresence>
 
-            {/* success indicator */}
+            {/* success indicators */}
             <AnimatePresence>
+              {pdfDone && (
+                <SuccessTag
+                  key="pdf-ok"
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{    opacity: 0, scale: 0.8 }}
+                  transition={{ type: 'spring', stiffness: 320, damping: 20 }}
+                >
+                  <CheckCircle2 size={12} /> PDF Ready
+                </SuccessTag>
+              )}
               {downloaded && (
                 <SuccessTag
                   key="dl-ok"

@@ -43,6 +43,8 @@
     "express": "^5.2.1",
     "express-rate-limit": "^8.5.0",
     "framer-motion": "^12.42.0",
+    "jspdf": "2.5.1",
+    "jspdf-autotable": "3.8.2",
     "lucide-astro": "^0.556.0",
     "lucide-react": "^1.21.0",
     "pdfkit": "^0.19.1",
