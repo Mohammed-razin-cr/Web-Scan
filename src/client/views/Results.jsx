@@ -7,7 +7,7 @@ import { ToastContainer } from 'react-toastify';
 
 import Modal from 'client/components/Form/Modal';
 import Footer from 'client/components/misc/Footer';
-import Nav from 'client/components/Form/Nav';
+import Nav, { ScanningContent } from 'client/components/Form/Nav';
 import Loader from 'client/components/misc/Loader';
 import ErrorBoundary from 'client/components/misc/ErrorBoundary';
 import DocContent from 'client/components/misc/DocContent';
@@ -277,45 +277,7 @@ const Results = (props) => {
       <NavWrapper>
         <Nav>
           {address && (
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-              {addressType === 'url' && (
-                <a
-                  target="_blank"
-                  rel="noreferrer"
-                  href={/^https?:\/\//i.test(address) ? address : `https://${address}`}
-                  style={{ display: 'flex', alignItems: 'center' }}
-                >
-                  <img
-                    width="22px"
-                    height="22px"
-                    alt=""
-                    src={`https://icon.horse/icon/${makeSiteName(address)}`}
-                    style={{ borderRadius: '4px', objectFit: 'contain' }}
-                  />
-                </a>
-              )}
-              <span style={{
-                fontSize: '1rem',
-                fontWeight: 700,
-                color: '#d1e8e2',
-                letterSpacing: '0.03em',
-              }}>
-                {makeSiteName(address)}
-              </span>
-              <span style={{
-                fontSize: '0.65rem',
-                fontWeight: 600,
-                letterSpacing: '0.1em',
-                textTransform: 'uppercase',
-                color: '#4ce1d3',
-                background: 'rgba(76,225,211,0.1)',
-                border: '1px solid rgba(76,225,211,0.25)',
-                borderRadius: '4px',
-                padding: '0.2rem 0.55rem',
-              }}>
-                Scanning
-              </span>
-            </div>
+            <ScanningContent address={address} addressType={addressType} />
           )}
         </Nav>
       </NavWrapper>
