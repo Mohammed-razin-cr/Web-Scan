@@ -21,6 +21,8 @@ import AdvisoryPanel from 'client/components/misc/AdvisoryPanel';
 import NoResults from 'client/components/misc/NoResults';
 import ResultsMasonryGrid from 'client/components/misc/ResultsMasonryGrid';
 import ViewRaw from 'client/components/misc/ViewRaw';
+import ExportPanel from 'client/components/misc/ExportPanel';
+import VulnerabilityTrackingPanel from 'client/components/misc/VulnerabilityTrackingPanel';
 
 import { determineAddressType, } from 'client/utils/address-type-checker';
 import { hasData } from 'client/utils/result-processor';
@@ -28,6 +30,13 @@ import keys from 'client/utils/get-keys';
 import useJobs from 'client/hooks/useJobs';
 import { jobs, allCards, allCardIds } from 'client/jobs/registry';
 import { runAnalysis } from 'client/analysis/registry';
+import { exportScan } from 'client/utils/export';
+import {
+  storeScanRecord,
+  compareWithPreviousScan,
+  getVulnerabilitySummary,
+  exportScanHistory,
+} from 'client/utils/vulnerability-tracker';
 
 const ResultsOuter = styled.div`
   display: flex;
@@ -89,6 +98,8 @@ const Results = (props) => {
   const [addressType, setAddressType] = useState('empt');
   const [modalOpen, setModalOpen] = useState(false);
   const [modalContent, setModalContent] = useState(<></>);
+  const [vulnerabilityChanges, setVulnerabilityChanges] = useState([]);
+  const [vulnerabilitySummary, setVulnerabilitySummary] = useState(null);
 
   useEffect(() => {
     if (addressType === 'empt') setAddressType(determineAddressType(address));
@@ -127,6 +138,36 @@ const Results = (props) => {
     });
   }, [jobsState]);
 
+  // Handle vulnerability tracking when scan completes
+  useEffect(() => {
+    const entries = Object.values(jobsState);
+    const allDone = entries.every((e) => e?.state !== 'loading');
+    
+    if (allDone && address && cardsToShow.length > 0) {
+      try {
+        // Prepare results for storage
+        const results = cardsToShow.map(({ card, data }) => ({
+          id: card.id,
+          title: card.title,
+          status: 'success',
+          severity: 'info',
+          tags: [card.title],
+          data: data,
+        }));
+
+        // Store scan and get comparisons
+        storeScanRecord(address, results);
+        const changes = compareWithPreviousScan(address, results);
+        const summary = getVulnerabilitySummary(address);
+
+        setVulnerabilityChanges(changes);
+        setVulnerabilitySummary(summary);
+      } catch (error) {
+        console.error('Failed to track vulnerability:', error);
+      }
+    }
+  }, [jobsState, cardsToShow, address]);
+
   const showInfo = (id) => {
     setModalContent(DocContent(id));
     setModalOpen(true);
@@ -135,6 +176,39 @@ const Results = (props) => {
   const showErrorModal = (content) => {
     setModalContent(content);
     setModalOpen(true);
+  };
+
+  // Export handlers
+  const handleExportPDF = async () => {
+    const scanData = {
+      address,
+      id: `scan-${Date.now()}`,
+      results: cardsToShow.map(({ card, data }) => ({
+        title: card.title,
+        tags: [card.title],
+        status: 'completed',
+        data: data,
+      })),
+    };
+    await exportScan('pdf', scanData);
+  };
+
+  const handleExportCSV = async () => {
+    const scanData = {
+      address,
+      id: `scan-${Date.now()}`,
+      results: cardsToShow.map(({ card, data }) => ({
+        title: card.title,
+        tags: [card.title],
+        status: 'completed',
+        data: data,
+      })),
+    };
+    await exportScan('csv', scanData);
+  };
+
+  const handleExportHistory = async () => {
+    await exportScanHistory(address);
   };
 
   // Resolve each card's data, applying picker and falling back when needed
@@ -229,6 +303,21 @@ const Results = (props) => {
       </NavWrapper>
       {errorKind && <NoResults kind={errorKind} address={address} error={ipLookupError} />}
       <ProgressBar loadStatus={loadingJobs} showModal={showErrorModal} showJobDocs={showInfo} />
+      {cardsToShow.length > 0 && (
+        <>
+          <ExportPanel
+            onExportPDF={handleExportPDF}
+            onExportCSV={handleExportCSV}
+            onExportHistory={handleExportHistory}
+            isLoading={loadingJobs.some((j) => j.state === 'loading')}
+          />
+          <VulnerabilityTrackingPanel
+            url={address}
+            changes={vulnerabilityChanges}
+            summary={vulnerabilitySummary}
+          />
+        </>
+      )}
       <Loader show={loadingJobs.filter((j) => j.state !== 'loading').length < 5} />
       <AdvisoryPanel findings={findings} onJumpTo={jumpToCard} />
       <ResultsContent>
