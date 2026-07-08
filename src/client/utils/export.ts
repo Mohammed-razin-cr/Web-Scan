@@ -2,7 +2,7 @@
  * Export utilities for PDF and CSV downloads
  */
 
-export const exportScan = async (format, scanData) => {
+export const exportScan = (format: string, scanData: any) => {
   try {
     if (format === 'pdf') {
       exportAsPDF(scanData);
@@ -18,35 +18,23 @@ export const exportScan = async (format, scanData) => {
 };
 
 /**
- * Generate PDF client-side using html2pdf library
+ * Generate PDF client-side using browser print functionality
  */
-export const exportAsPDF = async (scanData) => {
-  try {
-    // Dynamically import html2pdf
-    const html2pdf = (await import('html2pdf.js')).default;
-    
-    const element = document.createElement('div');
-    element.innerHTML = generateReportHTML(scanData);
-    
-    const options = {
-      margin: 10,
-      filename: `web-check-report-${scanData.address || 'report'}-${new Date().getTime()}.pdf`,
-      image: { type: 'jpeg', quality: 0.98 },
-      html2canvas: { scale: 2 },
-      jsPDF: { orientation: 'portrait', unit: 'mm', format: 'a4' },
-    };
-    
-    await html2pdf().set(options).from(element).save();
-  } catch (error) {
-    console.warn('html2pdf not available, using print dialog:', error);
-    exportAsHTMLPDF(scanData);
+export const exportAsPDF = (scanData: any) => {
+  const printWindow = window.open('', '', 'height=600,width=800');
+  if (printWindow) {
+    printWindow.document.write(generateReportHTML(scanData));
+    printWindow.document.close();
+    setTimeout(() => {
+      printWindow.print();
+    }, 250);
   }
 };
 
 /**
  * Fallback: Generate PDF using browser print functionality
  */
-export const exportAsHTMLPDF = (scanData) => {
+export const exportAsHTMLPDF = (scanData: any) => {
   const printWindow = window.open('', '', 'height=600,width=800');
   if (printWindow) {
     printWindow.document.write(generateReportHTML(scanData));
@@ -58,14 +46,14 @@ export const exportAsHTMLPDF = (scanData) => {
 /**
  * Generate comprehensive HTML report content
  */
-export const generateReportHTML = (scanData) => {
+export const generateReportHTML = (scanData: any) => {
   const timestamp = new Date().toLocaleString();
   const address = scanData.address || 'Unknown URL';
   const scanId = scanData.id || 'N/A';
   
   const resultsHTML = scanData.results
     ?.map(
-      (result) => `
+      (result: any) => `
     <div class="result-item ${result.severity || 'info'}">
       <div class="result-header">
         <h3>${result.title || 'Unknown'}</h3>
@@ -224,7 +212,7 @@ export const generateReportHTML = (scanData) => {
 /**
  * Export as CSV
  */
-export const exportAsCSV = (scanData) => {
+export const exportAsCSV = (scanData: any) => {
   const address = scanData.address || 'unknown';
   const timestamp = new Date().toISOString();
   
@@ -232,7 +220,7 @@ export const exportAsCSV = (scanData) => {
   const headers = ['Timestamp', 'URL', 'Check Name', 'Category', 'Severity', 'Status', 'Description', 'Data'];
   
   // Build data rows
-  const rows = (scanData.results || []).map((result) => [
+  const rows = (scanData.results || []).map((result: any) => [
     timestamp,
     address,
     result.title || 'Unknown',
@@ -246,8 +234,8 @@ export const exportAsCSV = (scanData) => {
   // Convert to CSV format with proper escaping
   const csvContent = [
     headers.map(h => `"${h}"`).join(','),
-    ...rows.map(row => 
-      row.map(cell => {
+    ...rows.map((row: any[]) => 
+      row.map((cell: any) => {
         const cellStr = String(cell || '').replace(/"/g, '""');
         return `"${cellStr}"`;
       }).join(',')

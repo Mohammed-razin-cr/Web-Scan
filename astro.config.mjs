@@ -74,4 +74,21 @@ if (!isBossServer && isBossServer !== true) {
 }
 
 // Export Astro configuration
-export default defineConfig({ output, base, integrations, site, adapter, redirects });
+export default defineConfig({
+  output,
+  base,
+  integrations,
+  site,
+  adapter,
+  redirects,
+  vite: {
+    server: {
+      proxy: {
+        '/api': {
+          target: 'http://localhost:3001',
+          changeOrigin: true,
+        },
+      },
+    },
+  },
+});

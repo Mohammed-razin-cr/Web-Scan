@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo, } from 'react';
+import { useState, useEffect, useMemo, useCallback, } from 'react';
 import { useParams } from 'react-router-dom';
 import styled from '@emotion/styled';
 import { ToastContainer } from 'react-toastify';
@@ -138,35 +138,53 @@ const Results = (props) => {
     });
   }, [jobsState]);
 
+  // Memoize scan completion state to prevent effect from triggering too often
+  const scanCompleted = useMemo(() => {
+    const entries = Object.values(jobsState);
+    return entries.length > 0 && entries.every((e) => e?.state !== 'loading');
+  }, [jobsState]);
+
   // Handle vulnerability tracking when scan completes
   useEffect(() => {
-    const entries = Object.values(jobsState);
-    const allDone = entries.every((e) => e?.state !== 'loading');
-    
-    if (allDone && address && cardsToShow.length > 0) {
-      try {
-        // Prepare results for storage
-        const results = cardsToShow.map(({ card, data }) => ({
-          id: card.id,
-          title: card.title,
-          status: 'success',
-          severity: 'info',
-          tags: [card.title],
-          data: data,
-        }));
+    if (!scanCompleted || !address) return;
 
-        // Store scan and get comparisons
+    try {
+      // Recompute renderable and cardsToShow within the effect
+      const renderable = allCards.map(({ jobId, card }) => {
+        const entry = jobsState[card.id];
+        const raw = entry?.raw;
+        let data = raw && card.pick ? card.pick(raw) : raw;
+        if (!hasData(data) && card.fallback) data = card.fallback(jobsState);
+        return { jobId, card, data, entry };
+      });
+
+      const cards = renderable.filter(({ data, entry }) => hasData(data) && !entry?.error);
+      
+      if (cards.length === 0) return;
+
+      // Prepare results for storage
+      const results = cards.map(({ card, data }) => ({
+        id: card.id,
+        title: card.title,
+        status: 'success',
+        severity: 'info',
+        tags: [card.title],
+        data: data,
+      }));
+
+      // Store scan and get comparisons - add small delay to ensure DOM is settled
+      setTimeout(() => {
         storeScanRecord(address, results);
         const changes = compareWithPreviousScan(address, results);
         const summary = getVulnerabilitySummary(address);
 
         setVulnerabilityChanges(changes);
         setVulnerabilitySummary(summary);
-      } catch (error) {
-        console.error('Failed to track vulnerability:', error);
-      }
+      }, 100);
+    } catch (error) {
+      console.error('Failed to track vulnerability:', error);
     }
-  }, [jobsState, cardsToShow, address]);
+  }, [address, scanCompleted]);
 
   const showInfo = (id) => {
     setModalContent(DocContent(id));
@@ -176,39 +194,6 @@ const Results = (props) => {
   const showErrorModal = (content) => {
     setModalContent(content);
     setModalOpen(true);
-  };
-
-  // Export handlers
-  const handleExportPDF = async () => {
-    const scanData = {
-      address,
-      id: `scan-${Date.now()}`,
-      results: cardsToShow.map(({ card, data }) => ({
-        title: card.title,
-        tags: [card.title],
-        status: 'completed',
-        data: data,
-      })),
-    };
-    await exportScan('pdf', scanData);
-  };
-
-  const handleExportCSV = async () => {
-    const scanData = {
-      address,
-      id: `scan-${Date.now()}`,
-      results: cardsToShow.map(({ card, data }) => ({
-        title: card.title,
-        tags: [card.title],
-        status: 'completed',
-        data: data,
-      })),
-    };
-    await exportScan('csv', scanData);
-  };
-
-  const handleExportHistory = async () => {
-    await exportScanHistory(address);
   };
 
   // Resolve each card's data, applying picker and falling back when needed
@@ -221,6 +206,39 @@ const Results = (props) => {
   });
 
   const cardsToShow = renderable.filter(({ data, entry }) => hasData(data) && !entry?.error);
+
+  // Export handlers (memoized to prevent re-renders)
+  const handleExportPDF = useCallback(() => {
+    const scanData = {
+      address,
+      id: `scan-${Date.now()}`,
+      results: cardsToShow.map(({ card, data }) => ({
+        title: card.title,
+        tags: [card.title],
+        status: 'completed',
+        data: data,
+      })),
+    };
+    exportScan('pdf', scanData);
+  }, [address, cardsToShow]);
+
+  const handleExportCSV = useCallback(() => {
+    const scanData = {
+      address,
+      id: `scan-${Date.now()}`,
+      results: cardsToShow.map(({ card, data }) => ({
+        title: card.title,
+        tags: [card.title],
+        status: 'completed',
+        data: data,
+      })),
+    };
+    exportScan('csv', scanData);
+  }, [address, cardsToShow]);
+
+  const handleExportHistory = useCallback(() => {
+    exportScanHistory(address);
+  }, [address]);
 
   const findings = useMemo(() => runAnalysis(jobsState), [jobsState]);
 
@@ -303,21 +321,19 @@ const Results = (props) => {
       </NavWrapper>
       {errorKind && <NoResults kind={errorKind} address={address} error={ipLookupError} />}
       <ProgressBar loadStatus={loadingJobs} showModal={showErrorModal} showJobDocs={showInfo} />
-      {cardsToShow.length > 0 && (
-        <>
-          <ExportPanel
-            onExportPDF={handleExportPDF}
-            onExportCSV={handleExportCSV}
-            onExportHistory={handleExportHistory}
-            isLoading={loadingJobs.some((j) => j.state === 'loading')}
-          />
-          <VulnerabilityTrackingPanel
-            url={address}
-            changes={vulnerabilityChanges}
-            summary={vulnerabilitySummary}
-          />
-        </>
-      )}
+      <div style={{ display: cardsToShow.length > 0 ? 'block' : 'none' }}>
+        <ExportPanel
+          onExportPDF={handleExportPDF}
+          onExportCSV={handleExportCSV}
+          onExportHistory={handleExportHistory}
+          isLoading={loadingJobs.some((j) => j.state === 'loading')}
+        />
+        <VulnerabilityTrackingPanel
+          url={address}
+          changes={vulnerabilityChanges}
+          summary={vulnerabilitySummary}
+        />
+      </div>
       <Loader show={loadingJobs.filter((j) => j.state !== 'loading').length < 5} />
       <AdvisoryPanel findings={findings} onJumpTo={jumpToCard} />
       <ResultsContent>
