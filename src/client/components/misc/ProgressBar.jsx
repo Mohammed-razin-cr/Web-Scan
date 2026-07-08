@@ -1,518 +1,382 @@
-import { useState, useEffect, useRef, useCallback, } from 'react';
+/**
+ * ProgressBar — premium sleek pill progress
+ * Replaces the old details/summary card with a glassmorphic
+ * collapsible panel: animated multi-segment bar, live job pills,
+ * retry buttons and per-job docs links.
+ */
+import { useState, useEffect, useRef, useCallback } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import styled from '@emotion/styled';
-import colors from 'client/styles/colors';
-import Card from 'client/components/Form/Card';
-import Heading from 'client/components/Form/Heading';
 import { allCardIds } from 'client/jobs/registry';
 
- 
-
-
-
-
-
-
-
-
-
-const STATE_META = {
-  success: { emoji: '✅', color: colors.success },
-  loading: { emoji: '🔄', color: colors.info },
-  error: { emoji: '❌', color: colors.danger },
-  'timed-out': { emoji: '⏸️', color: colors.warning },
-  skipped: { emoji: '⏭️', color: colors.neutral },
-};
-
-// Tally jobs by their loading state in a single pass
+/* ── count helpers (unchanged logic) ── */
 const countByState = (jobs) => {
-  const counts = {
-    success: 0,
-    loading: 0,
-    error: 0,
-    skipped: 0,
-    'timed-out': 0,
-  };
-  for (const j of jobs) counts[j.state]++;
-  return counts;
+  const c = { success: 0, loading: 0, error: 0, skipped: 0, 'timed-out': 0 };
+  for (const j of jobs) c[j.state]++;
+  return c;
 };
-
-// Convert per-state counts into percentages of the total
 const stateToPercent = (jobs) => {
-  const counts = countByState(jobs);
+  const c = countByState(jobs);
   const total = jobs.length || 1;
-  return Object.fromEntries(
-    Object.entries(counts).map(([k, v]) => [k, (v / total) * 100]),
-  ) ;
+  return Object.fromEntries(Object.entries(c).map(([k, v]) => [k, (v / total) * 100]));
 };
 
-const LoadCard = styled(Card)`
+/* ── palette ── */
+const STATE_COLOR = {
+  success:    '#4ce1d3',
+  loading:    '#3b82f6',
+  error:      '#ef4444',
+  'timed-out':'#f59e0b',
+  skipped:    '#64748b',
+};
+const STATE_ICON = {
+  success: '✓', loading: '○', error: '✕', 'timed-out': '⏸', skipped: '—',
+};
+const REASON_LABEL = { error:'Show error', 'timed-out':'Show reason', skipped:'Show reason' };
+
+/* ── styled ── */
+const Outer = styled.div`
   margin: 0 auto;
   width: 95vw;
-  max-height: 100%;
+  max-width: 900px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+`;
+
+const Panel = styled(motion.div)`
   position: relative;
-`;
-
-// Animates height auto <-> 0 via the grid-template-rows 1fr/0fr trick, plus fade and slide
-const Collapsible = styled.div`
-  display: grid;
-  grid-template-rows: 1fr;
-  opacity: 1;
-  transform: translateY(0);
-  transition:
-    grid-template-rows 0.3s ease,
-    opacity 0.25s ease,
-    transform 0.3s ease;
-  > .inner {
-    overflow: hidden;
-    min-height: 0;
-  }
-  &.collapsed {
-    grid-template-rows: 0fr;
-    opacity: 0;
-    transform: translateY(-0.5rem);
-    pointer-events: none;
-  }
-`;
-
-const ProgressBarContainer = styled.div`
-  width: 100%;
-  height: 0.5rem;
-  background: ${colors.bgShadowColor};
-  border-radius: 4px;
+  border-radius: 1rem;
+  background: rgba(6,15,14,0.82);
+  border: 1px solid rgba(76,225,211,0.13);
+  backdrop-filter: blur(24px);
+  box-shadow: 0 12px 48px rgba(0,0,0,0.4), inset 0 1px 0 rgba(76,225,211,0.06);
   overflow: hidden;
-`;
-
-const ProgressBarSegment = styled.div`
-  height: 1rem;
-  display: inline-block;
-  width: ${(p) => p.width}%;
-  background: ${(p) => `repeating-linear-gradient(
-    315deg,
-    ${p.color},
-    ${p.color} 3px,
-    color-mix(in srgb, ${p.color} 92%, #000) 3px,
-    color-mix(in srgb, ${p.color} 92%, #000) 6px
-  )`};
-  transition: width 0.5s ease-in-out;
-`;
-
-const StateLabel = styled.span`
-  color: ${(p) => p.color};
-`;
-
-const Details = styled.details`
-  summary {
-    margin: 0.5rem 0;
-    font-weight: bold;
-    cursor: pointer;
-    &:before {
-      content: '►';
-      position: absolute;
-      margin-left: -1rem;
-      color: ${colors.primary};
-    }
-  }
-  &[open] summary:before {
-    content: '▼';
-  }
-  ul {
-    list-style: none;
-    padding: 0.25rem;
-    border-radius: 4px;
-    width: fit-content;
-    li {
-      button.docs {
-        background: none;
-        border: none;
-        color: inherit;
-        font: inherit;
-        font-weight: 700;
-        padding: 0;
-        cursor: pointer;
-        &:hover,
-        &:focus-visible {
-          color: ${colors.primary};
-          outline: none;
-        }
-      }
-      i {
-        color: ${colors.textColorSecondary};
-      }
-    }
-  }
-  p.error {
-    margin: 0.5rem 0;
-    opacity: 0.75;
-    color: ${colors.danger};
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 2rem; right: 2rem; height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(76,225,211,0.4), transparent);
   }
 `;
 
-const AboutPageLink = styled.a`
-  color: ${colors.primary};
-`;
-
-const SummaryContainer = styled.div`
+const PanelHead = styled.div`
   display: flex;
-  align-items: center;
-  margin: 0.5rem 0;
-  &.error-info {
-    color: ${colors.danger};
-  }
-  &.success-info {
-    color: ${colors.success};
-  }
-  &.loading-info {
-    color: ${colors.info};
-  }
-  .skipped,
-  .success,
-  .error,
-  .timed-out {
-    margin-left: 0.75rem;
-  }
-  .skipped {
-    color: ${colors.warning};
-  }
-  .success {
-    color: ${colors.success};
-  }
-  .error {
-    color: ${colors.danger};
-  }
-  .timed-out {
-    color: ${colors.error};
-  }
-  .elapsed {
-    color: ${colors.textColorSecondary};
-    margin-left: auto;
-  }
-`;
-
-const ReShowRow = styled.div`
-  margin: 0 auto;
-  width: 95vw;
-  display: flex;
-  justify-content: space-between;
   align-items: center;
   gap: 1rem;
-  .summary {
-    color: ${colors.textColorSecondary};
-    font-size: 0.9rem;
-    button.extras {
-      background: none;
-      border: none;
-      color: inherit;
-      font: inherit;
-      padding: 0;
-      cursor: pointer;
-      &:hover,
-      &:focus-visible {
-        text-decoration: underline;
-        color: ${colors.primary};
-        outline: none;
-      }
-    }
-  }
-`;
-
-// Re-open trigger styled to match the repo's filter buttons (shadow grows on hover)
-const ShowLoadStateButton = styled.button`
-  background: ${colors.backgroundLighter};
-  color: ${colors.textColor};
-  border: none;
-  padding: 0.3rem 0.7rem;
-  border-radius: 4px;
-  font-family: var(--font-mono);
-  font-size: 0.9rem;
+  padding: 0.85rem 1.5rem;
   cursor: pointer;
-  box-shadow: 2px 2px 0px ${colors.bgShadowColor};
-  transition:
-    box-shadow 0.2s ease-in-out,
-    color 0.2s ease-in-out;
-  &:hover,
-  &:focus-visible {
-    color: ${colors.primary};
-    box-shadow: 4px 4px 0px ${colors.bgShadowColor};
-    outline: none;
-  }
+  user-select: none;
 `;
 
-const DismissButton = styled.button`
-  width: fit-content;
-  position: absolute;
-  right: 1rem;
-  bottom: 1rem;
-  background: ${colors.background};
-  color: ${colors.textColorSecondary};
-  border: none;
-  padding: 0.25rem 0.5rem;
+const BarTrack = styled.div`
+  flex: 1;
+  height: 6px;
+  background: rgba(76,225,211,0.07);
+  border-radius: 999px;
+  overflow: hidden;
+  display: flex;
+`;
+
+const BarSeg = styled(motion.div)`
+  height: 100%;
+  background: ${p => p.color};
+  transition: width 0.5s ease;
+  &:first-of-type { border-radius: 999px 0 0 999px; }
+  &:last-of-type  { border-radius: 0 999px 999px 0; }
+`;
+
+const HeadRight = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-shrink: 0;
+`;
+
+const HeadLabel = styled.span`
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: rgba(209,232,226,0.5);
+  font-family: 'JetBrains Mono', monospace;
+  white-space: nowrap;
+`;
+
+const ChevronBtn = styled(motion.button)`
+  background: none; border: none; cursor: pointer;
+  color: rgba(76,225,211,0.6);
+  display: flex; align-items: center;
+  padding: 0.15rem;
+  svg { width: 14px; height: 14px; stroke: currentColor; transition: transform 0.25s ease; }
+`;
+
+const StatChips = styled.div`
+  display: flex;
+  gap: 0.45rem;
+  flex-wrap: wrap;
+`;
+
+const StatChip = styled.span`
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: ${p => p.color};
+  background: ${p => p.color}18;
+  border: 1px solid ${p => p.color}33;
+  border-radius: 999px;
+  padding: 0.18rem 0.55rem;
+`;
+
+/* ── collapsible body ── */
+const Body = styled(motion.div)`
+  overflow: hidden;
+  padding: 0 1.5rem;
+`;
+
+const BodyInner = styled.div`
+  padding-bottom: 1.1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+`;
+
+const JobRow = styled(motion.div)`
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.3rem 0.5rem;
+  border-radius: 6px;
+  transition: background 0.15s ease;
+  &:hover { background: rgba(76,225,211,0.04); }
+`;
+
+const JobIcon = styled.span`
+  font-size: 0.72rem;
+  color: ${p => p.color};
+  width: 14px;
+  text-align: center;
+  flex-shrink: 0;
+`;
+
+const JobName = styled.button`
+  background: none; border: none; cursor: pointer;
+  font-size: 0.76rem; font-weight: 600;
+  color: rgba(209,232,226,0.7);
+  font-family: 'JetBrains Mono', monospace;
+  padding: 0; text-align: left;
+  transition: color 0.15s ease;
+  &:hover { color: #4ce1d3; }
+`;
+
+const JobTime = styled.span`
+  font-size: 0.67rem;
+  color: rgba(209,232,226,0.28);
+  font-family: 'JetBrains Mono', monospace;
+  margin-left: auto;
+`;
+
+const ActionBtn = styled.button`
+  background: rgba(76,225,211,0.06);
+  border: 1px solid rgba(76,225,211,0.18);
+  color: rgba(76,225,211,0.75);
+  font-size: 0.66rem; font-weight: 700;
+  letter-spacing: 0.06em;
+  padding: 0.15rem 0.5rem;
   border-radius: 4px;
-  font-family: var(--font-mono);
   cursor: pointer;
-  &:hover {
-    color: ${colors.primary};
+  transition: all 0.15s ease;
+  &:hover { background: rgba(76,225,211,0.14); color: #4ce1d3; border-color: rgba(76,225,211,0.4); }
+`;
+
+/* ── re-show row ── */
+const ReShowRow = styled(motion.div)`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.55rem 1rem;
+  border-radius: 8px;
+  background: rgba(6,15,14,0.6);
+  border: 1px solid rgba(76,225,211,0.1);
+`;
+
+const ReShowLabel = styled.span`
+  font-size: 0.75rem;
+  color: rgba(209,232,226,0.45);
+  button {
+    background: none; border: none; cursor: pointer;
+    color: #4ce1d3; font-size: inherit;
+    padding: 0; margin-left: 0.35rem;
+    &:hover { text-decoration: underline; }
   }
 `;
 
-const FailedJobActionButton = styled.button`
-  margin: 0.1rem 0.1rem 0.1rem 0.5rem;
-  background: ${colors.background};
-  color: ${colors.textColorSecondary};
-  border: 1px solid ${colors.textColorSecondary};
-  padding: 0.25rem 0.5rem;
-  border-radius: 4px;
-  font-family: var(--font-mono);
+const ReShowBtn = styled(motion.button)`
+  background: rgba(76,225,211,0.08);
+  border: 1px solid rgba(76,225,211,0.22);
+  color: #4ce1d3;
+  font-size: 0.72rem; font-weight: 700; letter-spacing: 0.08em;
+  padding: 0.3rem 0.8rem; border-radius: 6px;
   cursor: pointer;
-  transition: all 0.2s ease-in-out;
-  &:hover {
-    color: ${colors.primary};
-    border-color: ${colors.primary};
-  }
+  transition: background 0.15s ease;
+  &:hover { background: rgba(76,225,211,0.16); }
 `;
 
-const ErrorModalContent = styled.div`
-  p {
-    margin: 0;
-  }
-  pre {
-    color: ${colors.danger};
-    &.info {
-      color: ${colors.warning};
-    }
-  }
+/* ── error modal content ── */
+const ModalError = styled.div`
+  p { margin: 0; color: #ef4444; font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; }
+  pre { color: #f59e0b; font-size: 0.8rem; white-space: pre-wrap; }
 `;
 
+/* ── component ── */
+const ProgressBar = ({ loadStatus: jobs = [], showModal, showJobDocs }) => {
+  const [open, setOpen] = useState(true);
+  const startRef = useRef(Date.now());
+  const [elapsed, setElapsed] = useState(0);
 
-
-
-
-
-
-const REASON_LABEL = {
-  error: '■ Show Error',
-  'timed-out': '■ Show Timeout Reason',
-  skipped: '■ Show Skip Reason',
-};
-
-// One row in the details list, showing job state, time and any actions
-const JobListItem = ({ job, showJobDocs, showErrorModal }) => {
-  const { name, state, timeTaken, retry, error } = job;
-  const canRetry = retry && state !== 'success' && state !== 'loading';
-  const reasonLabel = error ? REASON_LABEL[state] : undefined;
-  return (
-    <li>
-      <button type="button" className="docs" onClick={() => showJobDocs(name)}>
-        {STATE_META[state].emoji} {name}
-      </button>
-      <StateLabel color={STATE_META[state].color}> ({state})</StateLabel>
-      <i>{timeTaken && state !== 'loading' ? ` Took ${timeTaken} ms` : ''}</i>
-      {canRetry && (
-        <FailedJobActionButton type="button" onClick={retry}>
-          ↻ Retry
-        </FailedJobActionButton>
-      )}
-      {reasonLabel && (
-        <FailedJobActionButton
-          type="button"
-          onClick={() => showErrorModal(job, state === 'skipped')}
-        >
-          {reasonLabel}
-        </FailedJobActionButton>
-      )}
-    </li>
-  );
-};
-
-
-
-
-
-
-
-// Compact one-liner shown alongside the "Show Load State" button when collapsed
-const LoadSummary = ({ jobs, elapsedMs, onOpen }) => {
-  const total = allCardIds.length;
-  const c = countByState(jobs);
-  const issues = c.error + c['timed-out'] + c.skipped;
-  const sec = (elapsedMs / 1000).toFixed(1);
-  const text = c.loading
-    ? `Loading ${total - c.loading} of ${total}` + (elapsedMs < 15000 ? ` (${sec}s)` : '')
-    : `Finished ${total} lookups in ${sec}s`;
-  return (
-    <span className="summary">
-      {text}
-      {issues > 0 && (
-        <>
-          {' · '}
-          <button type="button" className="extras" onClick={onOpen}>
-            {issues} {issues === 1 ? 'issue' : 'issues'}
-          </button>
-        </>
-      )}
-    </span>
-  );
-};
-
-
-
-const CHIP_LABEL = {
-  success: 'successful',
-  skipped: 'skipped',
-  'timed-out': 'timed out',
-  error: 'failed',
-};
-
-
-
-
-
-
-// Heading-style summary that adapts to loading, all-success and partial-failure
-const SummaryText = ({ jobs, elapsedMs }) => {
-  const total = allCardIds.length;
-  const c = countByState(jobs);
-  const isDone = c.loading === 0;
-  const hasIssues = c.error > 0 || c['timed-out'] > 0;
-  const elapsed = elapsedMs >= 10_000 ? `${(elapsedMs / 1000).toFixed(1)} s` : `${elapsedMs} ms`;
-  const chip = (k) =>
-    c[k] > 0 && (
-      <span key={k} className={k}>
-        {c[k]} {c[k] === 1 ? 'job' : 'jobs'} {CHIP_LABEL[k]}{' '}
-      </span>
-    );
-  const cls = !isDone ? 'loading-info' : hasIssues ? 'error-info' : 'success-info';
-  const heading = !isDone
-    ? `Loading ${total - c.loading} / ${total} Jobs`
-    : !hasIssues
-      ? `${c.success} Jobs Completed Successfully`
-      : null;
-  const keys = !isDone
-    ? ['skipped', 'timed-out', 'error']
-    : hasIssues
-      ? ['success', 'skipped', 'timed-out', 'error']
-      : ['skipped'];
-  return (
-    <SummaryContainer className={cls}>
-      {heading && <b>{heading}</b>}
-      {keys.map(chip)}
-      <span className="elapsed">{isDone ? `Done in ${elapsed}` : elapsed}</span>
-    </SummaryContainer>
-  );
-};
-
-
-
-
-
-
-
-// Top-of-results progress bar with collapsible per-job detail and error modals
-const ProgressLoader = ({ loadStatus, showModal, showJobDocs }) => {
-  const [hideLoader, setHideLoader] = useState(false);
-  const [elapsedMs, setElapsedMs] = useState(0);
-  const percentages = stateToPercent(loadStatus);
-  const isDone = !loadStatus.some((j) => j.state === 'loading');
-
-  // Tick elapsed-time while loading, freeze on done so summary shows final duration
   useEffect(() => {
-    if (isDone) return;
-    const id = setInterval(() => setElapsedMs((v) => v + 100), 100);
-    return () => clearInterval(id);
-  }, [isDone]);
-
-  // Auto-collapse once when 75% of jobs have settled
-  const autoCollapsedRef = useRef(false);
-  const autoCollapse = useCallback(() => {
-    if (autoCollapsedRef.current) return;
-    autoCollapsedRef.current = true;
-    setHideLoader(true);
+    const t = setInterval(() => setElapsed(Date.now() - startRef.current), 250);
+    return () => clearInterval(t);
   }, []);
 
-  useEffect(() => {
-    const total = loadStatus.length || 1;
-    const settled = loadStatus.filter((j) => j.state !== 'loading').length;
-    if (settled / total >= 0.75) autoCollapse();
-  }, [loadStatus, autoCollapse]);
+  const pct    = stateToPercent(jobs);
+  const counts = countByState(jobs);
+  const total  = allCardIds.length;
+  const done   = total - counts.loading;
+  const isDone = counts.loading === 0;
+  const hasIssues = counts.error > 0 || counts['timed-out'] > 0;
+  const elapsedSec = (elapsed / 1000).toFixed(1);
 
-  const colorFor = (state) =>
-    state === 'success' && isDone ? colors.primary : STATE_META[state].color;
-
-  const showErrorModal = (job, isInfo) => {
-    const detailsLabel = job.state === 'skipped' ? 'Reason:' : 'Server response:';
+  const openErrorModal = useCallback((job, isSkip) => {
     showModal(
-      <ErrorModalContent>
-        <Heading as="h3">Details for {job.name}</Heading>
-        <p>
-          The {job.name} job ended with state '{job.state}'
-          {job.timeTaken !== undefined ? ` after ${job.timeTaken} ms` : ''}. {detailsLabel}
-        </p>
-        <pre className={isInfo ? 'info' : 'error'}>{job.error}</pre>
-      </ErrorModalContent>,
+      <ModalError>
+        <p>{isSkip ? 'Skipped:' : 'Error:'}</p>
+        <pre className={isSkip ? 'info' : ''}>{job.error || 'No details available'}</pre>
+      </ModalError>,
     );
-  };
+  }, [showModal]);
+
+
+  const segments = ['success', 'loading', 'timed-out', 'error', 'skipped'];
 
   return (
-    <div>
-      <Collapsible className={!hideLoader ? 'collapsed' : ''} aria-hidden={!hideLoader}>
-        <div className="inner">
-          <ReShowRow>
-            <LoadSummary
-              jobs={loadStatus}
-              elapsedMs={elapsedMs}
-              onOpen={() => setHideLoader(false)}
-            />
-            <ShowLoadStateButton type="button" onClick={() => setHideLoader(false)}>
-              Show Load State
-            </ShowLoadStateButton>
-          </ReShowRow>
-        </div>
-      </Collapsible>
-      <Collapsible className={hideLoader ? 'collapsed' : ''} aria-hidden={hideLoader}>
-        <div className="inner">
-          <LoadCard>
-            <ProgressBarContainer>
-              {(Object.keys(percentages) ).map((state) => (
-                <ProgressBarSegment
-                  key={`progress-bar-${state}`}
-                  color={colorFor(state)}
-                  width={percentages[state]}
-                  title={`${state} (${Math.round(percentages[state])}%)`}
+    <Outer>
+      <Panel
+        initial={{ opacity: 0, y: 12 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+      >
+        {/* ── Header row with bar ── */}
+        <PanelHead onClick={() => setOpen(o => !o)}>
+          <BarTrack>
+            {segments.map(s => (
+              pct[s] > 0 && (
+                <BarSeg
+                  key={s}
+                  color={STATE_COLOR[s]}
+                  initial={{ width: 0 }}
+                  animate={{ width: `${pct[s]}%` }}
+                  transition={{ duration: 0.6, ease: 'easeOut' }}
                 />
-              ))}
-            </ProgressBarContainer>
-            <SummaryText jobs={loadStatus} elapsedMs={elapsedMs} />
-            <Details>
-              <summary>Show Details</summary>
-              <ul>
-                {loadStatus.map((job) => (
-                  <JobListItem
-                    key={job.name}
-                    job={job}
-                    showJobDocs={showJobDocs}
-                    showErrorModal={showErrorModal}
-                  />
-                ))}
-              </ul>
-              {loadStatus.some((j) => j.state === 'error') && (
-                <p className="error">
-                  <b>Check the browser console for logs and more info</b>
-                  <br />
-                  It's normal for some jobs to fail, either because the host doesn't return the
-                  required info, or restrictions in the lambda function, or hitting an API limit.
-                </p>
+              )
+            ))}
+          </BarTrack>
+
+          <HeadRight>
+            <StatChips>
+              {counts.success > 0 && (
+                <StatChip color={STATE_COLOR.success}>{counts.success} done</StatChip>
               )}
-              <AboutPageLink href="/check/about" target="_blank" rel="noreferrer">
-                Learn More about Web-Check
-              </AboutPageLink>
-            </Details>
-            <DismissButton type="button" onClick={() => setHideLoader(true)}>
-              Dismiss
-            </DismissButton>
-          </LoadCard>
-        </div>
-      </Collapsible>
-    </div>
+              {counts.loading > 0 && (
+                <StatChip color={STATE_COLOR.loading}>{counts.loading} running</StatChip>
+              )}
+              {(counts.error + counts['timed-out']) > 0 && (
+                <StatChip color={STATE_COLOR.error}>
+                  {counts.error + counts['timed-out']} failed
+                </StatChip>
+              )}
+            </StatChips>
+
+            <HeadLabel>
+              {isDone ? `Done in ${elapsedSec}s` : `${done}/${total} · ${elapsedSec}s`}
+            </HeadLabel>
+
+            <ChevronBtn type="button" aria-label="Toggle details" whileTap={{ scale: 0.9 }}>
+              <svg viewBox="0 0 24 24" fill="none" strokeWidth="2.5"
+                style={{ transform: open ? 'rotate(180deg)' : 'rotate(0deg)' }}>
+                <path d="M6 9l6 6 6-6" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+            </ChevronBtn>
+          </HeadRight>
+        </PanelHead>
+
+        {/* ── Collapsible job list ── */}
+        <AnimatePresence initial={false}>
+          {open && (
+            <Body
+              key="body"
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: 'auto', opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+            >
+              <BodyInner>
+                {jobs.map((job) => {
+                  const color = STATE_COLOR[job.state] || '#64748b';
+                  const canRetry = job.retry && job.state !== 'success' && job.state !== 'loading';
+                  const hasReason = job.error && REASON_LABEL[job.state];
+                  return (
+                    <JobRow
+                      key={job.name}
+                      initial={{ opacity: 0, x: -6 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ duration: 0.2 }}
+                    >
+                      <JobIcon color={color}>{STATE_ICON[job.state]}</JobIcon>
+                      <JobName type="button" onClick={() => showJobDocs(job.name)}>
+                        {job.name}
+                      </JobName>
+                      {job.timeTaken && job.state !== 'loading' && (
+                        <JobTime>{job.timeTaken}ms</JobTime>
+                      )}
+                      {canRetry && (
+                        <ActionBtn type="button" onClick={job.retry}>↻ Retry</ActionBtn>
+                      )}
+                      {hasReason && (
+                        <ActionBtn type="button"
+                          onClick={() => openErrorModal(job, job.state === 'skipped')}>
+                          {REASON_LABEL[job.state]}
+                        </ActionBtn>
+                      )}
+                    </JobRow>
+                  );
+                })}
+              </BodyInner>
+            </Body>
+          )}
+        </AnimatePresence>
+      </Panel>
+
+      {/* ── Collapsed re-show row ── */}
+      {isDone && !open && (
+        <ReShowRow
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.3 }}
+        >
+          <ReShowLabel>
+            {hasIssues
+              ? <>{counts.error + counts['timed-out']} issues &mdash; <button type="button" onClick={() => setOpen(true)}>show details</button></>
+              : <>{counts.success} checks completed in {elapsedSec}s</>
+            }
+          </ReShowLabel>
+          <ReShowBtn type="button" onClick={() => setOpen(true)}
+            whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.97 }}>
+            Show report
+          </ReShowBtn>
+        </ReShowRow>
+      )}
+    </Outer>
   );
 };
 
-export default ProgressLoader;
+export default ProgressBar;
+export { ProgressBar };

@@ -1,4 +1,12 @@
 ---
+/**
+ * Features — GlowingCard grid layout
+ * Each check gets a premium glassmorphic card with:
+ *  - Mouse-tracking spotlight glow (via CSS custom props + JS)
+ *  - 3D tilt on hover
+ *  - Category icon + accent color
+ *  - Stagger entrance animation via IntersectionObserver
+ */
 import Icon from '@components/molecules/Icon.svelte';
 
 interface Props {
@@ -6,35 +14,291 @@ interface Props {
 }
 
 const { supportedChecks } = Astro.props;
+
+/* Map check names to category accent colors + icons */
+const categoryMap: Record<string, { color: string; emoji: string }> = {
+  'SSL Certificate':   { color: '#4ce1d3', emoji: '🔒' },
+  'DNSSEC':            { color: '#4ce1d3', emoji: '🛡️' },
+  'HTTP Security':     { color: '#4ce1d3', emoji: '🔐' },
+  'HSTS':              { color: '#4ce1d3', emoji: '🔑' },
+  'Known Threats':     { color: '#ff8c7a', emoji: '⚠️' },
+  'Firewall Types':    { color: '#ff8c7a', emoji: '🧱' },
+  'Block List Check':  { color: '#ff8c7a', emoji: '🚫' },
+  'Open Ports':        { color: '#ffcb9a', emoji: '🔌' },
+  'TLS Version':       { color: '#ffcb9a', emoji: '📡' },
+  'DNS Records':       { color: '#60a5fa', emoji: '🌐' },
+  'DNS Server':        { color: '#60a5fa', emoji: '🖧'  },
+  'Mail Config':       { color: '#60a5fa', emoji: '📧' },
+  'Redirects':         { color: '#60a5fa', emoji: '↪️' },
+  'Trace Route':       { color: '#60a5fa', emoji: '📍' },
+  'Tech Stack':        { color: '#a78bfa', emoji: '⚙️'  },
+  'Site Features':     { color: '#a78bfa', emoji: '✨' },
+  'Quality Check':     { color: '#a78bfa', emoji: '📊' },
+  'Screenshot':        { color: '#a78bfa', emoji: '📸' },
+  'Carbon Footprint':  { color: '#34d399', emoji: '🌿' },
+  'Global Rank':       { color: '#34d399', emoji: '📈' },
+  'Uptime Status':     { color: '#34d399', emoji: '💚' },
+};
+
+const getCategory = (name: string) =>
+  categoryMap[name] ?? { color: '#4ce1d3', emoji: '🔍' };
 ---
 
-<ul class="features">
-  {
-    supportedChecks.map((check) => (
-      <li>
-        <Icon name="check" />
-        {check}
-      </li>
-    ))
-  }
-  <li><Icon name="plus" /><a href="/about#features">More</a></li>
-</ul>
+<div class="features-grid" id="features-grid">
+  {supportedChecks.map((check, i) => {
+    const { color, emoji } = getCategory(check);
+    return (
+      <div
+        class="feature-card"
+        data-index={i}
+        style={`--accent: ${color};`}
+      >
+        {/* spotlight layer — position driven by JS */}
+        <div class="card-spotlight" aria-hidden="true"></div>
+        {/* animated top accent line */}
+        <div class="card-top-line" aria-hidden="true"></div>
+        <span class="card-emoji" aria-hidden="true">{emoji}</span>
+        <span class="card-name">{check}</span>
+        <div class="card-dot" aria-hidden="true"></div>
+      </div>
+    );
+  })}
+
+  <div class="feature-card feature-card--more" data-index={supportedChecks.length}>
+    <div class="card-spotlight" aria-hidden="true"></div>
+    <span class="card-emoji" aria-hidden="true">＋</span>
+    <a href="/about#features" class="card-name">More</a>
+    <div class="card-dot" aria-hidden="true"></div>
+  </div>
+</div>
+
+<script>
+  /* ── Mouse-tracking spotlight + 3D tilt ── */
+  const cards = document.querySelectorAll<HTMLElement>('.feature-card');
+
+  cards.forEach((card) => {
+    const spotlight = card.querySelector<HTMLElement>('.card-spotlight');
+
+    card.addEventListener('mousemove', (e) => {
+      const rect = card.getBoundingClientRect();
+      const cx = e.clientX - rect.left;
+      const cy = e.clientY - rect.top;
+
+      /* spotlight */
+      if (spotlight) {
+        spotlight.style.background = `radial-gradient(
+          180px circle at ${cx}px ${cy}px,
+          var(--accent, rgba(76,225,211,0.12)) 0%,
+          transparent 70%
+        )`;
+        spotlight.style.opacity = '1';
+      }
+
+      /* 3D tilt */
+      const rx = ((cy / rect.height) - 0.5) * -10;
+      const ry = ((cx / rect.width)  - 0.5) *  10;
+      card.style.transform = `perspective(700px) rotateX(${rx}deg) rotateY(${ry}deg) scale(1.02) translateZ(4px)`;
+    });
+
+    card.addEventListener('mouseleave', () => {
+      if (spotlight) spotlight.style.opacity = '0';
+      card.style.transform = '';
+    });
+  });
+
+  /* ── Stagger entrance with IntersectionObserver ── */
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          const card = entry.target as HTMLElement;
+          const idx  = parseInt(card.dataset.index ?? '0', 10);
+          card.style.animationDelay = `${idx * 35}ms`;
+          card.classList.add('card-enter');
+          observer.unobserve(card);
+        }
+      });
+    },
+    { threshold: 0.1, rootMargin: '0px 0px -40px 0px' },
+  );
+
+  cards.forEach((card) => observer.observe(card));
+</script>
 
 <style lang="scss">
-  .features {
-    columns: 5;
-    column-width: 150px;
+  @use '@styles/global.scss' as *;
+
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(148px, 1fr));
+    gap: 0.75rem;
+    padding: 0.5rem 0;
     list-style: none;
-    padding: 0;
-    li {
-      font-size: 1.2rem;
-      line-height: 1.25;
-      margin: 0.5rem 0;
-      display: flex;
-      gap: 0.5rem;
-      :global(svg) {
-        color: var(--primary);
-      }
+    margin: 0;
+  }
+
+  /* ── Base card ── */
+  .feature-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.35rem;
+    padding: 0.9rem 1rem 0.85rem;
+    border-radius: 12px;
+    background: rgba(6, 15, 14, 0.75);
+    border: 1px solid rgba(76, 225, 211, 0.09);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    cursor: default;
+    overflow: hidden;
+    transform-style: preserve-3d;
+    will-change: transform;
+    transition:
+      border-color 0.25s ease,
+      box-shadow   0.25s ease,
+      transform    0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+
+    /* entrance state — hidden until IntersectionObserver fires */
+    opacity: 0;
+    transform: translateY(14px) scale(0.97);
+
+    &:hover {
+      border-color: rgba(var(--accent, 76, 225, 211), 0.35);
+      border-color: color-mix(in srgb, var(--accent) 35%, transparent);
+      box-shadow:
+        0 8px 28px rgba(0, 0, 0, 0.45),
+        0 0 0 1px color-mix(in srgb, var(--accent) 12%, transparent) inset;
     }
+  }
+
+  /* entrance keyframe */
+  @keyframes card-appear {
+    from { opacity: 0; transform: translateY(14px) scale(0.97); }
+    to   { opacity: 1; transform: translateY(0)    scale(1); }
+  }
+
+  .feature-card.card-enter {
+    animation: card-appear 0.45s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+
+  /* ── Spotlight layer ── */
+  .card-spotlight {
+    pointer-events: none;
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: 1;
+  }
+
+  /* ── Top accent line ── */
+  .card-top-line {
+    position: absolute;
+    top: 0;
+    left: 1rem;
+    right: 1rem;
+    height: 1px;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      var(--accent, #4ce1d3) 50%,
+      transparent
+    );
+    opacity: 0;
+    transition: opacity 0.25s ease;
+    z-index: 2;
+  }
+
+  .feature-card:hover .card-top-line {
+    opacity: 0.6;
+  }
+
+  /* ── Emoji icon ── */
+  .card-emoji {
+    font-size: 1.25rem;
+    line-height: 1;
+    position: relative;
+    z-index: 3;
+    filter: drop-shadow(0 0 6px color-mix(in srgb, var(--accent) 50%, transparent));
+  }
+
+  /* ── Check name ── */
+  .card-name {
+    position: relative;
+    z-index: 3;
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: rgba(209, 232, 226, 0.72);
+    letter-spacing: 0.02em;
+    line-height: 1.3;
+    transition: color 0.2s ease;
+    text-decoration: none;
+
+    .feature-card:hover & {
+      color: var(--accent, #4ce1d3);
+    }
+  }
+
+  a.card-name:hover {
+    text-decoration: none;
+  }
+
+  /* ── Corner accent dot ── */
+  .card-dot {
+    position: absolute;
+    bottom: 0.6rem;
+    right: 0.7rem;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--accent, #4ce1d3);
+    opacity: 0.25;
+    transition: opacity 0.25s ease, box-shadow 0.25s ease;
+    z-index: 3;
+  }
+
+  .feature-card:hover .card-dot {
+    opacity: 0.7;
+    box-shadow: 0 0 6px var(--accent, #4ce1d3);
+  }
+
+  /* ── "More" card variant ── */
+  .feature-card--more {
+    border-style: dashed;
+    border-color: rgba(76, 225, 211, 0.15);
+    background: rgba(76, 225, 211, 0.025);
+
+    .card-name {
+      color: rgba(76, 225, 211, 0.55);
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      font-size: 0.72rem;
+    }
+
+    &:hover {
+      background: rgba(76, 225, 211, 0.06);
+      .card-name { color: #4ce1d3; }
+    }
+  }
+
+  /* ── Responsive ── */
+  @media (max-width: 900px) {
+    .features-grid {
+      grid-template-columns: repeat(auto-fill, minmax(128px, 1fr));
+      gap: 0.6rem;
+    }
+  }
+
+  @media (max-width: 540px) {
+    .features-grid {
+      grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+      gap: 0.5rem;
+    }
+    .card-emoji { font-size: 1.1rem; }
+    .card-name  { font-size: 0.73rem; }
   }
 </style>

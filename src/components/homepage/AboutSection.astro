@@ -1,4 +1,8 @@
 ---
+/**
+ * AboutSection — premium section with GlowingCard-style heading, 
+ * animated section dividers, upgraded Features grid, and ShimmerButton CTAs.
+ */
 import ButtonGroup from '@components/homepage/ButtonGroup.astro';
 import Features from '@components/homepage/Features.astro';
 import SponsorSegment from '@components/homepage/SponsorSegment.astro';
@@ -60,67 +64,405 @@ const links = [
 ];
 ---
 
-<div class="about-section">
-  <div class="features-wrap">
-    <h4>30+ Checks, One Powerful Tool</h4>
-    <p class="what">
-      Analyze every aspect of your website with <span>{supportedChecks.length} supported checks</span> — from security and performance to DNS and history.
+<section class="about-section" id="features" aria-labelledby="features-heading">
+
+  {/* ── Section header ── */}
+  <div class="section-header" id="section-header-observe">
+    {/* Ambient glow behind the heading */}
+    <div class="header-glow" aria-hidden="true"></div>
+
+    {/* Eyebrow tag */}
+    <div class="eyebrow-tag">
+      <span class="eyebrow-dot" aria-hidden="true"></span>
+      <span>Capabilities</span>
+    </div>
+
+    <h2 id="features-heading" class="section-title">
+      <span class="title-line">30+ Checks,</span>
+      <span class="title-line accent-line">One Powerful Tool</span>
+    </h2>
+
+    <p class="section-sub">
+      Analyze every aspect of your website with{' '}
+      <strong class="count-badge">{supportedChecks.length} supported checks</strong>{' '}
+      — from security and performance to DNS, history and more.
     </p>
+
+    {/* Decorative scan line */}
+    <div class="scan-line" aria-hidden="true"></div>
   </div>
-  <div class="divider"></div>
-  <Features supportedChecks={supportedChecks} />
-  <ButtonGroup links={links} />
-  <div class="divider"></div>
+
+  {/* ── Divider ── */}
+  <div class="divider" role="separator" aria-hidden="true">
+    <span class="divider-dot"></span>
+    <span class="divider-dot"></span>
+    <span class="divider-dot"></span>
+  </div>
+
+  {/* ── Features grid (GlowingCard layout) ── */}
+  <div class="features-wrap">
+    <Features supportedChecks={supportedChecks} />
+  </div>
+
+  {/* ── CTA buttons ── */}
+  <div class="cta-row">
+    {links.map((link) => (
+      <a
+        href={link.url}
+        class={`cta-btn ${link.isCta ? 'cta-btn--primary' : 'cta-btn--ghost'}`}
+        target={link.url.startsWith('http') ? '_blank' : undefined}
+        rel={link.url.startsWith('http') ? 'noreferrer' : undefined}
+      >
+        {/* shimmer streak */}
+        <span class="btn-shimmer" aria-hidden="true"></span>
+        <span class="btn-label">{link.title}</span>
+      </a>
+    ))}
+  </div>
+
+  {/* ── Divider ── */}
+  <div class="divider" role="separator" aria-hidden="true">
+    <span class="divider-dot"></span>
+    <span class="divider-dot"></span>
+    <span class="divider-dot"></span>
+  </div>
+
   <SponsorSegment />
-</div>
+</section>
+
+<script>
+  /* Stagger-entrance for the section header */
+  const header = document.getElementById('section-header-observe');
+  if (header) {
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          header.classList.add('header-visible');
+          io.unobserve(header);
+        }
+      },
+      { threshold: 0.2 },
+    );
+    io.observe(header);
+  }
+</script>
 
 <style lang="scss">
   @use '@styles/global.scss' as *;
 
+  /* ── Section shell ── */
   .about-section {
     width: min(1200px, 92vw);
     margin: 0 auto;
-    padding: 4rem 0;
+    padding: 5rem 0 4rem;
     position: relative;
     z-index: 10;
   }
-  
-  .features-wrap {
-    width: 100%;
-    max-width: 650px;
+
+  /* ── Section header ── */
+  .section-header {
+    position: relative;
+    text-align: center;
+    max-width: 640px;
     margin: 0 auto;
-    text-align: center;
-  }
-  
-  h4 {
-    text-transform: none;
-    font-size: 2rem;
-    text-align: center;
-    background: linear-gradient(135deg, var(--primary), var(--info-light));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    font-weight: 700;
-    margin-bottom: 1rem;
-    letter-spacing: -0.03em;
-  }
-  
-  .what {
-    text-align: center;
-    font-size: 1.125rem;
-    line-height: 1.7;
-    color: var(--text-secondary);
-    
-    span {
-      color: var(--primary);
-      font-weight: 600;
+    padding: 2.5rem 2rem 2rem;
+    border-radius: 1.25rem;
+    border: 1px solid rgba(76, 225, 211, 0.08);
+    background: rgba(6, 15, 14, 0.55);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    box-shadow:
+      0 8px 40px rgba(0, 0, 0, 0.3),
+      inset 0 1px 0 rgba(76, 225, 211, 0.04);
+    overflow: hidden;
+
+    /* entrance: start hidden */
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.65s cubic-bezier(0.16, 1, 0.3, 1),
+                transform 0.65s cubic-bezier(0.16, 1, 0.3, 1);
+
+    &.header-visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* top accent sweep line */
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 2rem; right: 2rem;
+      height: 1px;
+      background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(76, 225, 211, 0.5) 35%,
+        rgba(255, 203, 154, 0.3) 65%,
+        transparent
+      );
+      background-size: 200% auto;
+      animation: header-top-sweep 5s linear infinite;
+    }
+
+    @keyframes header-top-sweep {
+      0%   { background-position: 120% 0; }
+      100% { background-position: -120% 0; }
     }
   }
-  
-  .divider {
-    width: 3rem;
+
+  /* ── Ambient glow behind the header ── */
+  .header-glow {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 480px; height: 220px;
+    background: radial-gradient(ellipse, rgba(76, 225, 211, 0.08) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ── Eyebrow tag ── */
+  .eyebrow-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    margin-bottom: 1.25rem;
+    padding: 0.3rem 0.8rem;
+    border-radius: 999px;
+    border: 1px solid rgba(76, 225, 211, 0.25);
+    background: rgba(76, 225, 211, 0.06);
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #4ce1d3;
+    position: relative;
+    z-index: 1;
+  }
+
+  .eyebrow-dot {
+    width: 5px; height: 5px;
+    border-radius: 50%;
+    background: #4ce1d3;
+    box-shadow: 0 0 6px rgba(76, 225, 211, 0.8);
+    animation: eyebrow-pulse 2s ease-in-out infinite;
+  }
+
+  @keyframes eyebrow-pulse {
+    0%, 100% { transform: scale(1); opacity: 1; }
+    50%       { transform: scale(0.65); opacity: 0.5; }
+  }
+
+  /* ── Section title ── */
+  .section-title {
+    margin: 0 0 1rem;
+    position: relative;
+    z-index: 1;
+
+    .title-line {
+      display: block;
+      font-size: clamp(1.65rem, 4vw, 2.4rem);
+      font-weight: 800;
+      line-height: 1.15;
+      letter-spacing: -0.03em;
+      color: var(--text-color);
+    }
+
+    .accent-line {
+      background: linear-gradient(
+        90deg,
+        #4ce1d3 0%,
+        #8ef5ec 30%,
+        #ffffff 50%,
+        #8ef5ec 70%,
+        #4ce1d3 100%
+      );
+      background-size: 250% auto;
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: section-title-shimmer 4s linear infinite;
+    }
+
+    @keyframes section-title-shimmer {
+      0%   { background-position: 0%   center; }
+      100% { background-position: 250% center; }
+    }
+  }
+
+  /* ── Sub-text ── */
+  .section-sub {
+    font-size: 1rem;
+    line-height: 1.7;
+    color: rgba(209, 232, 226, 0.58);
+    margin: 0;
+    position: relative;
+    z-index: 1;
+  }
+
+  .count-badge {
+    color: #4ce1d3;
+    font-weight: 700;
+    background: rgba(76, 225, 211, 0.08);
+    padding: 0.1rem 0.45rem;
+    border-radius: 6px;
+    border: 1px solid rgba(76, 225, 211, 0.18);
+    font-size: inherit;
+  }
+
+  /* ── Scan line ── */
+  .scan-line {
+    position: absolute;
+    bottom: 0;
+    left: 0; right: 0;
     height: 2px;
-    margin: 3rem auto;
-    background: linear-gradient(90deg, transparent, var(--border), transparent);
+    background: linear-gradient(90deg,
+      transparent 0%,
+      rgba(76, 225, 211, 0.0) 20%,
+      rgba(76, 225, 211, 0.5) 50%,
+      rgba(76, 225, 211, 0.0) 80%,
+      transparent 100%
+    );
+    background-size: 200% 100%;
+    animation: scan-sweep 3.5s linear infinite;
+  }
+
+  @keyframes scan-sweep {
+    0%   { background-position: -200% 0; }
+    100% { background-position:  200% 0; }
+  }
+
+  /* ── Divider ── */
+  .divider {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    margin: 2.5rem auto;
+    position: relative;
+
+    &::before, &::after {
+      content: '';
+      flex: 1;
+      max-width: 120px;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(76, 225, 211, 0.18));
+    }
+    &::after {
+      background: linear-gradient(90deg, rgba(76, 225, 211, 0.18), transparent);
+    }
+  }
+
+  .divider-dot {
+    width: 4px; height: 4px;
+    border-radius: 50%;
+    background: rgba(76, 225, 211, 0.35);
+  }
+
+  /* ── Features grid wrapper ── */
+  .features-wrap {
+    width: 100%;
+  }
+
+  /* ── CTA row ── */
+  .cta-row {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin: 2.5rem auto;
+  }
+
+  .cta-btn {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.75rem;
+    border-radius: 10px;
+    font-size: 0.875rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-decoration: none;
+    overflow: hidden;
+    transition: filter 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+
+    &:hover {
+      text-decoration: none;
+      transform: translateY(-2px);
+    }
+
+    /* shimmer sweep on hover */
+    .btn-shimmer {
+      position: absolute;
+      top: 0; bottom: 0; left: 0;
+      width: 40%;
+      background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255, 255, 255, 0.18) 50%,
+        transparent
+      );
+      transform: translateX(-150%) skewX(-18deg);
+      transition: none;
+      pointer-events: none;
+    }
+
+    &:hover .btn-shimmer {
+      animation: btn-sweep 0.6s ease forwards;
+    }
+
+    @keyframes btn-sweep {
+      0%   { transform: translateX(-150%) skewX(-18deg); }
+      100% { transform: translateX( 350%) skewX(-18deg); }
+    }
+
+    .btn-label {
+      position: relative;
+      z-index: 1;
+    }
+  }
+
+  /* Primary CTA */
+  .cta-btn--primary {
+    background: linear-gradient(135deg, #0b3d3a, #116466, #1a8f87);
+    color: #d1e8e2;
+    box-shadow:
+      0 0 0 1px rgba(76, 225, 211, 0.35),
+      0 4px 20px rgba(76, 225, 211, 0.2);
+
+    &:hover {
+      filter: brightness(1.12);
+      box-shadow:
+        0 0 0 1px rgba(76, 225, 211, 0.6),
+        0 6px 28px rgba(76, 225, 211, 0.35);
+    }
+  }
+
+  /* Ghost CTAs */
+  .cta-btn--ghost {
+    background: rgba(76, 225, 211, 0.05);
+    color: rgba(209, 232, 226, 0.75);
+    border: 1px solid rgba(76, 225, 211, 0.16);
+
+    &:hover {
+      background: rgba(76, 225, 211, 0.1);
+      color: #4ce1d3;
+      border-color: rgba(76, 225, 211, 0.35);
+    }
+  }
+
+  /* ── Responsive ── */
+  @media (max-width: 768px) {
+    .about-section { padding: 3.5rem 0 3rem; }
+    .cta-row { gap: 0.75rem; }
+    .cta-btn { padding: 0.7rem 1.4rem; font-size: 0.82rem; }
+    .section-header { padding: 2rem 1.25rem 1.75rem; }
+  }
+
+  @media (max-width: 480px) {
+    .cta-row { flex-direction: column; align-items: stretch; }
+    .cta-btn { text-align: center; }
   }
 </style>

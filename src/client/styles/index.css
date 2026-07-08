@@ -85,3 +85,160 @@ a {
 a:hover {
   color: #8eedd8;
 }
+
+/* ═══════════════════════════════════════════════════════════════
+   Premium UI — Global keyframes & utility classes
+   Added alongside the 10-component upgrade
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ── Shared easing custom property ── */
+:root {
+  --ease-spring: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-out-expo: cubic-bezier(0.19, 1, 0.22, 1);
+  --ease-in-out-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* Glow token re-used across components */
+  --glow-teal-sm:  0 0 12px rgba(76, 225, 211, 0.4);
+  --glow-teal-md:  0 0 24px rgba(76, 225, 211, 0.35), 0 0 6px rgba(76, 225, 211, 0.7);
+  --glow-teal-lg:  0 0 48px rgba(76, 225, 211, 0.3), 0 0 12px rgba(76, 225, 211, 0.5);
+  --glow-amber-sm: 0 0 12px rgba(255, 203, 154, 0.4);
+}
+
+/* ── Shimmer text utility (can be applied with class="shimmer-text") ── */
+@keyframes shimmer-pan {
+  0%   { background-position: -200% center; }
+  100% { background-position:  200% center; }
+}
+
+.shimmer-text {
+  background: linear-gradient(
+    90deg,
+    #d1e8e2 0%,
+    #d1e8e2 30%,
+    #ffffff 50%,
+    #d1e8e2 70%,
+    #d1e8e2 100%
+  );
+  background-size: 200% auto;
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: shimmer-pan 3s linear infinite;
+}
+
+/* ── Border beam shimmer utility ── */
+@keyframes border-beam-travel {
+  0%   { offset-distance:   0%; opacity: 0; }
+  4%   { opacity: 1; }
+  96%  { opacity: 1; }
+  100% { offset-distance: 100%; opacity: 0; }
+}
+
+/* ── Glow pulse utility ── */
+@keyframes glow-pulse-teal {
+  0%, 100% {
+    box-shadow: 0 0 0 1px rgba(76, 225, 211, 0.2), 0 4px 20px rgba(76, 225, 211, 0.12);
+  }
+  50% {
+    box-shadow: 0 0 0 1px rgba(76, 225, 211, 0.5), 0 6px 32px rgba(76, 225, 211, 0.28);
+  }
+}
+
+.glow-pulse { animation: glow-pulse-teal 3s ease-in-out infinite; }
+
+/* ── Floating element animation ── */
+@keyframes float-y {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-8px); }
+}
+
+.float { animation: float-y 4s ease-in-out infinite; }
+.float-slow { animation: float-y 6s ease-in-out infinite; }
+
+/* ── Fade-up entrance ── */
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.fade-up {
+  animation: fade-up 0.6s var(--ease-spring) forwards;
+  opacity: 0;
+}
+
+/* ── Stagger delay helpers ── */
+.delay-1 { animation-delay: 0.1s; }
+.delay-2 { animation-delay: 0.2s; }
+.delay-3 { animation-delay: 0.3s; }
+.delay-4 { animation-delay: 0.4s; }
+.delay-5 { animation-delay: 0.5s; }
+
+/* ── Scan line sweep ── */
+@keyframes scan-sweep {
+  0%   { background-position: -200% 0; }
+  100% { background-position:  200% 0; }
+}
+
+/* ── Sparkle twinkle (for CSS-only fallback) ── */
+@keyframes sparkle-twinkle {
+  0%, 100% { opacity: 0;   transform: scale(0) rotate(0deg); }
+  30%       { opacity: 1;   transform: scale(1) rotate(72deg); }
+  70%       { opacity: 0.6; transform: scale(0.8) rotate(144deg); }
+}
+
+/* ── Number counter glow ── */
+@keyframes counter-glow {
+  0%   { text-shadow: 0 0 24px rgba(76, 225, 211, 0.9), 0 0 48px rgba(76, 225, 211, 0.4); }
+  60%  { text-shadow: 0 0 12px rgba(76, 225, 211, 0.5); }
+  100% { text-shadow: none; }
+}
+
+/* ── Card entrance (mirrors GlowingCard) ── */
+@keyframes card-appear {
+  from { opacity: 0; transform: translateY(16px) scale(0.97); }
+  to   { opacity: 1; transform: translateY(0)    scale(1); }
+}
+
+/* ── Magnetic button press ring ── */
+@keyframes press-ring {
+  0%   { box-shadow: 0 0 0 0 rgba(76, 225, 211, 0.5); }
+  100% { box-shadow: 0 0 0 10px rgba(76, 225, 211, 0); }
+}
+
+/* ── Film grain shimmer ── */
+@keyframes grain-shift {
+  0%  { transform: translate(0,   0); }
+  10% { transform: translate(-2%, -3%); }
+  20% { transform: translate( 3%,  1%); }
+  30% { transform: translate(-1%,  4%); }
+  40% { transform: translate( 4%, -2%); }
+  50% { transform: translate(-3%,  3%); }
+  60% { transform: translate( 2%, -4%); }
+  70% { transform: translate(-4%,  2%); }
+  80% { transform: translate( 1%, -1%); }
+  90% { transform: translate(-2%,  4%); }
+  100%{ transform: translate(0,   0); }
+}
+
+/* ── Improved focus ring for accessibility ── */
+:focus-visible {
+  outline: 2px solid rgba(76, 225, 211, 0.7);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* ── Smooth image rendering for logos/icons ── */
+img {
+  image-rendering: -webkit-optimize-contrast;
+}
+
+/* ── Reduced motion: respect user preference ── */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
