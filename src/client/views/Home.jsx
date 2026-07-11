@@ -541,7 +541,7 @@ const Home = () => {
             {/* ── Eyebrow badge ── */}
             <EyebrowTag variants={fadeUp}>
               <span className="dot" />
-              Website Intelligence Platform
+              Scan Your Website
             </EyebrowTag>
 
             {/* ── Hero heading with animated shimmer on accent line ── */}
