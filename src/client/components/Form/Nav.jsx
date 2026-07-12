@@ -49,7 +49,7 @@ const progressPulse = keyframes`
 const Header = styled.header`
   margin: 0 auto;
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
@@ -68,6 +68,11 @@ const Header = styled.header`
     0 4px 32px rgba(0, 0, 0, 0.5),
     inset 0 1px 0 rgba(76, 225, 211, 0.06);
   overflow: hidden;
+
+  @media (max-width: 600px) {
+    padding: 0.6rem 0.85rem;
+    gap: 0.5rem;
+  }
 `;
 
 /* Horizontal scan-line that sweeps across the whole nav */
@@ -96,6 +101,7 @@ const Brand = styled(motion.a)`
   color: inherit;
   position: relative;
   z-index: 2;
+  flex-shrink: 0;
 `;
 
 const BrandMark = styled(motion.img)`
@@ -121,6 +127,9 @@ const BrandText = styled.div`
     letter-spacing: 0.1em;
     text-transform: uppercase;
     color: rgba(76, 225, 211, 0.55);
+    @media (max-width: 600px) {
+      display: none;
+    }
   }
 `;
 
@@ -129,6 +138,10 @@ const Divider = styled.div`
   height: 1.75rem;
   background: rgba(76, 225, 211, 0.12);
   flex-shrink: 0;
+
+  @media (max-width: 600px) {
+    display: none;
+  }
 `;
 
 const ChildWrap = styled.div`
@@ -138,6 +151,10 @@ const ChildWrap = styled.div`
   gap: 0.75rem;
   position: relative;
   z-index: 2;
+
+  @media (max-width: 600px) {
+    justify-content: flex-end;
+  }
 `;
 
 /* ── Favicon wrapper with animated sonar rings ── */
@@ -164,6 +181,15 @@ const DomainText = styled(motion.span)`
   color: #d1e8e2;
   letter-spacing: 0.03em;
   animation: ${textReveal} 0.5s cubic-bezier(0.16,1,0.3,1) both;
+  
+  max-width: 180px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+
+  @media (max-width: 600px) {
+    max-width: 110px;
+  }
 `;
 
 /* ── SCANNING badge ── */
@@ -221,6 +247,10 @@ const DotTrail = styled.div`
   align-items: center;
   gap: 3px;
   margin-left: 0.25rem;
+
+  @media (max-width: 600px) {
+    display: none;
+  }
 `;
 
 const TrailDot = styled.span`

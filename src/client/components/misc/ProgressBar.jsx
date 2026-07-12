@@ -67,6 +67,13 @@ const PanelHead = styled.div`
   padding: 0.85rem 1.5rem;
   cursor: pointer;
   user-select: none;
+
+  @media (max-width: 600px) {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.75rem;
+    padding: 0.85rem 1rem;
+  }
 `;
 
 const BarTrack = styled.div`
@@ -76,6 +83,10 @@ const BarTrack = styled.div`
   border-radius: 999px;
   overflow: hidden;
   display: flex;
+
+  @media (max-width: 600px) {
+    width: 100%;
+  }
 `;
 
 const BarSeg = styled(motion.div)`
@@ -91,6 +102,11 @@ const HeadRight = styled.div`
   align-items: center;
   gap: 0.75rem;
   flex-shrink: 0;
+
+  @media (max-width: 600px) {
+    justify-content: space-between;
+    width: 100%;
+  }
 `;
 
 const HeadLabel = styled.span`

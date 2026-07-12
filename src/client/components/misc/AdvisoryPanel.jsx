@@ -118,6 +118,13 @@ const PanelHeader = styled.div`
   padding: 0.9rem 1.4rem;
   border-bottom: 1px solid rgba(76, 225, 211, 0.08);
   background: rgba(76, 225, 211, 0.03);
+
+  @media (max-width: 600px) {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.65rem;
+    padding: 0.9rem 1rem;
+  }
 `;
 
 const ShieldIcon = () => (
@@ -139,6 +146,11 @@ const SeverityChips = styled.div`
   gap: 0.5rem;
   margin-left: auto;
   flex-wrap: wrap;
+
+  @media (max-width: 600px) {
+    margin-left: 0;
+    width: 100%;
+  }
 `;
 
 const Chip = styled.span`

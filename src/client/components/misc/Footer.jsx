@@ -67,7 +67,7 @@ const FooterLinks = styled.div`
 
 const FooterText = styled.span`
   font-size: clamp(0.825rem, 2vw, 0.9rem);
-  color: ${colors.textSecondary};
+  color: ${colors.textColorSecondary};
   font-weight: 400;
   line-height: 1.5;
   display: inline-flex;
@@ -78,7 +78,7 @@ const FooterText = styled.span`
 `;
 
 const StyledLink = styled.a`
-  color: ${colors.textSecondary};
+  color: ${colors.textColorSecondary};
   font-size: clamp(0.825rem, 2vw, 0.975rem);
   font-weight: 500;
   text-decoration: none;
@@ -90,7 +90,7 @@ const StyledLink = styled.a`
 `;
 
 const StyledRouterLink = styled(Link)`
-  color: ${colors.textSecondary};
+  color: ${colors.textColorSecondary};
   font-size: clamp(0.825rem, 2vw, 0.975rem);
   font-weight: 500;
   text-decoration: none;

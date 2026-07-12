@@ -402,6 +402,8 @@ const TreeNode = styled.div`
   border-left: 1px dashed rgba(76, 225, 211, 0.08);
   padding-left: 0.5rem;
   position: relative;
+  word-break: break-all;
+  overflow-wrap: anywhere;
 `;
 
 const KeySpan = styled.span`
@@ -414,6 +416,9 @@ const KeySpan = styled.span`
 `;
 
 const ValueSpan = styled.span`
+  white-space: pre-wrap;
+  word-break: break-word;
+  overflow-wrap: anywhere;
   color: ${props => {
     if (props.type === 'string') return '#ffe0b3';
     if (props.type === 'number') return '#4ce1d3';
