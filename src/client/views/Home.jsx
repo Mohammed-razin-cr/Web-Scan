@@ -2,10 +2,10 @@ import styled from '@emotion/styled';
 import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
+import { Activity, RadioTower, ScanSearch, ShieldCheck } from 'lucide-react';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-import colors from 'client/styles/colors';
 import { determineAddressType, normalizeAddress } from 'client/utils/address-type-checker';
 import Globe3D from 'client/components/misc/Globe3D';
 import NavigationDrawer from 'client/components/misc/NavigationDrawer';
@@ -26,10 +26,46 @@ const suggestions = ['stripe.com', 'cloudflare.com', 'github.com', 'vercel.com']
 
 /* ─── Stats data ─── */
 const STATS = [
-  { value: 35,  suffix: '+',  label: 'Checks',    decimals: 0, icon: '🔍' },
-  { value: 100, suffix: '%',  label: 'Free',       decimals: 0, icon: '✦'  },
-  { value: 20,  suffix: 'k+', label: 'Scans run',  decimals: 0, icon: '⚡'  },
-  { value: 99,  suffix: '%',  label: 'Uptime',     decimals: 0, icon: '💚'  },
+  {
+    value: 35,
+    suffix: '+',
+    label: 'Checks',
+    decimals: 0,
+    icon: ScanSearch,
+    color: '#4ce1d3',
+    motion: { rotate: [-6, 5, -6], scale: [1, 1.08, 1] },
+    duration: 3.4,
+  },
+  {
+    value: 100,
+    suffix: '%',
+    label: 'Free',
+    decimals: 0,
+    icon: ShieldCheck,
+    color: '#d1e8e2',
+    motion: { y: [0, -3, 0], scale: [1, 1.06, 1] },
+    duration: 3,
+  },
+  {
+    value: 20,
+    suffix: 'k+',
+    label: 'Scans run',
+    decimals: 0,
+    icon: Activity,
+    color: '#ffcb9a',
+    motion: { scale: [1, 1.16, 1], opacity: [0.7, 1, 0.7] },
+    duration: 2.2,
+  },
+  {
+    value: 99,
+    suffix: '%',
+    label: 'Uptime',
+    decimals: 0,
+    icon: RadioTower,
+    color: '#d9b08c',
+    motion: { y: [0, -2, 0], rotate: [-3, 3, -3] },
+    duration: 3.6,
+  },
 ];
 
 /* ─── Layout shells ─── */
@@ -366,12 +402,6 @@ const StatItem = styled.div`
     background: rgba(76,225,211,0.12);
   }
 
-  .icon {
-    font-size: 0.9rem;
-    line-height: 1;
-    margin-bottom: 0.15rem;
-    opacity: 0.7;
-  }
   .num {
     font-size: clamp(1.4rem, 3vw, 2.1rem);
     font-weight: 900;
@@ -385,6 +415,35 @@ const StatItem = styled.div`
     letter-spacing: 0.12em;
     text-transform: uppercase;
     color: rgba(209,232,226,0.4);
+  }
+`;
+
+const StatIcon = styled(motion.span)`
+  position: relative;
+  display: inline-grid;
+  place-items: center;
+  width: 1.65rem;
+  height: 1.65rem;
+  margin-bottom: 0.15rem;
+  color: var(--stat-icon-color, #4ce1d3);
+  transform-origin: center;
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0.3rem;
+    border-radius: 50%;
+    background: currentColor;
+    opacity: 0.22;
+    filter: blur(6px);
+  }
+
+  svg {
+    position: relative;
+    width: 1.1rem;
+    height: 1.1rem;
+    stroke-width: 1.8;
+    filter: drop-shadow(0 0 6px currentColor);
   }
 `;
 
@@ -569,7 +628,7 @@ const Home = () => {
 
             {/* ── Subtitle ── */}
             <Subtitle variants={fadeUp}>
-              Deep-scan any domain — SSL, DNS, headers, ports, threats, tech stack and more.
+              Deep-scan any domain: SSL, DNS, headers, ports, threats, tech stack and more.
               <br />Professional intelligence at a glance.
             </Subtitle>
 
@@ -656,23 +715,39 @@ const Home = () => {
 
             {/* ── Stats strip — AnimatedCounter with IntersectionObserver ── */}
             <StatsRow variants={fadeUp}>
-              {STATS.map((s) => (
-                <StatItem key={s.label}>
-                  <span className="icon" aria-hidden="true">{s.icon}</span>
-                  <span className="num">
-                    <AnimatedCounter
-                      value={s.value}
-                      suffix={s.suffix}
-                      decimals={s.decimals}
-                      duration={1600}
-                      delay={300}
-                      glowOnCount
-                      easing="expo"
-                    />
-                  </span>
-                  <span className="label">{s.label}</span>
-                </StatItem>
-              ))}
+              {STATS.map((s, index) => {
+                const Icon = s.icon;
+                return (
+                  <StatItem key={s.label}>
+                    <StatIcon
+                      aria-hidden="true"
+                      style={{ '--stat-icon-color': s.color }}
+                      animate={s.motion}
+                      transition={{
+                        duration: s.duration,
+                        delay: index * 0.24,
+                        repeat: Infinity,
+                        ease: 'easeInOut',
+                      }}
+                      whileHover={{ scale: 1.2, rotate: 0 }}
+                    >
+                      <Icon />
+                    </StatIcon>
+                    <span className="num">
+                      <AnimatedCounter
+                        value={s.value}
+                        suffix={s.suffix}
+                        decimals={s.decimals}
+                        duration={1600}
+                        delay={300}
+                        glowOnCount
+                        easing="expo"
+                      />
+                    </span>
+                    <span className="label">{s.label}</span>
+                  </StatItem>
+                );
+              })}
             </StatsRow>
 
           </Copy>

@@ -77,6 +77,9 @@ if (!isBossServer && isBossServer !== true) {
 export default defineConfig({
   output,
   base,
+  devToolbar: {
+    enabled: false,
+  },
   integrations,
   site,
   adapter,
