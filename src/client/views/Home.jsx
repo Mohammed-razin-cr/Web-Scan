@@ -85,7 +85,7 @@ const Header = styled.header`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 1.25rem 2.75rem;
+  padding: 1.1rem 2.75rem;
   @media (max-width: 1024px) { padding: 1rem 1.5rem; }
   @media (max-width: 640px)  { padding: 0.9rem 1rem; }
 `;
@@ -96,14 +96,23 @@ const Brand = styled(motion.a)`
   gap: 0.75rem;
   color: white;
   font-weight: 900;
-  font-size: clamp(1rem, 2.5vw, 1.35rem);
-  letter-spacing: 0.08em;
+  font-size: 1.3rem;
+  letter-spacing: 0;
   text-transform: uppercase;
   text-decoration: none;
   img {
-    height: clamp(1.8rem, 4vw, 2.3rem);
+    height: 2.3rem;
     width: auto;
     filter: drop-shadow(0 2px 12px rgba(76,225,211,0.4));
+  }
+  @media (max-width: 768px) {
+    font-size: 1.1rem;
+    img { height: 2rem; }
+  }
+  @media (max-width: 480px) {
+    font-size: 1rem;
+    gap: 0.55rem;
+    img { height: 1.8rem; }
   }
 `;
 
@@ -138,15 +147,22 @@ const MenuBtn = styled(motion.button)`
   border-radius: 8px;
   cursor: pointer;
   svg { width: 1.2rem; height: 1.2rem; stroke: currentColor; }
+  @media (max-width: 480px) { width: 2.5rem; height: 2.5rem; }
 `;
 
 /* ─── Hero ─── */
 const Hero = styled.section`
   min-height: calc(100vh - 5.5rem);
+  min-height: calc(100svh - 5.5rem);
   position: relative;
   display: grid;
   grid-template-columns: 1fr;
   overflow: hidden;
+
+  @media (max-width: 640px) {
+    min-height: calc(100vh - 4.25rem);
+    min-height: calc(100svh - 4.25rem);
+  }
 `;
 
 const Stage = styled.div`
@@ -154,11 +170,26 @@ const Stage = styled.div`
   z-index: 3;
   min-width: 0;
   min-height: calc(100vh - 5.5rem);
-  padding: clamp(2rem, 8vw, 5rem) clamp(1rem, 4vw, 5.5rem);
-  max-width: 52%;
-  padding-bottom: 4rem;
-  @media (max-width: 1024px) { max-width: 100%; padding-top: 3rem; }
-  @media (max-width: 640px)  { padding: 2.5rem 1.25rem; }
+  min-height: calc(100svh - 5.5rem);
+  max-width: 56%;
+  padding: 2.5rem clamp(2rem, 4vw, 5.5rem) 3rem;
+
+  @media (max-width: 1280px) {
+    max-width: 58%;
+    padding-top: 2rem;
+  }
+  @media (max-width: 1024px) {
+    max-width: 100%;
+    padding: 2rem clamp(1.5rem, 4vw, 3rem) 3rem;
+  }
+  @media (max-width: 640px) {
+    min-height: calc(100vh - 4.25rem);
+    min-height: calc(100svh - 4.25rem);
+    padding: 1.25rem 1rem 2.5rem;
+  }
+  @media (min-width: 1025px) and (max-height: 800px) {
+    padding-top: 1.5rem;
+  }
 `;
 
 /* Corner-bracket frame decoration */
@@ -166,8 +197,8 @@ const Frame = styled.div`
   position: absolute;
   left: clamp(1rem, 5vw, 5.5rem);
   right: clamp(1rem, 5vw, 5.5rem);
-  top: clamp(2.5rem, 8vw, 5rem);
-  bottom: 6rem;
+  top: 2.5rem;
+  bottom: 4rem;
   border: 1px solid rgba(76,225,211,0.14);
   opacity: 0.7;
   pointer-events: none;
@@ -185,18 +216,21 @@ const Copy = styled(motion.div)`
   position: relative;
   z-index: 3;
   width: 100%;
-  max-width: 48rem;
-  margin-top: clamp(2rem, 10vh, 7rem);
+  max-width: 50rem;
+  margin-top: clamp(1rem, 3vh, 2rem);
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+  @media (max-width: 1024px) { margin-top: 1.25rem; }
+  @media (max-width: 640px) { margin-top: 1rem; }
+  @media (min-width: 1025px) and (max-height: 800px) { margin-top: 0.5rem; }
 `;
 
 const EyebrowTag = styled(motion.div)`
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  margin-bottom: clamp(1.5rem, 4vw, 2.5rem);
+  margin-bottom: 1.5rem;
   padding: 0.35rem 0.85rem;
   border-radius: 999px;
   border: 1px solid rgba(76,225,211,0.28);
@@ -242,17 +276,22 @@ const EyebrowTag = styled(motion.div)`
     0%, 100% { opacity: 1; transform: scale(1); box-shadow: 0 0 6px rgba(76,225,211,0.8); }
     50%       { opacity: 0.6; transform: scale(0.7); box-shadow: 0 0 3px rgba(76,225,211,0.4); }
   }
+  @media (max-width: 640px) {
+    margin-bottom: 1rem;
+    padding: 0.32rem 0.7rem;
+    font-size: 0.66rem;
+  }
 `;
 
 const TitleBlock = styled.div`
-  margin: 0 0 clamp(1.5rem, 4vw, 2.5rem);
+  margin: 0 0 1.75rem;
   h1 {
     margin: 0;
     color: white;
-    font-size: clamp(2.2rem, 7vw, 5.5rem);
-    line-height: 1.08;
+    font-size: 4.5rem;
+    line-height: 1.04;
     font-weight: 900;
-    letter-spacing: clamp(0.02em, 1vw, 0.05em);
+    letter-spacing: 0;
   }
   .accent {
     display: block;
@@ -267,15 +306,28 @@ const TitleBlock = styled.div`
     0%   { background-position: 0%   center; }
     100% { background-position: 250% center; }
   }
+  @media (max-width: 1280px) { h1 { font-size: 4rem; } }
+  @media (max-width: 1024px) { h1 { font-size: 3.75rem; } }
+  @media (max-width: 768px) { h1 { font-size: 3rem; } }
+  @media (max-width: 640px) {
+    margin-bottom: 1.25rem;
+    h1 { font-size: 2.35rem; line-height: 1.06; }
+  }
+  @media (max-width: 360px) { h1 { font-size: 2.1rem; } }
 `;
 
 const Subtitle = styled(motion.p)`
-  margin: 0 0 clamp(1.5rem, 4vw, 2.5rem);
+  margin: 0 0 2rem;
   color: rgba(209,232,226,0.65);
-  font-size: clamp(0.95rem, 2vw, 1.1rem);
+  font-size: 1.05rem;
   line-height: 1.7;
   max-width: 38rem;
   font-weight: 400;
+  @media (max-width: 640px) {
+    margin-bottom: 1.25rem;
+    font-size: 0.95rem;
+    line-height: 1.55;
+  }
 `;
 
 /* ─── Scan form ─── */
@@ -297,6 +349,10 @@ const FormCard = styled.div`
     0 12px 48px rgba(0,0,0,0.42),
     0 0 0 1px rgba(76,225,211,0.05) inset;
   overflow: hidden;
+  @media (max-width: 640px) {
+    padding: 0.85rem;
+    border-radius: 12px;
+  }
 `;
 
 const ScanForm = styled.form`
@@ -336,6 +392,16 @@ const Suggestions = styled(motion.div)`
   font-size: 0.78rem;
   font-weight: 500;
   letter-spacing: 0.04em;
+  @media (max-width: 640px) {
+    gap: 0.45rem;
+    font-size: 0.72rem;
+  }
+  @media (max-width: 480px) {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    width: 100%;
+    > span:first-of-type { display: none; }
+  }
 `;
 
 const Chip = styled(motion.button)`
@@ -356,14 +422,21 @@ const Chip = styled(motion.button)`
     border-color: rgba(76,225,211,0.4);
     box-shadow: 0 0 12px rgba(76,225,211,0.15);
   }
+  @media (max-width: 480px) {
+    width: 100%;
+    min-width: 0;
+    padding: 0.35rem 0.45rem;
+    font-size: 0.7rem;
+  }
 `;
 
 /* ─── Stats strip ─── */
 const StatsRow = styled(motion.div)`
   display: flex;
-  gap: clamp(1.5rem, 4vw, 3rem);
-  margin-top: clamp(2rem, 5vw, 3.5rem);
-  padding-top: clamp(1.5rem, 4vw, 2.5rem);
+  gap: 2rem;
+  width: min(100%, 38rem);
+  margin-top: 2rem;
+  padding-top: 1.5rem;
   position: relative;
 
   /* top separator with glow */
@@ -382,7 +455,16 @@ const StatsRow = styled(motion.div)`
     );
   }
 
-  @media (max-width: 480px) { gap: 1.5rem; flex-wrap: wrap; }
+  @media (max-width: 640px) {
+    gap: 1.5rem;
+    margin-top: 1.5rem;
+    padding-top: 1.25rem;
+  }
+  @media (max-width: 480px) {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.25rem 0;
+  }
 `;
 
 const StatItem = styled.div`
@@ -403,7 +485,7 @@ const StatItem = styled.div`
   }
 
   .num {
-    font-size: clamp(1.4rem, 3vw, 2.1rem);
+    font-size: 1.85rem;
     font-weight: 900;
     color: #4ce1d3;
     line-height: 1;
@@ -415,6 +497,26 @@ const StatItem = styled.div`
     letter-spacing: 0.12em;
     text-transform: uppercase;
     color: rgba(209,232,226,0.4);
+  }
+  @media (max-width: 640px) {
+    .num { font-size: 1.55rem; }
+  }
+  @media (max-width: 480px) {
+    min-width: 0;
+    padding: 0 1rem;
+    align-items: flex-start;
+
+    &:not(:last-child)::after { display: none; }
+    &:nth-of-type(odd)::after {
+      content: '';
+      display: block;
+      position: absolute;
+      right: 0;
+      top: 10%;
+      bottom: 10%;
+      width: 1px;
+      background: rgba(76,225,211,0.12);
+    }
   }
 `;
 
@@ -428,22 +530,11 @@ const StatIcon = styled(motion.span)`
   color: var(--stat-icon-color, #4ce1d3);
   transform-origin: center;
 
-  &::before {
-    content: '';
-    position: absolute;
-    inset: 0.3rem;
-    border-radius: 50%;
-    background: currentColor;
-    opacity: 0.22;
-    filter: blur(6px);
-  }
-
   svg {
     position: relative;
     width: 1.1rem;
     height: 1.1rem;
     stroke-width: 1.8;
-    filter: drop-shadow(0 0 6px currentColor);
   }
 `;
 

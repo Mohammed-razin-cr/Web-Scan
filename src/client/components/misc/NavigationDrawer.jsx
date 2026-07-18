@@ -36,6 +36,14 @@ const DrawerContainer = styled.aside`
   transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
   padding: 2.2rem;
   box-sizing: border-box;
+  @media (max-width: 600px) {
+    width: 100vw;
+    padding:
+      max(1.25rem, env(safe-area-inset-top))
+      max(1.25rem, env(safe-area-inset-right))
+      max(1.25rem, env(safe-area-inset-bottom))
+      max(1.25rem, env(safe-area-inset-left));
+  }
 `;
 
 const CloseButton = styled.button`
@@ -82,6 +90,11 @@ const DrawerBrand = styled.div`
     width: auto;
     filter: drop-shadow(0 2px 8px rgba(76, 225, 211, 0.2));
   }
+  @media (max-width: 600px) {
+    margin-top: 1rem;
+    margin-bottom: 2rem;
+    font-size: 1.15rem;
+  }
 `;
 
 const NavList = styled.nav`
@@ -89,6 +102,7 @@ const NavList = styled.nav`
   flex-direction: column;
   gap: 1.4rem;
   flex-grow: 1;
+  @media (max-width: 600px) { gap: 0.75rem; }
 `;
 
 const LinkLabel = styled.div`
@@ -146,6 +160,10 @@ const NavLinkStyled = styled(Link)`
       color: #e2f7f1;
     }
   }
+  @media (max-width: 600px) {
+    gap: 0.9rem;
+    padding: 0.8rem;
+  }
 `;
 
 const ExternalNavLinkStyled = NavLinkStyled.withComponent('a');
@@ -169,6 +187,7 @@ const DrawerFooter = styled.div`
       color: ${colors.primaryLighter};
     }
   }
+  @media (max-width: 600px) { padding-top: 1.25rem; }
 `;
 
 export default function NavigationDrawer({ isOpen, onClose }) {

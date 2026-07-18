@@ -7,7 +7,7 @@ const Wrap = styled.div`
   position: absolute;
   right: 0;
   top: 0;
-  width: 50%;
+  width: 46%;
   height: 100%;
   pointer-events: none;
   z-index: 2;
@@ -16,11 +16,16 @@ const Wrap = styled.div`
   align-items: center;
   justify-content: center;
 
-  @media (max-width: 900px) {
+  @media (max-width: 1100px) {
     width: 100%;
     height: 100%;
-    opacity: 0.18;
+    opacity: 0.14;
     z-index: 0;
+  }
+  @media (max-width: 640px) {
+    align-items: flex-start;
+    padding-top: 7rem;
+    opacity: 0.11;
   }
 `;
 
@@ -29,6 +34,8 @@ const CanvasHost = styled.div`
   aspect-ratio: 1 / 1;
   width: min(92%, calc((100vh - 6rem) * 0.92));
   max-height: calc((100vh - 6rem) * 0.92);
+  @media (max-width: 1100px) { width: min(72%, 40rem); }
+  @media (max-width: 640px) { width: min(125%, 34rem); }
 
   canvas {
     display: block;

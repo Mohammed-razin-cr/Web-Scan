@@ -7,7 +7,7 @@
  *  - Custom blinking caret (caret-color transparent + overlay span)
  *  - Scan-line shimmer across the top
  */
-import { useEffect, useRef, useState, useCallback } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import styled from '@emotion/styled';
 import { keyframes } from '@emotion/react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -40,11 +40,6 @@ const pingAnim = keyframes`
 const globeSpin = keyframes`
   from { transform: rotate(0deg); }
   to   { transform: rotate(360deg); }
-`;
-
-const caretBlink = keyframes`
-  0%, 100% { opacity: 1; }
-  50%       { opacity: 0; }
 `;
 
 /* ── Shell ── */
@@ -80,6 +75,10 @@ const Shell = styled.div`
     animation: ${topSweep} 5s linear infinite;
     opacity: 0.6;
     pointer-events: none;
+  }
+  @media (max-width: 480px) {
+    height: 3.35rem;
+    border-radius: 10px;
   }
 `;
 
@@ -120,6 +119,7 @@ const IconZone = styled.div`
     animation: ${(p) => p.focused ? globeSpin : 'none'} 8s linear infinite;
     filter: ${(p) => p.focused ? 'drop-shadow(0 0 6px rgba(76,225,211,0.7))' : 'none'};
   }
+  @media (max-width: 480px) { width: 2.85rem; }
 `;
 
 const PingRing = styled.span`
@@ -152,6 +152,7 @@ const Input = styled.input`
     background: rgba(76, 225, 211, 0.25);
     color: #fff;
   }
+  @media (max-width: 480px) { padding-right: 0.5rem; }
 `;
 
 /* ── Animated placeholder ── */
@@ -166,6 +167,11 @@ const PhWrap = styled.div`
   pointer-events: none;
   overflow: hidden;
   height: 1.5rem;
+  @media (max-width: 480px) {
+    left: 2.85rem;
+    right: 0.5rem;
+    gap: 0.3rem;
+  }
 `;
 
 const PhLabel = styled.span`
@@ -174,6 +180,7 @@ const PhLabel = styled.span`
   color: rgba(209, 232, 226, 0.35);
   white-space: nowrap;
   flex-shrink: 0;
+  @media (max-width: 480px) { font-size: 0.9rem; }
 `;
 
 const PhText = styled(motion.span)`
@@ -183,6 +190,10 @@ const PhText = styled(motion.span)`
   white-space: nowrap;
   position: absolute;
   left: 3.8rem; /* after "Scan: " */
+  @media (max-width: 480px) {
+    left: 3.1rem;
+    font-size: 0.9rem;
+  }
 `;
 
 export const TypewriterInput = ({
