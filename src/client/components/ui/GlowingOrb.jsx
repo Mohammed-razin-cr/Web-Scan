@@ -4,13 +4,13 @@
  * Use as a background accent inside position:relative containers.
  */
 import styled from '@emotion/styled';
-import { motion } from 'framer-motion';
+import { motion, useReducedMotion } from 'framer-motion';
 
 const Orb = styled(motion.div)`
   position: absolute;
   border-radius: 50%;
   pointer-events: none;
-  will-change: transform;
+  will-change: transform, opacity;
   background: radial-gradient(
     circle at center,
     ${(p) => p.color} 0%,
@@ -35,29 +35,34 @@ export const GlowingOrb = ({
   opacity = 0.45,
   blur = 60,
   animate = true,
-}) => (
-  <Orb
-    color={color}
-    size={size}
-    x={x}
-    y={y}
-    opacity={opacity}
-    blur={blur}
-    aria-hidden="true"
-    {...(animate
-      ? {
-          animate: {
-            scale: [1, 1.08, 1],
-            opacity: [opacity, opacity * 1.3, opacity],
-          },
-          transition: {
-            duration: 5,
-            repeat: Infinity,
-            ease: 'easeInOut',
-          },
-        }
-      : {})}
-  />
-);
+}) => {
+  const reduceMotion = useReducedMotion();
+  const shouldAnimate = animate && !reduceMotion;
+
+  return (
+    <Orb
+      color={color}
+      size={size}
+      x={x}
+      y={y}
+      opacity={opacity}
+      blur={blur}
+      aria-hidden="true"
+      {...(shouldAnimate
+        ? {
+            animate: {
+              scale: [1, 1.08, 1],
+              opacity: [opacity, opacity * 1.3, opacity],
+            },
+            transition: {
+              duration: 5,
+              repeat: Infinity,
+              ease: 'easeInOut',
+            },
+          }
+        : {})}
+    />
+  );
+};
 
 export default GlowingOrb;

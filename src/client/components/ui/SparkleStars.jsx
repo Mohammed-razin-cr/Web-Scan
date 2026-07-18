@@ -3,7 +3,7 @@
  */
 import { useMemo } from 'react';
 import styled from '@emotion/styled';
-import { motion } from 'framer-motion';
+import { motion, useReducedMotion } from 'framer-motion';
 
 const Canvas = styled.div`
   position: absolute;
@@ -15,7 +15,7 @@ const Canvas = styled.div`
 
 const STAR = 'M8 0 L9.8 6.2 L16 8 L9.8 9.8 L8 16 L6.2 9.8 L0 8 L6.2 6.2 Z';
 
-const Star = ({ x, y, size, color, delay, duration, type }) => {
+const Star = ({ x, y, size, color, delay, duration, type, reduceMotion }) => {
   const anim = {
     hidden: { opacity: 0, scale: 0 },
     show: {
@@ -33,8 +33,8 @@ const Star = ({ x, y, size, color, delay, duration, type }) => {
       fill="none"
       aria-hidden="true"
       variants={anim}
-      initial="hidden"
-      animate="show"
+      initial={reduceMotion ? false : 'hidden'}
+      animate={reduceMotion ? { opacity: 0.45, scale: 1 } : 'show'}
     >
       {type === 'cross' ? (
         <>
@@ -50,6 +50,7 @@ const Star = ({ x, y, size, color, delay, duration, type }) => {
 };
 
 export const SparkleStars = ({ count = 22, className }) => {
+  const reduceMotion = useReducedMotion();
   const stars = useMemo(() => Array.from({ length: count }, (_, i) => {
     const tier = i % 3;
     const size = tier === 0 ? 5 + Math.random() * 3 : tier === 1 ? 9 + Math.random() * 4 : 14 + Math.random() * 6;
@@ -68,7 +69,7 @@ export const SparkleStars = ({ count = 22, className }) => {
 
   return (
     <Canvas className={className} aria-hidden="true">
-      {stars.map((s) => <Star key={s.id} {...s} />)}
+      {stars.map((s) => <Star key={s.id} {...s} reduceMotion={reduceMotion} />)}
     </Canvas>
   );
 };

@@ -358,16 +358,18 @@ const ScanningContent = ({ address, addressType }) => {
 const Nav = (props) => (
   <Header>
     {/* Animated border beam on the nav */}
-    <BorderBeam
-      colorStart="#4ce1d3"
-      colorEnd="#ffcb9a"
-      duration={5}
-      beamWidth={5}
-      borderRadius={14}
-    />
+    {!props.quiet && (
+      <BorderBeam
+        colorStart="#4ce1d3"
+        colorEnd="#ffcb9a"
+        duration={5}
+        beamWidth={5}
+        borderRadius={14}
+      />
+    )}
 
     {/* Horizontal scan-line during active scan */}
-    {props.children && <NavScanLine />}
+    {props.children && !props.quiet && <NavScanLine />}
 
     <Brand
       href="/check"

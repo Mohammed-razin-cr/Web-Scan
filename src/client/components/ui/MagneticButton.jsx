@@ -2,7 +2,7 @@
  * MagneticButton — pulls toward cursor when nearby. Wraps any child.
  */
 import { useRef, useCallback } from 'react';
-import { motion, useMotionValue, useSpring } from 'framer-motion';
+import { motion, useMotionValue, useReducedMotion, useSpring } from 'framer-motion';
 
 export const MagneticButton = ({
   children,
@@ -12,13 +12,14 @@ export const MagneticButton = ({
   style,
 }) => {
   const ref  = useRef(null);
+  const reduceMotion = useReducedMotion();
   const rawX = useMotionValue(0);
   const rawY = useMotionValue(0);
   const x    = useSpring(rawX, { stiffness: 220, damping: 20 });
   const y    = useSpring(rawY, { stiffness: 220, damping: 20 });
 
   const onMove = useCallback((e) => {
-    if (!ref.current) return;
+    if (!ref.current || reduceMotion || e.pointerType === 'touch') return;
     const r  = ref.current.getBoundingClientRect();
     const dx = e.clientX - (r.left + r.width  / 2);
     const dy = e.clientY - (r.top  + r.height / 2);
@@ -28,7 +29,7 @@ export const MagneticButton = ({
       rawX.set(dx * f);
       rawY.set(dy * f);
     }
-  }, [radius, strength, rawX, rawY]);
+  }, [radius, strength, rawX, rawY, reduceMotion]);
 
   const onLeave = useCallback(() => {
     rawX.set(0);
@@ -40,8 +41,8 @@ export const MagneticButton = ({
       ref={ref}
       className={className}
       style={{ display: 'inline-flex', position: 'relative', x, y, ...style }}
-      onMouseMove={onMove}
-      onMouseLeave={onLeave}
+      onPointerMove={onMove}
+      onPointerLeave={onLeave}
     >
       {children}
     </motion.div>

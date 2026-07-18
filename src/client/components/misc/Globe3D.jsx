@@ -94,7 +94,7 @@ const addLatLine = (
   lat,
   r,
   material,
-  lonStep = 0.75,
+  lonStep = 1.5,
 ) => {
   const pts = [];
   for (let lon = 0; lon <= 360; lon += lonStep) pts.push(latLonToVec3(lat, lon, r));
@@ -106,7 +106,7 @@ const addLonLine = (
   lon,
   r,
   material,
-  latStep = 0.75,
+  latStep = 1.5,
 ) => {
   const pts = [];
   for (let lat = -90; lat <= 90; lat += latStep) pts.push(latLonToVec3(lat, lon, r));
@@ -121,7 +121,7 @@ const makeSmoothRing = (
   opacity,
   rx,
   ry,
-  segments = 512,
+  segments = 160,
 ) => {
   const ring = new THREE.Mesh(
     new THREE.RingGeometry(radius - thickness * 0.5, radius + thickness * 0.5, segments),
@@ -163,10 +163,17 @@ const Globe3D = () => {
     };
 
     let size = getSize();
+    const isCompact = window.matchMedia('(max-width: 1100px)').matches;
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const maxPixelRatio = isCompact ? 1.25 : 1.5;
 
     /* ── renderer ── */
-    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    const renderer = new THREE.WebGLRenderer({
+      antialias: true,
+      alpha: true,
+      powerPreference: 'high-performance',
+    });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, maxPixelRatio));
     renderer.setSize(size, size, false);
     renderer.setClearColor(0x000000, 0);
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
@@ -193,20 +200,26 @@ const Globe3D = () => {
     scene.add(rimLight);
 
     const R = 1.25;
-    const segments = 192;
-    const ringSegments = 512;
+    const segments = isCompact ? 72 : 112;
+    const ringSegments = isCompact ? 96 : 160;
     const outerRadius = R * 1.24;
-    const sphereGeo = (radius) => new THREE.SphereGeometry(radius, segments, segments);
+    const sphereGeometry = new THREE.SphereGeometry(1, segments, segments);
+    const addSphere = (radius, material) => {
+      const mesh = new THREE.Mesh(sphereGeometry, material);
+      mesh.scale.setScalar(radius);
+      group.add(mesh);
+      return mesh;
+    };
 
     fitCameraToSphere(camera, outerRadius, 1.24);
 
     /* ── outer atmosphere shells ── */
     const atmColor = new THREE.Color(0x4ce1d3);
     const atmMat = fresnelAtmosphereMaterial(atmColor, 0.42, 2.4);
-    group.add(new THREE.Mesh(sphereGeo(R * 1.14), atmMat));
+    addSphere(R * 1.14, atmMat);
 
     const outerHazeMat = fresnelAtmosphereMaterial(new THREE.Color(0x0d4f52), 0.18, 3.2);
-    group.add(new THREE.Mesh(sphereGeo(outerRadius), outerHazeMat));
+    addSphere(outerRadius, outerHazeMat);
 
     /* ── lit globe body ── */
     const globeMat = new THREE.MeshStandardMaterial({
@@ -218,13 +231,13 @@ const Globe3D = () => {
       transparent: true,
       opacity: 0.98,
     });
-    group.add(new THREE.Mesh(sphereGeo(R * 0.998), globeMat));
+    addSphere(R * 0.998, globeMat);
 
     /* ── subtle front-side rim highlight ── */
     const frontRimMat = fresnelAtmosphereMaterial(new THREE.Color(0x8ef5ec), 0.12, 4.5);
     frontRimMat.side = THREE.FrontSide;
     frontRimMat.blending = THREE.NormalBlending;
-    group.add(new THREE.Mesh(sphereGeo(R * 1.004), frontRimMat));
+    addSphere(R * 1.004, frontRimMat);
 
     /* ── lat / lon grid (equator + prime meridian emphasized) ── */
     const gridMat = new THREE.LineBasicMaterial({ color: 0x1a7070, transparent: true, opacity: 0.22 });
@@ -251,8 +264,8 @@ const Globe3D = () => {
     const colA = new THREE.Color(0x4ce1d3);
     const colB = new THREE.Color(0xffcb9a);
     const nodeVecs = [];
-    const dotGeo = new THREE.SphereGeometry(0.018, 24, 24);
-    const glowGeo = new THREE.SphereGeometry(0.048, 32, 32);
+    const dotGeo = new THREE.SphereGeometry(0.018, 12, 12);
+    const glowGeo = new THREE.SphereGeometry(0.048, 16, 16);
     const pingGeo = new THREE.RingGeometry(0.04, 0.055, ringSegments);
 
     /* city dot + animated ping circle (flat circle that grows outward on surface) */
@@ -317,15 +330,29 @@ const Globe3D = () => {
       const a = nodeVecs[ia], b = nodeVecs[ib];
       const mid = a.clone().add(b).multiplyScalar(0.5).normalize().multiplyScalar(R * 1.42);
       const curve = new THREE.QuadraticBezierCurve3(a, mid, b);
+      const pts = curve.getPoints(60);
+      const position = new THREE.BufferAttribute(new Float32Array(pts.length * 3), 3);
+      position.setUsage(THREE.DynamicDrawUsage);
+      const geometry = new THREE.BufferGeometry();
+      geometry.setAttribute('position', position);
+      geometry.setDrawRange(0, 0);
       const mat = new THREE.LineBasicMaterial({
         color: new THREE.Color().lerpColors(colA, colB, Math.random()),
         transparent: true,
         opacity: 0,
         blending: THREE.AdditiveBlending,
       });
-      const line = new THREE.Line(new THREE.BufferGeometry().setFromPoints([a, b]), mat);
+      const line = new THREE.Line(geometry, mat);
+      line.frustumCulled = false;
       group.add(line);
-      arcs.push({ line, prog: Math.random() * 1.4, speed: 0.004 + Math.random() * 0.003, pts: curve.getPoints(60), mat });
+      arcs.push({
+        line,
+        position,
+        prog: Math.random() * 1.4,
+        speed: 0.004 + Math.random() * 0.003,
+        pts,
+        mat,
+      });
     });
 
     /* ── decorative orbit rings (smooth flat rings, not faceted torus) ── */
@@ -371,18 +398,19 @@ const Globe3D = () => {
       depthWrite: false,
     })));
 
-    /* ── mouse tilt ── */
+    /* ── pointer tilt ── */
     let mx = 0, my = 0;
-    const onMouse = (e) => {
+    const onPointerMove = (e) => {
       mx = (e.clientX / window.innerWidth - 0.5) * 2;
       my = (e.clientY / window.innerHeight - 0.5) * 2;
     };
-    window.addEventListener('mousemove', onMouse);
+    if (!isCompact && !prefersReducedMotion) {
+      window.addEventListener('pointermove', onPointerMove, { passive: true });
+    }
 
     /* ── resize ── */
     const onResize = () => {
       size = getSize();
-      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
       renderer.setSize(size, size, false);
     };
     const resizeObserver = new ResizeObserver(onResize);
@@ -390,14 +418,15 @@ const Globe3D = () => {
     onResize();
 
     /* ── animation ── */
-    let raf;
-    const start = Date.now();
+    let raf = null;
+    let isIntersecting = true;
+    let isDocumentVisible = !document.hidden;
+    let lastFrame = performance.now();
+    const start = performance.now();
+    const frameInterval = 1000 / (isCompact ? 30 : 45);
     const orR = R * 1.52;
 
-    const animate = () => {
-      raf = requestAnimationFrame(animate);
-      const t = (Date.now() - start) / 1000;
-
+    const updateScene = (t, frameScale) => {
       group.rotation.y = t * 0.09 + mx * 0.14;
       group.rotation.x = Math.sin(t * 0.055) * 0.045 + my * 0.06;
 
@@ -414,18 +443,21 @@ const Globe3D = () => {
 
       // Arcs
       arcs.forEach((arc) => {
-        arc.prog += arc.speed;
+        arc.prog += arc.speed * frameScale;
         if (arc.prog > 1.5) arc.prog = 0;
         const head = Math.min(arc.prog, 1);
         const tail = Math.max(0, arc.prog - 0.35);
-        const slice = arc.pts.slice(
-          Math.floor(tail * arc.pts.length),
-          Math.floor(head * arc.pts.length) + 1,
-        );
-        if (slice.length > 1) {
-          arc.line.geometry.setFromPoints(slice);
-          arc.line.geometry.computeBoundingSphere();
+        const firstPoint = Math.floor(tail * (arc.pts.length - 1));
+        const lastPoint = Math.floor(head * (arc.pts.length - 1));
+        const pointCount = Math.max(0, lastPoint - firstPoint + 1);
+
+        for (let i = 0; i < pointCount; i += 1) {
+          const point = arc.pts[firstPoint + i];
+          arc.position.setXYZ(i, point.x, point.y, point.z);
         }
+
+        arc.position.needsUpdate = pointCount > 1;
+        arc.line.geometry.setDrawRange(0, pointCount > 1 ? pointCount : 0);
         arc.mat.opacity = arc.prog < 1 ? Math.sin(head * Math.PI) * 0.95 : 0;
       });
 
@@ -447,16 +479,77 @@ const Globe3D = () => {
       const pos2 = sat2Geo.attributes.position;
       pos2.setXYZ(0, Math.cos(t * 0.41 + 1) * orR * 0.95, Math.sin(-t * 0.35 + 2) * orR * 0.6, Math.sin(t * 0.41 + 1) * orR * 0.95);
       pos2.needsUpdate = true;
+    };
+
+    const animate = (now) => {
+      if (!isIntersecting || !isDocumentVisible || prefersReducedMotion) {
+        raf = null;
+        return;
+      }
+
+      raf = requestAnimationFrame(animate);
+      const elapsed = now - lastFrame;
+      if (elapsed < frameInterval) return;
+
+      const frameScale = Math.min(elapsed / (1000 / 60), 3);
+      lastFrame = now - (elapsed % frameInterval);
+      updateScene((now - start) / 1000, frameScale);
 
       renderer.render(scene, camera);
     };
-    animate();
+
+    const startAnimation = () => {
+      if (raf !== null || !isIntersecting || !isDocumentVisible || prefersReducedMotion) return;
+      lastFrame = performance.now();
+      raf = requestAnimationFrame(animate);
+    };
+
+    const stopAnimation = () => {
+      if (raf === null) return;
+      cancelAnimationFrame(raf);
+      raf = null;
+    };
+
+    const onVisibilityChange = () => {
+      isDocumentVisible = !document.hidden;
+      if (isDocumentVisible) startAnimation();
+      else stopAnimation();
+    };
+
+    const intersectionObserver = new IntersectionObserver(([entry]) => {
+      isIntersecting = entry.isIntersecting;
+      if (isIntersecting) startAnimation();
+      else stopAnimation();
+    }, { rootMargin: '120px' });
+
+    document.addEventListener('visibilitychange', onVisibilityChange);
+    intersectionObserver.observe(el);
+    updateScene(prefersReducedMotion ? 2 : 0, 0);
+    renderer.render(scene, camera);
+    startAnimation();
 
     return () => {
-      cancelAnimationFrame(raf);
-      window.removeEventListener('mousemove', onMouse);
+      stopAnimation();
+      window.removeEventListener('pointermove', onPointerMove);
+      document.removeEventListener('visibilitychange', onVisibilityChange);
+      intersectionObserver.disconnect();
       resizeObserver.disconnect();
+
+      const geometries = new Set();
+      const materials = new Set();
+      scene.traverse((object) => {
+        if (object.geometry) geometries.add(object.geometry);
+        if (object.material) {
+          const objectMaterials = Array.isArray(object.material)
+            ? object.material
+            : [object.material];
+          objectMaterials.forEach((material) => materials.add(material));
+        }
+      });
+      geometries.forEach((geometry) => geometry.dispose());
+      materials.forEach((material) => material.dispose());
       renderer.dispose();
+      renderer.forceContextLoss();
       if (el.contains(renderer.domElement)) el.removeChild(renderer.domElement);
     };
   }, []);

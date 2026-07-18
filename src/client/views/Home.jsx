@@ -415,7 +415,7 @@ const Chip = styled(motion.button)`
   cursor: pointer;
   letter-spacing: 0.03em;
   font-family: inherit;
-  transition: all 0.2s ease;
+  transition: border-color 0.2s ease, background-color 0.2s ease, color 0.2s ease;
   &:hover {
     color: #4ce1d3;
     background: rgba(76,225,211,0.1);
@@ -560,7 +560,7 @@ const BottomBar = styled(motion.div)`
     font-size: 0.7rem; font-weight: 700;
     letter-spacing: 0.1em; text-transform: uppercase;
     padding: 0 0.9rem;
-    transition: all 0.2s ease;
+    transition: color 0.2s ease, opacity 0.2s ease;
     text-decoration: none; cursor: pointer;
     &:hover { color: #4ce1d3; background: rgba(76,225,211,0.1); }
     &:last-child { border-right: 0; }
@@ -636,7 +636,7 @@ const Home = () => {
       <NoiseOverlay opacity={0.028} animate zIndex={4} />
 
       {/* ── Enhanced sparkle field — 3 size tiers + cross type ── */}
-      <SparkleStars count={28} drift={false} />
+      <SparkleStars count={22} drift={false} />
 
       {/* ── Ambient glow orbs ── */}
       <GlowingOrb color="rgba(76,225,211,0.20)" size={580} x="28%" y="32%" blur={100} />

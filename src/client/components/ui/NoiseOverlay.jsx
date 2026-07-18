@@ -10,11 +10,8 @@ const Wrap = styled.div`
   z-index: ${(p) => p.zi};
   opacity: ${(p) => p.op};
   mix-blend-mode: overlay;
-  transform: translateZ(0);
-  will-change: transform;
-`;
+  contain: strict;
 
-const ANIM = `
   @keyframes grain {
     0%  { transform: translate(0,0); }
     10% { transform: translate(-2%,-3%); }
@@ -28,15 +25,24 @@ const ANIM = `
     90% { transform: translate(-2%,4%); }
     100%{ transform: translate(0,0); }
   }
+
   .grain-inner {
-    position: absolute; inset: 0;
-    animation: grain 0.2s steps(1) infinite;
+    position: absolute;
+    inset: -4%;
+    animation: ${(p) => (p.isAnimated ? 'grain 1.2s steps(6) infinite' : 'none')};
+    will-change: ${(p) => (p.isAnimated ? 'transform' : 'auto')};
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .grain-inner {
+      animation: none;
+      will-change: auto;
+    }
   }
 `;
 
-export const NoiseOverlay = ({ opacity = 0.032, zIndex = 2 }) => (
-  <Wrap op={opacity} zi={zIndex} aria-hidden="true">
-    <style>{ANIM}</style>
+export const NoiseOverlay = ({ opacity = 0.032, zIndex = 2, animate = false }) => (
+  <Wrap op={opacity} zi={zIndex} isAnimated={animate} aria-hidden="true">
     <div className="grain-inner">
       <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
         <defs>

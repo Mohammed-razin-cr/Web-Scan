@@ -9,6 +9,14 @@ const GlobalStyles = () => (
         box-sizing: border-box;
       }
 
+      html {
+        scrollbar-gutter: stable;
+      }
+
+      body {
+        overflow-x: hidden;
+      }
+
       body,
       div,
       a,
@@ -39,6 +47,12 @@ const GlobalStyles = () => (
         color: #8eedd8;
       }
 
+      button,
+      input,
+      a {
+        -webkit-tap-highlight-color: transparent;
+      }
+
       #fancy-background p span {
         color: transparent;
       }
@@ -54,6 +68,12 @@ const GlobalStyles = () => (
       .card-body::-webkit-scrollbar-thumb {
         background: rgba(76, 225, 211, 0.25);
         border-radius: 2px;
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        html {
+          scroll-behavior: auto;
+        }
       }
     `}
   />
