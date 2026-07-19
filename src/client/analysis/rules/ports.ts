@@ -27,6 +27,13 @@ const ports: Analyzer = (d) => {
       });
     }
   }
+  if (out.length === 0) {
+    out.push({
+      severity: 'pass',
+      title: 'No high-risk open ports detected',
+      detail: `${d.openPorts.length} reachable service(s) checked against the high-risk port policy`,
+    });
+  }
   return out;
 };
 

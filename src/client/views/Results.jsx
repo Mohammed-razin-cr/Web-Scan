@@ -17,12 +17,11 @@ import ProgressBar, {
 } from 'client/components/misc/ProgressBar';
 import ActionButtons from 'client/components/misc/ActionButtons';
 import AdditionalResources from 'client/components/misc/AdditionalResources';
-import AdvisoryPanel from 'client/components/misc/AdvisoryPanel';
 import NoResults from 'client/components/misc/NoResults';
 import ResultsMasonryGrid from 'client/components/misc/ResultsMasonryGrid';
 import ViewRaw from 'client/components/misc/ViewRaw';
 import ExportPanel from 'client/components/misc/ExportPanel';
-import VulnerabilityTrackingPanel from 'client/components/misc/VulnerabilityTrackingPanel';
+import SecurityCommandCenter from 'client/components/misc/SecurityCommandCenter';
 
 import { determineAddressType, } from 'client/utils/address-type-checker';
 import { hasData } from 'client/utils/result-processor';
@@ -37,6 +36,7 @@ import {
   getVulnerabilitySummary,
   exportScanHistory,
 } from 'client/utils/vulnerability-tracker';
+import { recordMonitoringScan } from 'client/utils/monitoring';
 
 const ResultsOuter = styled.div`
   display: flex;
@@ -106,6 +106,7 @@ const Results = (props) => {
   }, [address, addressType]);
 
   const { state: jobsState, retry, ipLookupError } = useJobs(address, addressType, jobs);
+  const findings = useMemo(() => runAnalysis(jobsState), [jobsState]);
 
   // Shape useJobs state for the existing ProgressBar contract
   const loadingJobs = useMemo(
@@ -149,42 +150,21 @@ const Results = (props) => {
     if (!scanCompleted || !address) return;
 
     try {
-      // Recompute renderable and cardsToShow within the effect
-      const renderable = allCards.map(({ jobId, card }) => {
-        const entry = jobsState[card.id];
-        const raw = entry?.raw;
-        let data = raw && card.pick ? card.pick(raw) : raw;
-        if (!hasData(data) && card.fallback) data = card.fallback(jobsState);
-        return { jobId, card, data, entry };
-      });
-
-      const cards = renderable.filter(({ data, entry }) => hasData(data) && !entry?.error);
-      
-      if (cards.length === 0) return;
-
-      // Prepare results for storage
-      const results = cards.map(({ card, data }) => ({
-        id: card.id,
-        title: card.title,
-        status: 'success',
-        severity: 'info',
-        tags: [card.title],
-        data: data,
-      }));
-
       // Store scan and get comparisons - add small delay to ensure DOM is settled
-      setTimeout(() => {
-        storeScanRecord(address, results);
-        const changes = compareWithPreviousScan(address, results);
+      const timer = setTimeout(() => {
+        storeScanRecord(address, findings);
+        recordMonitoringScan(address);
+        const changes = compareWithPreviousScan(address, findings);
         const summary = getVulnerabilitySummary(address);
 
         setVulnerabilityChanges(changes);
         setVulnerabilitySummary(summary);
       }, 100);
+      return () => clearTimeout(timer);
     } catch (error) {
       console.error('Failed to track vulnerability:', error);
     }
-  }, [address, scanCompleted]);
+  }, [address, findings, scanCompleted]);
 
   const showInfo = (id) => {
     setModalContent(DocContent(id));
@@ -240,8 +220,6 @@ const Results = (props) => {
     exportScanHistory(address);
   }, [address]);
 
-  const findings = useMemo(() => runAnalysis(jobsState), [jobsState]);
-
   // Detect a catastrophic API outage when the bulk of settled jobs error or time out
   const apiUnreachable = useMemo(() => {
     const entries = Object.values(jobsState);
@@ -290,14 +268,17 @@ const Results = (props) => {
           onExportHistory={handleExportHistory}
           isLoading={loadingJobs.some((j) => j.state === 'loading')}
         />
-        <VulnerabilityTrackingPanel
-          url={address}
-          changes={vulnerabilityChanges}
-          summary={vulnerabilitySummary}
-        />
       </div>
       <Loader show={loadingJobs.filter((j) => j.state !== 'loading').length < 5} />
-      <AdvisoryPanel findings={findings} onJumpTo={jumpToCard} />
+      {vulnerabilitySummary && (
+        <SecurityCommandCenter
+          url={address}
+          findings={findings}
+          changes={vulnerabilityChanges}
+          summary={vulnerabilitySummary}
+          onJumpTo={jumpToCard}
+        />
+      )}
       <ResultsContent>
         <ResultsMasonryGrid minColWidth={340} gap={18}>
           {cardsToShow.map(({ card, data }) => (
