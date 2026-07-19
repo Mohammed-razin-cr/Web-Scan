@@ -29,6 +29,7 @@ const Beam = styled.div`
     );
     animation: beam-rotate ${(p) => p.dur}s linear infinite;
     animation-delay: ${(p) => p.dl}s;
+    will-change: transform;
   }
 
   /* mask to show only the border edge */
@@ -43,6 +44,13 @@ const Beam = styled.div`
   @keyframes beam-rotate {
     from { transform: rotate(0deg); }
     to   { transform: rotate(360deg); }
+  }
+
+  @media (prefers-reduced-motion: reduce), (max-width: 768px), (max-height: 720px) {
+    &::before {
+      animation: none;
+      opacity: 0.45;
+    }
   }
 `;
 
@@ -70,6 +78,11 @@ const Ring = styled.div`
   @keyframes ring-pulse {
     from { opacity: 0.35; }
     to   { opacity: 0.9; }
+  }
+
+  @media (prefers-reduced-motion: reduce), (max-width: 768px), (max-height: 720px) {
+    animation: none;
+    opacity: 0.45;
   }
 `;
 

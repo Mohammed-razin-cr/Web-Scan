@@ -11,24 +11,33 @@ const Canvas = styled.div`
   pointer-events: none;
   overflow: hidden;
   z-index: 0;
+  contain: layout paint style;
 `;
 
 const STAR = 'M8 0 L9.8 6.2 L16 8 L9.8 9.8 L8 16 L6.2 9.8 L0 8 L6.2 6.2 Z';
 
-const Star = ({ x, y, size, color, delay, duration, type, reduceMotion }) => {
+const Star = ({ x, y, size, color, delay, duration, repeatDelay, type, reduceMotion }) => {
   const anim = {
     hidden: { opacity: 0, scale: 0 },
     show: {
       opacity: [0, 1, 0.6, 1, 0],
       scale:   [0, 1, 0.8, 1, 0],
       rotate:  [0, 90, 180, 270, 360],
-      transition: { duration, delay, repeat: Infinity, repeatDelay: 1 + Math.random() * 2, ease: 'easeInOut' },
+      transition: { duration, delay, repeat: Infinity, repeatDelay, ease: 'easeInOut' },
     },
   };
 
   return (
     <motion.svg
-      style={{ position: 'absolute', left: x, top: y, width: size, height: size, overflow: 'visible' }}
+      style={{
+        position: 'absolute',
+        left: x,
+        top: y,
+        width: size,
+        height: size,
+        overflow: 'visible',
+        willChange: reduceMotion ? 'auto' : 'transform, opacity',
+      }}
       viewBox="0 0 16 16"
       fill="none"
       aria-hidden="true"
@@ -63,6 +72,7 @@ export const SparkleStars = ({ count = 22, className }) => {
       color: colors[i % colors.length],
       delay: Math.random() * 5,
       duration: 2.5 + Math.random() * 3,
+      repeatDelay: 1.6 + Math.random() * 2.4,
       type: Math.random() > 0.6 ? 'cross' : 'star',
     };
   }), [count]);

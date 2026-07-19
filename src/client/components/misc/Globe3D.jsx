@@ -41,6 +41,7 @@ const CanvasHost = styled.div`
     display: block;
     width: 100% !important;
     height: 100% !important;
+    transform: translateZ(0);
   }
 `;
 
@@ -165,7 +166,7 @@ const Globe3D = () => {
     let size = getSize();
     const isCompact = window.matchMedia('(max-width: 1100px)').matches;
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const maxPixelRatio = isCompact ? 1.25 : 1.5;
+    const maxPixelRatio = isCompact ? 1 : 1.35;
 
     /* ── renderer ── */
     const renderer = new THREE.WebGLRenderer({
@@ -200,8 +201,8 @@ const Globe3D = () => {
     scene.add(rimLight);
 
     const R = 1.25;
-    const segments = isCompact ? 72 : 112;
-    const ringSegments = isCompact ? 96 : 160;
+    const segments = isCompact ? 56 : 96;
+    const ringSegments = isCompact ? 72 : 128;
     const outerRadius = R * 1.24;
     const sphereGeometry = new THREE.SphereGeometry(1, segments, segments);
     const addSphere = (radius, material) => {
@@ -264,8 +265,8 @@ const Globe3D = () => {
     const colA = new THREE.Color(0x4ce1d3);
     const colB = new THREE.Color(0xffcb9a);
     const nodeVecs = [];
-    const dotGeo = new THREE.SphereGeometry(0.018, 12, 12);
-    const glowGeo = new THREE.SphereGeometry(0.048, 16, 16);
+    const dotGeo = new THREE.SphereGeometry(0.018, isCompact ? 8 : 12, isCompact ? 8 : 12);
+    const glowGeo = new THREE.SphereGeometry(0.048, isCompact ? 10 : 16, isCompact ? 10 : 16);
     const pingGeo = new THREE.RingGeometry(0.04, 0.055, ringSegments);
 
     /* city dot + animated ping circle (flat circle that grows outward on surface) */
@@ -381,8 +382,9 @@ const Globe3D = () => {
     scene.add(sat2Pts);
 
     /* ── star field ── */
-    const sPts = new Float32Array(400 * 3);
-    for (let i = 0; i < 400; i++) {
+    const starCount = isCompact ? 180 : 280;
+    const sPts = new Float32Array(starCount * 3);
+    for (let i = 0; i < starCount; i++) {
       const r = 6 + Math.random() * 8;
       const phi = Math.acos(2 * Math.random() - 1);
       const th = Math.random() * Math.PI * 2;
@@ -423,7 +425,7 @@ const Globe3D = () => {
     let isDocumentVisible = !document.hidden;
     let lastFrame = performance.now();
     const start = performance.now();
-    const frameInterval = 1000 / (isCompact ? 30 : 45);
+    const frameInterval = 1000 / (isCompact ? 24 : 36);
     const orR = R * 1.52;
 
     const updateScene = (t, frameScale) => {
@@ -434,32 +436,36 @@ const Globe3D = () => {
       ring2.rotation.z = -t * 0.07;
 
       // Ping circles expand & fade
-      pings.forEach(({ ring, phase }) => {
-        const p = ((t * 0.8 + phase) % (Math.PI * 2)) / (Math.PI * 2);
-        const s = p * 3.8;
-        ring.scale.set(s, s, s);
-        (ring.material ).opacity = (1 - p) * 0.72;
-      });
+      if (!isCompact) {
+        pings.forEach(({ ring, phase }) => {
+          const p = ((t * 0.8 + phase) % (Math.PI * 2)) / (Math.PI * 2);
+          const s = p * 3.8;
+          ring.scale.set(s, s, s);
+          (ring.material ).opacity = (1 - p) * 0.72;
+        });
+      }
 
       // Arcs
-      arcs.forEach((arc) => {
-        arc.prog += arc.speed * frameScale;
-        if (arc.prog > 1.5) arc.prog = 0;
-        const head = Math.min(arc.prog, 1);
-        const tail = Math.max(0, arc.prog - 0.35);
-        const firstPoint = Math.floor(tail * (arc.pts.length - 1));
-        const lastPoint = Math.floor(head * (arc.pts.length - 1));
-        const pointCount = Math.max(0, lastPoint - firstPoint + 1);
+      if (!isCompact) {
+        arcs.forEach((arc) => {
+          arc.prog += arc.speed * frameScale;
+          if (arc.prog > 1.5) arc.prog = 0;
+          const head = Math.min(arc.prog, 1);
+          const tail = Math.max(0, arc.prog - 0.35);
+          const firstPoint = Math.floor(tail * (arc.pts.length - 1));
+          const lastPoint = Math.floor(head * (arc.pts.length - 1));
+          const pointCount = Math.max(0, lastPoint - firstPoint + 1);
 
-        for (let i = 0; i < pointCount; i += 1) {
-          const point = arc.pts[firstPoint + i];
-          arc.position.setXYZ(i, point.x, point.y, point.z);
-        }
+          for (let i = 0; i < pointCount; i += 1) {
+            const point = arc.pts[firstPoint + i];
+            arc.position.setXYZ(i, point.x, point.y, point.z);
+          }
 
-        arc.position.needsUpdate = pointCount > 1;
-        arc.line.geometry.setDrawRange(0, pointCount > 1 ? pointCount : 0);
-        arc.mat.opacity = arc.prog < 1 ? Math.sin(head * Math.PI) * 0.95 : 0;
-      });
+          arc.position.needsUpdate = pointCount > 1;
+          arc.line.geometry.setDrawRange(0, pointCount > 1 ? pointCount : 0);
+          arc.mat.opacity = arc.prog < 1 ? Math.sin(head * Math.PI) * 0.95 : 0;
+        });
+      }
 
       // Subtle atmosphere pulse
       atmMat.uniforms.intensity.value = 0.34 + 0.08 * Math.sin(t * 0.75);

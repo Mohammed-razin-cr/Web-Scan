@@ -4,8 +4,6 @@
 import { keyframes } from '@emotion/react';
 import styled from '@emotion/styled';
 import { motion } from 'framer-motion';
-import { useRef } from 'react';
-import { useMotionValue, useSpring } from 'framer-motion';
 
 const sweep = keyframes`
   0%   { transform: translateX(-180%) skewX(-18deg); }
@@ -43,8 +41,9 @@ const Btn = styled(motion.button)`
   font-size: 0.9rem;
   background: linear-gradient(135deg, #0b3532 0%, #116466 50%, #1a8f87 100%);
   color: #d1e8e2;
-  animation: ${glow} 3s ease-in-out infinite;
+  animation: ${glow} 4.2s ease-in-out infinite;
   transition: filter 0.2s ease;
+  will-change: transform;
 
   &:hover { filter: brightness(1.12); }
   &:disabled { opacity: 0.45; cursor: not-allowed; animation: none; }
@@ -56,7 +55,8 @@ const Btn = styled(motion.button)`
     width: 42%;
     background: linear-gradient(90deg, transparent, rgba(255,255,255,0.25) 50%, transparent);
     transform: translateX(-180%) skewX(-18deg);
-    animation: ${sweep} 2.8s ease-in-out infinite;
+    animation: ${sweep} 4.2s ease-in-out infinite;
+    will-change: transform;
     pointer-events: none;
   }
 
@@ -67,6 +67,16 @@ const Btn = styled(motion.button)`
     height: 1px;
     background: linear-gradient(90deg, transparent, rgba(255,255,255,0.35) 50%, transparent);
     pointer-events: none;
+  }
+
+  @media (prefers-reduced-motion: reduce), (max-width: 768px), (max-height: 720px) {
+    animation: none;
+
+    &::before {
+      animation: none;
+      opacity: 0.55;
+      transform: translateX(105%) skewX(-18deg);
+    }
   }
 `;
 

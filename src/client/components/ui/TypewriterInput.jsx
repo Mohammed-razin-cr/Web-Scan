@@ -57,6 +57,7 @@ const Shell = styled.div`
   };
   overflow: hidden;
   transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  transform: translateZ(0);
 
   /* top shimmer line */
   &::before {
@@ -72,13 +73,20 @@ const Shell = styled.div`
       transparent
     );
     background-size: 200% auto;
-    animation: ${topSweep} 5s linear infinite;
+    animation: ${topSweep} 7s linear infinite;
     opacity: 0.6;
     pointer-events: none;
   }
   @media (max-width: 480px) {
     height: 3.35rem;
     border-radius: 10px;
+  }
+
+  @media (prefers-reduced-motion: reduce), (max-width: 768px), (max-height: 720px) {
+    &::before {
+      animation: none;
+      opacity: 0.38;
+    }
   }
 `;
 
@@ -99,7 +107,7 @@ const FocusBeam = styled(motion.div)`
     inset: 0;
     background: linear-gradient(90deg, transparent, rgba(255,255,255,0.5) 50%, transparent);
     background-size: 200% auto;
-    animation: ${beamRipple} 1.8s linear infinite;
+    animation: ${beamRipple} 2.8s linear infinite;
   }
 `;
 
@@ -120,6 +128,12 @@ const IconZone = styled.div`
     filter: ${(p) => p.focused ? 'drop-shadow(0 0 6px rgba(76,225,211,0.7))' : 'none'};
   }
   @media (max-width: 480px) { width: 2.85rem; }
+
+  @media (prefers-reduced-motion: reduce), (max-width: 768px), (max-height: 720px) {
+    svg {
+      animation: none;
+    }
+  }
 `;
 
 const PingRing = styled.span`
@@ -130,6 +144,10 @@ const PingRing = styled.span`
   border: 1.5px solid rgba(76, 225, 211, 0.5);
   animation: ${pingAnim} 1.8s ease-out infinite;
   pointer-events: none;
+
+  @media (prefers-reduced-motion: reduce), (max-width: 768px), (max-height: 720px) {
+    display: none;
+  }
 `;
 
 /* ── Real input ── */

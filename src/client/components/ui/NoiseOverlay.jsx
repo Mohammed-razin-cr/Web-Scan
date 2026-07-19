@@ -29,7 +29,7 @@ const Wrap = styled.div`
   .grain-inner {
     position: absolute;
     inset: -4%;
-    animation: ${(p) => (p.isAnimated ? 'grain 1.2s steps(6) infinite' : 'none')};
+    animation: ${(p) => (p.isAnimated ? 'grain 2.4s steps(4) infinite' : 'none')};
     will-change: ${(p) => (p.isAnimated ? 'transform' : 'auto')};
   }
 
@@ -47,7 +47,7 @@ export const NoiseOverlay = ({ opacity = 0.032, zIndex = 2, animate = false }) =
       <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
         <defs>
           <filter id="grain-f">
-            <feTurbulence type="fractalNoise" baseFrequency="0.72" numOctaves="4" stitchTiles="stitch" />
+            <feTurbulence type="fractalNoise" baseFrequency="0.72" numOctaves="2" stitchTiles="stitch" />
             <feColorMatrix type="saturate" values="0" />
           </filter>
         </defs>

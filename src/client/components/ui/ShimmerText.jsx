@@ -29,6 +29,11 @@ const GradientSpan = styled.span`
   -webkit-text-fill-color: transparent;
   color: transparent;
   animation: ${pan} 3s linear infinite;
+
+  @media (prefers-reduced-motion: reduce), (max-width: 768px), (max-height: 720px) {
+    animation: none;
+    background-position: 50% center;
+  }
 `;
 
 const HeadingSpan = styled.span`
@@ -53,6 +58,11 @@ const HeadingSpan = styled.span`
   font-size: inherit;
   line-height: inherit;
   animation: ${pan} 4s linear infinite;
+
+  @media (prefers-reduced-motion: reduce), (max-width: 768px), (max-height: 720px) {
+    animation: none;
+    background-position: 50% center;
+  }
 `;
 
 const maskPan = keyframes`
@@ -81,6 +91,13 @@ const MaskSpan = styled.span`
     mix-blend-mode: overlay;
     animation: ${maskPan} 3.5s linear infinite;
     border-radius: inherit;
+  }
+
+  @media (prefers-reduced-motion: reduce), (max-width: 768px), (max-height: 720px) {
+    &::after {
+      animation: none;
+      opacity: 0.35;
+    }
   }
 `;
 

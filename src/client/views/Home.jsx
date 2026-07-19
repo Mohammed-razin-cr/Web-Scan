@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
 import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
 import { Activity, RadioTower, ScanSearch, ShieldCheck } from 'lucide-react';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -276,6 +276,12 @@ const EyebrowTag = styled(motion.div)`
     0%, 100% { opacity: 1; transform: scale(1); box-shadow: 0 0 6px rgba(76,225,211,0.8); }
     50%       { opacity: 0.6; transform: scale(0.7); box-shadow: 0 0 3px rgba(76,225,211,0.4); }
   }
+  @media (prefers-reduced-motion: reduce), (max-width: 768px), (max-height: 720px) {
+    &::after,
+    .dot {
+      animation: none;
+    }
+  }
   @media (max-width: 640px) {
     margin-bottom: 1rem;
     padding: 0.32rem 0.7rem;
@@ -305,6 +311,12 @@ const TitleBlock = styled.div`
   @keyframes title-shimmer {
     0%   { background-position: 0%   center; }
     100% { background-position: 250% center; }
+  }
+  @media (prefers-reduced-motion: reduce), (max-width: 768px), (max-height: 720px) {
+    .accent {
+      animation: none;
+      background-position: 50% center;
+    }
   }
   @media (max-width: 1280px) { h1 { font-size: 4rem; } }
   @media (max-width: 1024px) { h1 { font-size: 3.75rem; } }
@@ -591,8 +603,20 @@ const Home = () => {
   const [userInput, setUserInput] = useState('');
   const [errorMsg, setErrMsg]     = useState('');
   const [menuOpen, setMenuOpen]   = useState(false);
+  const [isCompactViewport, setIsCompactViewport] = useState(false);
+  const reduceMotion = useReducedMotion();
+  const calmMotion = reduceMotion || isCompactViewport;
   const navigate  = useNavigate();
   const location  = useLocation();
+
+  useEffect(() => {
+    const query = window.matchMedia('(max-width: 768px), (max-height: 720px)');
+    const update = () => setIsCompactViewport(query.matches);
+
+    update();
+    query.addEventListener('change', update);
+    return () => query.removeEventListener('change', update);
+  }, []);
 
   useEffect(() => {
     const query = new URLSearchParams(location.search);
@@ -633,15 +657,15 @@ const Home = () => {
   return (
     <HomeContainer>
       {/* ── Cinematic noise / film-grain overlay ── */}
-      <NoiseOverlay opacity={0.028} animate zIndex={4} />
+      <NoiseOverlay opacity={isCompactViewport ? 0.018 : 0.024} animate={!calmMotion} zIndex={4} />
 
       {/* ── Enhanced sparkle field — 3 size tiers + cross type ── */}
-      <SparkleStars count={22} drift={false} />
+      <SparkleStars count={calmMotion ? 8 : 16} drift={false} />
 
       {/* ── Ambient glow orbs ── */}
-      <GlowingOrb color="rgba(76,225,211,0.20)" size={580} x="28%" y="32%" blur={100} />
-      <GlowingOrb color="rgba(255,203,154,0.10)" size={420} x="72%" y="62%" blur={90} />
-      <GlowingOrb color="rgba(76,225,211,0.08)" size={300} x="85%" y="20%" blur={70} />
+      <GlowingOrb color="rgba(76,225,211,0.20)" size={580} x="28%" y="32%" blur={100} animate={!calmMotion} />
+      <GlowingOrb color="rgba(255,203,154,0.10)" size={420} x="72%" y="62%" blur={90} animate={!calmMotion} />
+      <GlowingOrb color="rgba(76,225,211,0.08)" size={300} x="85%" y="20%" blur={70} animate={!calmMotion} />
 
       <NavigationDrawer isOpen={menuOpen} onClose={() => setMenuOpen(false)} />
 
@@ -730,10 +754,11 @@ const Home = () => {
                 <BorderBeam
                   colorStart="#4ce1d3"
                   colorEnd="#ffcb9a"
-                  duration={3.5}
+                  duration={calmMotion ? 6 : 4.5}
                   beamWidth={5}
                   borderRadius={18}
-                  dual
+                  dual={!calmMotion}
+                  glowRing={!calmMotion}
                 />
                 <ScanForm onSubmit={(e) => { e.preventDefault(); submit(); }}>
                   <label htmlFor="scan-input">Website or IP</label>
@@ -813,14 +838,14 @@ const Home = () => {
                     <StatIcon
                       aria-hidden="true"
                       style={{ '--stat-icon-color': s.color }}
-                      animate={s.motion}
+                      animate={calmMotion ? { opacity: 1, scale: 1, rotate: 0, y: 0 } : s.motion}
                       transition={{
                         duration: s.duration,
                         delay: index * 0.24,
-                        repeat: Infinity,
+                        repeat: calmMotion ? 0 : Infinity,
                         ease: 'easeInOut',
                       }}
-                      whileHover={{ scale: 1.2, rotate: 0 }}
+                      whileHover={calmMotion ? { scale: 1.08 } : { scale: 1.2, rotate: 0 }}
                     >
                       <Icon />
                     </StatIcon>
@@ -829,7 +854,7 @@ const Home = () => {
                         value={s.value}
                         suffix={s.suffix}
                         decimals={s.decimals}
-                        duration={1600}
+                        duration={calmMotion ? 900 : 1400}
                         delay={300}
                         glowOnCount
                         easing="expo"
