@@ -50,7 +50,7 @@ const floatIn = keyframes`
 /* ── Outer card ── */
 const Wrap = styled.div`
   margin: 0 auto;
-  width: min(1200px, 92vw);
+  width: min(1200px, calc(100% - clamp(1rem, 8vw, 3rem)));
   position: relative;
   border-radius: 16px;
   border: 1px solid rgba(76,225,211,0.13);
@@ -62,6 +62,10 @@ const Wrap = styled.div`
     inset 0 1px 0 rgba(76,225,211,0.06);
   overflow: hidden;
   animation: ${floatIn} 0.5s cubic-bezier(0.16,1,0.3,1) both;
+
+  @media (max-width: 480px) {
+    border-radius: 12px;
+  }
 
   /* top accent line */
   &::before {
@@ -88,6 +92,11 @@ const HeadRow = styled.div`
   gap: 1rem;
   padding: 1.1rem 1.5rem 0;
   flex-wrap: wrap;
+
+  @media (max-width: 520px) {
+    align-items: flex-start;
+    padding: 0.9rem 0.9rem 0;
+  }
 `;
 
 const HeadLeft = styled.div`
@@ -120,6 +129,11 @@ const MetaChips = styled.div`
   display: flex;
   gap: 0.5rem;
   flex-wrap: wrap;
+
+  @media (max-width: 520px) {
+    width: 100%;
+    gap: 0.35rem;
+  }
 `;
 
 const MetaChip = styled.div`
@@ -144,6 +158,11 @@ const Body = styled.div`
   display: flex;
   flex-direction: column;
   gap: 1.25rem;
+
+  @media (max-width: 520px) {
+    padding: 0.9rem;
+    gap: 1rem;
+  }
 `;
 
 /* ── Description block ── */
@@ -166,6 +185,17 @@ const ActionRow = styled.div`
   gap: 0.85rem;
   flex-wrap: wrap;
   align-items: center;
+
+  @media (max-width: 520px) {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.6rem;
+
+    button {
+      width: 100% !important;
+      justify-content: center;
+    }
+  }
 `;
 
 /* Ghost secondary button */
@@ -319,6 +349,18 @@ const IFrameBar = styled.div`
     overflow: hidden;
     text-overflow: ellipsis;
   }
+
+  @media (max-width: 520px) {
+    padding: 0.5rem 0.65rem;
+
+    .dots { display: none; }
+    .url-pill {
+      width: auto !important;
+      flex: 1 !important;
+      margin: 0 !important;
+      text-align: left !important;
+    }
+  }
 `;
 
 /* ── Success toast ── */
@@ -392,13 +434,18 @@ const ViewerContainer = styled.div`
   overflow: auto;
   border-radius: 0 0 12px 12px;
   text-align: left;
+
+  @media (max-width: 520px) {
+    padding: 0.8rem;
+    font-size: 0.74rem;
+  }
   &::-webkit-scrollbar { width: 6px; height: 6px; }
   &::-webkit-scrollbar-track { background: transparent; }
   &::-webkit-scrollbar-thumb { background: rgba(76,225,211,0.15); border-radius: 3px; }
 `;
 
 const TreeNode = styled.div`
-  margin-left: ${props => props.isRoot ? 0 : '1.5rem'};
+  margin-left: ${props => props.isRoot ? 0 : 'clamp(0.65rem, 3vw, 1.5rem)'};
   border-left: 1px dashed rgba(76, 225, 211, 0.08);
   padding-left: 0.5rem;
   position: relative;
@@ -614,7 +661,7 @@ const ViewRaw = ({ everything = [] }) => {
         {/* ── body ── */}
         <Body>
           <Desc>
-            Raw results from your scan in <strong>JSON format</strong> — download locally
+            Raw results from your scan in <strong>JSON format</strong>. Download locally
             or view interactively with the built-in tree viewer. Import into any tool for further analysis.
           </Desc>
 

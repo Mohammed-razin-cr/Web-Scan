@@ -30,7 +30,7 @@ const STATE_COLOR = {
   skipped:    '#64748b',
 };
 const STATE_ICON = {
-  success: '✓', loading: '○', error: '✕', 'timed-out': '⏸', skipped: '—',
+  success: '✓', loading: '○', error: '✕', 'timed-out': '⏸', skipped: '•',
 };
 const REASON_LABEL = { error:'Show error', 'timed-out':'Show reason', skipped:'Show reason' };
 
@@ -380,7 +380,7 @@ const ProgressBar = ({ loadStatus: jobs = [], showModal, showJobDocs }) => {
         >
           <ReShowLabel>
             {hasIssues
-              ? <>{counts.error + counts['timed-out']} issues &mdash; <button type="button" onClick={() => setOpen(true)}>show details</button></>
+              ? <>{counts.error + counts['timed-out']} issues · <button type="button" onClick={() => setOpen(true)}>show details</button></>
               : <>{counts.success} checks completed in {elapsedSec}s</>
             }
           </ReShowLabel>

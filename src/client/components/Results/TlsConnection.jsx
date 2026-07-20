@@ -34,7 +34,7 @@ const TlsConnectionCard = (props
       <Row lbl="OCSP Stapling" val="">
         <span className="lbl">OCSP Stapling</span>
         <span className="val" style={{ color: colors.info }}>
-          {d.ocspStapled ? 'ⓘ Present' : 'ⓘ Not Present'} — may impact visitor privacy
+          {d.ocspStapled ? 'ⓘ Present' : 'ⓘ Not Present'}. May impact visitor privacy
         </span>
       </Row>
       <Row

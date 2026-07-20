@@ -151,7 +151,7 @@ const Footer = (props) => {
           <FooterText>•</FooterText>
           <FooterText>
             <AnimatedLink to="/about">WebScan</AnimatedLink> is licensed under
-            <AnimatedLink href={licenseUrl}>MIT</AnimatedLink> —
+            <AnimatedLink href={licenseUrl}>MIT</AnimatedLink>
             <span>© {currentYear}</span>
             <AnimatedLink href={authorUrl}>Mohammed Razin</AnimatedLink>
           </FooterText>

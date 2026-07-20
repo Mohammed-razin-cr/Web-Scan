@@ -290,6 +290,8 @@ const EyebrowTag = styled(motion.div)`
 `;
 
 const TitleBlock = styled.div`
+  min-width: 0;
+  max-width: 100%;
   margin: 0 0 1.75rem;
   h1 {
     margin: 0;
@@ -298,6 +300,8 @@ const TitleBlock = styled.div`
     line-height: 1.04;
     font-weight: 900;
     letter-spacing: 0;
+    max-width: 100%;
+    overflow-wrap: anywhere;
   }
   .accent {
     display: block;
@@ -325,7 +329,10 @@ const TitleBlock = styled.div`
     margin-bottom: 1.25rem;
     h1 { font-size: 2.35rem; line-height: 1.06; }
   }
-  @media (max-width: 360px) { h1 { font-size: 2.1rem; } }
+  @media (max-width: 360px) {
+    h1 { font-size: 1.8rem; line-height: 1.08; }
+    .accent { max-width: 100%; }
+  }
 `;
 
 const Subtitle = styled(motion.p)`

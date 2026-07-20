@@ -39,6 +39,7 @@ import {
 import { recordMonitoringScan } from 'client/utils/monitoring';
 
 const ResultsOuter = styled.div`
+  --results-gutter: clamp(0.5rem, 2vw, 1.25rem);
   display: flex;
   flex-direction: column;
   gap: 1.25rem;
@@ -48,13 +49,14 @@ const ResultsOuter = styled.div`
 `;
 
 const NavWrapper = styled.div`
-  padding: 0 1.25rem;
+  width: 100%;
+  padding: 0 var(--results-gutter);
   display: flex;
   justify-content: center;
 `;
 
 const ResultsContent = styled.section`
-  width: min(1400px, 96vw);
+  width: min(1400px, calc(100% - (2 * var(--results-gutter))));
   margin: 0 auto;
 
   @keyframes cardFlash {

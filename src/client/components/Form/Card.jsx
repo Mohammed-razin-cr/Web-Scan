@@ -86,6 +86,29 @@ export const StyledCard = styled(motion.section)`
     display: flex;
     align-items: center;
     gap: 0.5rem;
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+
+  @media (max-width: 480px) {
+    border-radius: 12px;
+
+    .card-header {
+      gap: 0.65rem;
+      min-height: 3rem;
+      padding: 0.7rem 0.85rem;
+      border-radius: 12px 12px 0 0;
+    }
+
+    .card-body {
+      padding: 0.85rem;
+      max-height: calc(54rem - 3rem);
+    }
+
+    .inner-heading {
+      font-size: 0.66rem !important;
+      line-height: 1.35;
+    }
   }
 
   ${(props) => props.styles}
@@ -102,6 +125,7 @@ const ActionArea = styled.div`
   gap: 0.3rem;
   position: relative;
   z-index: 3;
+  flex-shrink: 0;
 `;
 
 const HeadingDot = () => (

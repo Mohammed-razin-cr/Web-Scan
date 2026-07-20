@@ -16,6 +16,8 @@ import Heading from 'client/components/Form/Heading';
 
 
 export const StyledRow = styled.div`
+  width: 100%;
+  min-width: 0;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -41,6 +43,7 @@ export const StyledRow = styled.div`
     font-weight: 600;
     font-size: 0.8rem;
     flex: 1;
+    min-width: 0;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -63,6 +66,7 @@ export const StyledRow = styled.div`
     background: rgba(76, 225, 211, 0.05);
     border: 1px solid rgba(76, 225, 211, 0.08);
     transition: all 0.15s ease;
+    min-width: 0;
 
     &:hover {
       background: rgba(76, 225, 211, 0.1);
@@ -72,6 +76,21 @@ export const StyledRow = styled.div`
 
     a {
       color: #4ce1d3;
+    }
+  }
+
+  @media (max-width: 420px) {
+    align-items: stretch;
+
+    span.lbl,
+    span.val {
+      width: 100%;
+      max-width: 100%;
+    }
+
+    span.val {
+      white-space: normal;
+      overflow-wrap: anywhere;
     }
   }
 `;

@@ -8,7 +8,7 @@ const ResourceListOuter = styled.ul`
   padding: 0;
   display: grid;
   gap: 1rem;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
   
   li a.resource-wrap {
     display: flex;
@@ -51,6 +51,8 @@ const ResourceListOuter = styled.ul`
     font-size: 0.875rem;
     transition: all 0.2s ease;
     font-weight: 500;
+    max-width: 100%;
+    overflow-wrap: anywhere;
   }
   
   .resource-title {
@@ -77,6 +79,18 @@ const ResourceListOuter = styled.ul`
       line-height: 1.6;
     }
   }
+
+  @media (max-width: 480px) {
+    gap: 0.75rem;
+
+    li a.resource-wrap {
+      padding: 0.9rem;
+    }
+
+    .resource-lower {
+      gap: 0.7rem;
+    }
+  }
 `;
 
 const Note = styled.small`
@@ -85,6 +99,7 @@ const Note = styled.small`
   display: block;
   font-size: 0.875rem;
   line-height: 1.6;
+  overflow-wrap: anywhere;
   
   a {
     color: ${colors.primary};
@@ -107,6 +122,12 @@ const CardStyles = `
   border: 1px solid rgba(148,163,184,0.18);
   border-radius: 1rem;
   padding: 1.5rem;
+
+  @media (max-width: 480px) {
+    width: calc(100% - 1rem);
+    padding: 0.75rem;
+    border-radius: 12px;
+  }
 `;
 
 const resources = [

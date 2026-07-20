@@ -9,10 +9,16 @@ const ExportPanelContainer = styled.div`
   align-items: center;
   justify-content: center;
   flex-wrap: wrap;
+  width: min(1400px, calc(100% - clamp(1rem, 4vw, 2rem)));
   padding: 1.25rem;
   background: rgba(76, 225, 211, 0.03);
   border-radius: 8px;
-  margin: 0 1.25rem;
+  margin: 0 auto;
+
+  @media (max-width: 520px) {
+    align-items: stretch;
+    padding: 0.85rem;
+  }
 `;
 
 const ExportButtonGroup = styled.div`
@@ -20,6 +26,12 @@ const ExportButtonGroup = styled.div`
   gap: 0.5rem;
   align-items: center;
   flex-wrap: wrap;
+
+  @media (max-width: 520px) {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    width: 100%;
+  }
 `;
 
 const ExportButton = styled.button`
@@ -58,6 +70,13 @@ const ExportButton = styled.button`
     width: 1rem;
     height: 1rem;
   }
+
+  @media (max-width: 520px) {
+    justify-content: center;
+    min-width: 0;
+    padding: 0.58rem 0.3rem;
+    font-size: 0.76rem;
+  }
 `;
 
 const Label = styled.span`
@@ -67,6 +86,12 @@ const Label = styled.span`
   letter-spacing: 0.05em;
   font-weight: 600;
   margin-right: 0.25rem;
+
+  @media (max-width: 520px) {
+    width: 100%;
+    margin-right: 0;
+    text-align: center;
+  }
 `;
 
 export const ExportPanel = memo(({ onExportPDF, onExportCSV, onExportHistory, isLoading = false }) => {

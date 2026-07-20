@@ -28,7 +28,7 @@ const severityMeta = {
 };
 
 const Shell = styled.section`
-  width: min(1400px, 96vw);
+  width: min(1400px, calc(100% - clamp(1rem, 4vw, 2rem)));
   margin: 0 auto;
   border: 1px solid rgba(76, 225, 211, 0.14);
   border-radius: 14px;
@@ -67,6 +67,11 @@ const ScoreBlock = styled.div`
 
   @media (max-width: 560px) {
     padding: 1rem;
+  }
+
+  @media (max-width: 360px) {
+    gap: 0.65rem;
+    padding: 0.85rem 0.75rem;
   }
 `;
 
@@ -225,8 +230,10 @@ const Tab = styled.button`
 
   @media (max-width: 420px) {
     flex: 1;
-    padding: 0 0.65rem;
-    font-size: 0.7rem;
+    gap: 0.3rem;
+    padding: 0 0.35rem;
+    font-size: 0.65rem;
+    svg { width: 13px; height: 13px; }
   }
 `;
 
@@ -240,6 +247,10 @@ const TabCount = styled.span`
   background: rgba(76, 225, 211, 0.1);
   color: #4ce1d3;
   font-size: 0.62rem;
+
+  @media (max-width: 360px) {
+    display: none;
+  }
 `;
 
 const Pane = styled.div`

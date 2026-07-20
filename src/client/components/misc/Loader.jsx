@@ -311,7 +311,7 @@ const Loader = ({ show }) => {
                       >
                         {i === lineIndex % 4
                           ? ROTATING_LINES[lineIndex]
-                          : i < lineIndex % 4 ? line : '—'}
+                          : i < lineIndex % 4 ? line : ''}
                       </motion.span>
                     </AnimatePresence>
                   </StatusLine>
@@ -328,7 +328,7 @@ const Loader = ({ show }) => {
                 </BarTrack>
               </BarWrap>
 
-              <HintText>Results appear as they complete — no need to wait</HintText>
+              <HintText>Results appear as they complete. No need to wait</HintText>
             </Info>
           </Inner>
         </Wrap>

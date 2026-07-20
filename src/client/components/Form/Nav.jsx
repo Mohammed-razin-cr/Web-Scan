@@ -55,7 +55,7 @@ const Header = styled.header`
   gap: 1rem;
   padding: 0.75rem 1.5rem;
   width: 100%;
-  max-width: min(1240px, calc(100vw - 2rem));
+  max-width: 1240px;
   position: sticky;
   top: 0.75rem;
   z-index: 50;
@@ -72,6 +72,7 @@ const Header = styled.header`
   @media (max-width: 600px) {
     padding: 0.6rem 0.85rem;
     gap: 0.5rem;
+    top: 0.5rem;
   }
 `;
 
@@ -102,6 +103,10 @@ const Brand = styled(motion.a)`
   position: relative;
   z-index: 2;
   flex-shrink: 0;
+
+  @media (max-width: 420px) {
+    gap: 0;
+  }
 `;
 
 const BrandMark = styled(motion.img)`
@@ -109,6 +114,11 @@ const BrandMark = styled(motion.img)`
   height: 2rem;
   object-fit: contain;
   filter: drop-shadow(0 2px 12px rgba(76, 225, 211, 0.4));
+
+  @media (max-width: 420px) {
+    width: 1.75rem;
+    height: 1.75rem;
+  }
 `;
 
 const BrandText = styled.div`
@@ -131,6 +141,10 @@ const BrandText = styled.div`
       display: none;
     }
   }
+
+  @media (max-width: 420px) {
+    display: none;
+  }
 `;
 
 const Divider = styled.div`
@@ -146,6 +160,7 @@ const Divider = styled.div`
 
 const ChildWrap = styled.div`
   flex: 1;
+  min-width: 0;
   display: flex;
   align-items: center;
   gap: 0.75rem;
@@ -154,6 +169,25 @@ const ChildWrap = styled.div`
 
   @media (max-width: 600px) {
     justify-content: flex-end;
+    overflow: hidden;
+  }
+`;
+
+const ScanningWrap = styled.div`
+  width: 100%;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.65rem;
+  position: relative;
+
+  @media (max-width: 600px) {
+    gap: 0.45rem;
+  }
+
+  @media (max-width: 420px) {
+    .scan-label { display: none; }
   }
 `;
 
@@ -163,6 +197,10 @@ const FaviconWrap = styled.div`
   width: 26px;
   height: 26px;
   flex-shrink: 0;
+
+  @media (max-width: 360px) {
+    display: none;
+  }
 `;
 
 const FaviconRing = styled.span`
@@ -186,9 +224,17 @@ const DomainText = styled(motion.span)`
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  min-width: 0;
+  flex: 0 1 auto;
 
   @media (max-width: 600px) {
     max-width: 110px;
+    font-size: 0.86rem;
+  }
+
+  @media (max-width: 360px) {
+    max-width: 92px;
+    font-size: 0.78rem;
   }
 `;
 
@@ -209,6 +255,7 @@ const ScanBadge = styled(motion.span)`
   position: relative;
   overflow: hidden;
   animation: ${badgeGlow} 2s ease-in-out infinite;
+  flex-shrink: 0;
 
   /* shimmer streak */
   &::before {
@@ -218,6 +265,11 @@ const ScanBadge = styled(motion.span)`
     width: 40%;
     background: linear-gradient(90deg, transparent, rgba(76,225,211,0.2) 50%, transparent);
     animation: ${scanSweep} 1.8s ease-in-out infinite;
+  }
+
+  @media (max-width: 420px) {
+    gap: 0.2rem;
+    padding: 0.24rem 0.4rem;
   }
 `;
 
@@ -274,6 +326,10 @@ const Spark = styled.span`
   animation: ${sparkFloat} ${p => p.dur ?? 1.2}s ease-out infinite;
   animation-delay: ${p => p.delay ?? 0}s;
   pointer-events: none;
+
+  @media (max-width: 600px) {
+    display: none;
+  }
 `;
 
 /* spark data */
@@ -295,7 +351,7 @@ const ScanningContent = ({ address, addressType }) => {
   })();
 
   return (
-    <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', position: 'relative' }}>
+    <ScanningWrap>
       {/* floating sparks */}
       {SPARKS.map((s, i) => <Spark key={i} {...s} />)}
 
@@ -342,7 +398,7 @@ const ScanningContent = ({ address, addressType }) => {
         <BadgeDot delay={0}    />
         <BadgeDot delay={0.2}  />
         <BadgeDot delay={0.4}  />
-        Scanning
+        <span className="scan-label">Scanning</span>
       </ScanBadge>
 
       {/* progress dot trail */}
@@ -351,7 +407,7 @@ const ScanningContent = ({ address, addressType }) => {
           <TrailDot key={i} delay={d} opacity={0.2 + i * 0.15} />
         ))}
       </DotTrail>
-    </div>
+    </ScanningWrap>
   );
 };
 
