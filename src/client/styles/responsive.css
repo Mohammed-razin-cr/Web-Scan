@@ -270,4 +270,11 @@ fieldset {
   }
 }
 
+@media (max-height: 600px) and (orientation: landscape) {
+  [role='dialog'] {
+    max-height: calc(100dvh - 1rem);
+    overflow-y: auto;
+  }
+}
+
 /* RESPONSIVE_RULES_END */
