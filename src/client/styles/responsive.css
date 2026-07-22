@@ -64,4 +64,9 @@ table {
   max-width: 100%;
 }
 
+.inner-heading {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
 /* RESPONSIVE_RULES_END */
