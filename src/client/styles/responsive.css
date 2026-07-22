@@ -129,4 +129,10 @@ a {
   touch-action: manipulation;
 }
 
+input,
+textarea,
+select {
+  max-width: 100%;
+}
+
 /* RESPONSIVE_RULES_END */
