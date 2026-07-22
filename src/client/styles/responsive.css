@@ -88,4 +88,8 @@ table {
   overflow-wrap: anywhere;
 }
 
+.resource-link {
+  overflow-wrap: anywhere;
+}
+
 /* RESPONSIVE_RULES_END */
