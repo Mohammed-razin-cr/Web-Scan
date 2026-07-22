@@ -157,4 +157,10 @@ fieldset {
   }
 }
 
+@media (max-width: 768px) {
+  .card-body {
+    overflow-wrap: anywhere;
+  }
+}
+
 /* RESPONSIVE_RULES_END */
