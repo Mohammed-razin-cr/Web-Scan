@@ -106,4 +106,9 @@ table {
   overscroll-behavior-inline: contain;
 }
 
+[role='tab'] {
+  min-width: 0;
+  touch-action: manipulation;
+}
+
 /* RESPONSIVE_RULES_END */
