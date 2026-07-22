@@ -196,4 +196,10 @@ fieldset {
   }
 }
 
+@media (max-width: 768px) {
+  .resource-lower img {
+    flex: 0 0 auto;
+  }
+}
+
 /* RESPONSIVE_RULES_END */
