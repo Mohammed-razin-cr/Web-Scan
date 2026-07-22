@@ -144,4 +144,9 @@ fieldset {
   max-width: calc(100vw - 1rem);
 }
 
+.Toastify__toast {
+  max-width: 100%;
+  overflow-wrap: anywhere;
+}
+
 /* RESPONSIVE_RULES_END */
