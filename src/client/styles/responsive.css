@@ -254,4 +254,12 @@ fieldset {
   }
 }
 
+@media (max-width: 520px) {
+  .url-pill {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
 /* RESPONSIVE_RULES_END */
