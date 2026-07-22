@@ -40,4 +40,9 @@ video {
   height: auto;
 }
 
+canvas,
+iframe {
+  max-width: 100%;
+}
+
 /* RESPONSIVE_RULES_END */
