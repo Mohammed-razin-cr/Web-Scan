@@ -12,4 +12,9 @@ body {
   min-width: 0;
 }
 
+.check-page {
+  width: 100%;
+  min-width: 0;
+}
+
 /* RESPONSIVE_RULES_END */
