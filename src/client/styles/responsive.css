@@ -169,4 +169,10 @@ fieldset {
   }
 }
 
+@media (max-width: 768px) {
+  .card-header > * {
+    min-width: 0;
+  }
+}
+
 /* RESPONSIVE_RULES_END */
