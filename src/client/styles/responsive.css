@@ -96,4 +96,9 @@ table {
   overflow-wrap: anywhere;
 }
 
+[role='tabpanel'] {
+  min-width: 0;
+  max-width: 100%;
+}
+
 /* RESPONSIVE_RULES_END */
