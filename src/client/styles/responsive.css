@@ -175,4 +175,12 @@ fieldset {
   }
 }
 
+@media (max-width: 768px) {
+  .card-body ul,
+  .card-body ol {
+    max-width: 100%;
+    padding-inline-start: 1.25rem;
+  }
+}
+
 /* RESPONSIVE_RULES_END */
