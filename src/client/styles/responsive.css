@@ -183,4 +183,11 @@ fieldset {
   }
 }
 
+@media (max-width: 768px) {
+  .card-body pre {
+    width: 100%;
+    margin-inline: 0;
+  }
+}
+
 /* RESPONSIVE_RULES_END */
