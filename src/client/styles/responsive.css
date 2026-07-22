@@ -149,4 +149,12 @@ fieldset {
   overflow-wrap: anywhere;
 }
 
+@media (max-width: 768px) {
+  input,
+  textarea,
+  select {
+    font-size: 16px;
+  }
+}
+
 /* RESPONSIVE_RULES_END */
