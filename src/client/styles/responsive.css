@@ -208,4 +208,11 @@ fieldset {
   }
 }
 
+@media (max-width: 768px) {
+  footer a {
+    max-width: 100%;
+    overflow-wrap: anywhere;
+  }
+}
+
 /* RESPONSIVE_RULES_END */
