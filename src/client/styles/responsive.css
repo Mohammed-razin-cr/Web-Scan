@@ -79,4 +79,9 @@ table {
   max-width: 100%;
 }
 
+.resource-details {
+  min-width: 0;
+  max-width: 100%;
+}
+
 /* RESPONSIVE_RULES_END */
