@@ -163,4 +163,10 @@ fieldset {
   }
 }
 
+@media (max-width: 768px) {
+  .card-header {
+    gap: 0.65rem;
+  }
+}
+
 /* RESPONSIVE_RULES_END */
