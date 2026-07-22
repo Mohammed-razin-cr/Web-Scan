@@ -34,4 +34,10 @@ footer {
   min-width: 0;
 }
 
+img,
+video {
+  max-width: 100%;
+  height: auto;
+}
+
 /* RESPONSIVE_RULES_END */
