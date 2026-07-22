@@ -140,4 +140,8 @@ fieldset {
   max-width: 100%;
 }
 
+.Toastify__toast-container {
+  max-width: calc(100vw - 1rem);
+}
+
 /* RESPONSIVE_RULES_END */
