@@ -124,4 +124,9 @@ summary {
   touch-action: manipulation;
 }
 
+button,
+a {
+  touch-action: manipulation;
+}
+
 /* RESPONSIVE_RULES_END */
