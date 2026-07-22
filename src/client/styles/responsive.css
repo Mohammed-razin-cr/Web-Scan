@@ -242,4 +242,10 @@ fieldset {
   }
 }
 
+@media (max-width: 520px) {
+  [aria-label='Security command center'] {
+    max-width: calc(100% - 1rem);
+  }
+}
+
 /* RESPONSIVE_RULES_END */
