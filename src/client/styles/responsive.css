@@ -101,4 +101,9 @@ table {
   max-width: 100%;
 }
 
+[role='tablist'] {
+  max-width: 100%;
+  overscroll-behavior-inline: contain;
+}
+
 /* RESPONSIVE_RULES_END */
