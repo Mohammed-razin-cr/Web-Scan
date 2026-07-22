@@ -60,4 +60,8 @@ table {
   max-width: 100%;
 }
 
+.card-body > * {
+  max-width: 100%;
+}
+
 /* RESPONSIVE_RULES_END */
