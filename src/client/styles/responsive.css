@@ -17,4 +17,8 @@ body {
   min-width: 0;
 }
 
+.check-page > * {
+  min-width: 0;
+}
+
 /* RESPONSIVE_RULES_END */
