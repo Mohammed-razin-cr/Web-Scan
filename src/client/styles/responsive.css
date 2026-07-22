@@ -120,4 +120,8 @@ details {
   max-width: 100%;
 }
 
+summary {
+  touch-action: manipulation;
+}
+
 /* RESPONSIVE_RULES_END */
