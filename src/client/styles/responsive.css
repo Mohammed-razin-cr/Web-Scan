@@ -92,4 +92,8 @@ table {
   overflow-wrap: anywhere;
 }
 
+.resource-description {
+  overflow-wrap: anywhere;
+}
+
 /* RESPONSIVE_RULES_END */
