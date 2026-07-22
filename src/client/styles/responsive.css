@@ -223,4 +223,11 @@ fieldset {
   }
 }
 
+@media (max-width: 520px) {
+  .Toastify__toast {
+    margin-bottom: 0.5rem;
+    border-radius: 8px;
+  }
+}
+
 /* RESPONSIVE_RULES_END */
