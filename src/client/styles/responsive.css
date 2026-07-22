@@ -248,4 +248,10 @@ fieldset {
   }
 }
 
+@media (max-width: 520px) {
+  [aria-label='Security command center'] [role='tabpanel'] {
+    overflow-x: clip;
+  }
+}
+
 /* RESPONSIVE_RULES_END */
