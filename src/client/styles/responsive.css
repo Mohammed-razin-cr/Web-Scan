@@ -84,4 +84,8 @@ table {
   max-width: 100%;
 }
 
+.resource-title {
+  overflow-wrap: anywhere;
+}
+
 /* RESPONSIVE_RULES_END */
