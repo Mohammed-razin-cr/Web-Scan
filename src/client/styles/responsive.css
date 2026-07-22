@@ -54,4 +54,10 @@ table {
   max-width: 100%;
 }
 
+.card-header,
+.card-body {
+  min-width: 0;
+  max-width: 100%;
+}
+
 /* RESPONSIVE_RULES_END */
