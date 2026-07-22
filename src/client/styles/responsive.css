@@ -190,4 +190,10 @@ fieldset {
   }
 }
 
+@media (max-width: 768px) {
+  .resource-lower {
+    flex-wrap: wrap;
+  }
+}
+
 /* RESPONSIVE_RULES_END */
