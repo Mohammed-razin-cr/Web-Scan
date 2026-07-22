@@ -230,4 +230,10 @@ fieldset {
   }
 }
 
+@media (max-width: 520px) {
+  [role='tablist'] {
+    scrollbar-width: none;
+  }
+}
+
 /* RESPONSIVE_RULES_END */
