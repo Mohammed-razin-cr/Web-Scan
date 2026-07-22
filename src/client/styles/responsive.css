@@ -45,4 +45,9 @@ iframe {
   max-width: 100%;
 }
 
+pre {
+  max-width: 100%;
+  overflow-x: auto;
+}
+
 /* RESPONSIVE_RULES_END */
