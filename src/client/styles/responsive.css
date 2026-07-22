@@ -111,4 +111,8 @@ table {
   touch-action: manipulation;
 }
 
+[role='dialog'] {
+  max-width: 100%;
+}
+
 /* RESPONSIVE_RULES_END */
