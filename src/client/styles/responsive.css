@@ -262,4 +262,12 @@ fieldset {
   }
 }
 
+@media (max-width: 520px) {
+  .card-body table {
+    display: block;
+    overflow-x: auto;
+    overscroll-behavior-inline: contain;
+  }
+}
+
 /* RESPONSIVE_RULES_END */
