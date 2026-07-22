@@ -1,3 +1,9 @@
 /* Cross-page responsive safeguards for the React application. */
 
+html {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: clip;
+}
+
 /* RESPONSIVE_RULES_END */
