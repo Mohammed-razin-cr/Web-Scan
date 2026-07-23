@@ -166,10 +166,11 @@ const ChildWrap = styled.div`
   gap: 0.75rem;
   position: relative;
   z-index: 2;
+  overflow: hidden;
 
   @media (max-width: 600px) {
     justify-content: flex-end;
-    overflow: hidden;
+    gap: 0.4rem;
   }
 `;
 
@@ -227,14 +228,23 @@ const DomainText = styled(motion.span)`
   min-width: 0;
   flex: 0 1 auto;
 
+  @media (max-width: 768px) {
+    max-width: 140px;
+  }
+
   @media (max-width: 600px) {
     max-width: 110px;
     font-size: 0.86rem;
   }
 
+  @media (max-width: 420px) {
+    max-width: 80px;
+    font-size: 0.8rem;
+  }
+
   @media (max-width: 360px) {
-    max-width: 92px;
-    font-size: 0.78rem;
+    max-width: 65px;
+    font-size: 0.75rem;
   }
 `;
 

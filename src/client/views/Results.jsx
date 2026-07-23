@@ -46,6 +46,16 @@ const ResultsOuter = styled.div`
   padding: 1.25rem 0 3rem;
   max-width: 100vw;
   overflow-x: hidden;
+
+  @media (max-width: 480px) {
+    gap: 0.875rem;
+    padding: 0.875rem 0 2.5rem;
+  }
+
+  @media (max-width: 360px) {
+    gap: 0.75rem;
+    padding: 0.75rem 0 2rem;
+  }
 `;
 
 const NavWrapper = styled.div`
@@ -282,7 +292,7 @@ const Results = (props) => {
         />
       )}
       <ResultsContent>
-        <ResultsMasonryGrid minColWidth={340} gap={18}>
+        <ResultsMasonryGrid minColWidth={300} gap={16}>
           {cardsToShow.map(({ card, data }) => (
             <div id={`card-${card.id}`} key={`eb-${card.id}`}>
               <ErrorBoundary title={card.title}>

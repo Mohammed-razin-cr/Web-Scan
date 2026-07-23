@@ -141,6 +141,32 @@ const GhostBtn = styled(motion.a)`
 const MenuBtn = styled(motion.button)`
   width: 2.75rem; height: 2.75rem;
   display: grid; place-items: center;
+
+const HeaderActions = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+`;
+
+const GhostBtn = styled(motion.a)`
+  color: #4ce1d3;
+  border: 1px solid rgba(76,225,211,0.22);
+  background: rgba(76,225,211,0.06);
+  padding: 0.55rem 1.1rem;
+  border-radius: 8px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  text-decoration: none;
+  transition: background 0.2s, border-color 0.2s;
+  &:hover { background: rgba(76,225,211,0.14); border-color: rgba(76,225,211,0.5); text-decoration: none; }
+  @media (max-width: 768px) { display: none; }
+`;
+
+const MenuBtn = styled(motion.button)`
+  width: 2.75rem; height: 2.75rem;
+  display: grid; place-items: center;
   color: #4ce1d3;
   border: 1px solid rgba(76,225,211,0.2);
   background: rgba(44,53,49,0.5);
@@ -163,6 +189,10 @@ const Hero = styled.section`
     min-height: calc(100vh - 4.25rem);
     min-height: calc(100svh - 4.25rem);
   }
+  @media (max-width: 360px) {
+    min-height: auto;
+    padding-bottom: 2rem;
+  }
 `;
 
 const Stage = styled.div`
@@ -182,19 +212,22 @@ const Stage = styled.div`
     max-width: 100%;
     padding: 2rem clamp(1.5rem, 4vw, 3rem) 3rem;
   }
+  @media (max-width: 768px) {
+    padding: 1.5rem clamp(1rem, 4vw, 2rem) 3rem;
+  }
   @media (max-width: 640px) {
     min-height: calc(100vh - 4.25rem);
     min-height: calc(100svh - 4.25rem);
     padding: 1.25rem 1rem 2.5rem;
   }
+  @media (max-width: 360px) {
+    min-height: auto;
+    padding: 1rem 0.875rem 2rem;
+  }
   @media (min-width: 1025px) and (max-height: 800px) {
     padding-top: 1.5rem;
   }
 `;
-
-/* Corner-bracket frame decoration */
-const Frame = styled.div`
-  position: absolute;
   left: clamp(1rem, 5vw, 5.5rem);
   right: clamp(1rem, 5vw, 5.5rem);
   top: 2.5rem;
@@ -342,10 +375,17 @@ const Subtitle = styled(motion.p)`
   line-height: 1.7;
   max-width: 38rem;
   font-weight: 400;
+  @media (max-width: 768px) {
+    font-size: 0.98rem;
+  }
   @media (max-width: 640px) {
     margin-bottom: 1.25rem;
-    font-size: 0.95rem;
+    font-size: 0.92rem;
     line-height: 1.55;
+  }
+  @media (max-width: 360px) {
+    font-size: 0.875rem;
+    margin-bottom: 1rem;
   }
 `;
 
@@ -475,14 +515,19 @@ const StatsRow = styled(motion.div)`
   }
 
   @media (max-width: 640px) {
-    gap: 1.5rem;
+    gap: 1.25rem;
     margin-top: 1.5rem;
     padding-top: 1.25rem;
+    width: 100%;
   }
   @media (max-width: 480px) {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 1.25rem 0;
+    gap: 1rem 0;
+  }
+  @media (max-width: 360px) {
+    gap: 0.75rem 0;
+    margin-top: 1.25rem;
   }
 `;
 
@@ -750,8 +795,7 @@ const Home = () => {
 
             {/* ── Subtitle ── */}
             <Subtitle variants={fadeUp}>
-              Deep-scan any domain: SSL, DNS, headers, ports, threats, tech stack and more.
-              <br />Professional intelligence at a glance.
+              Deep-scan any domain: SSL, DNS, headers, ports, threats, tech stack and more. Professional intelligence at a glance.
             </Subtitle>
 
             {/* ── Scan form with dual BorderBeam ── */}

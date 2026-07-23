@@ -44,7 +44,14 @@ const currentYear = new Date().getFullYear();
     position: relative;
     z-index: 10;
     padding: 3rem 0 2rem;
+    padding-bottom: calc(2rem + env(safe-area-inset-bottom, 0px));
     margin-top: 4rem;
+
+    @media (max-width: 480px) {
+      padding: 2rem 0 1.5rem;
+      padding-bottom: calc(1.5rem + env(safe-area-inset-bottom, 0px));
+      margin-top: 2.5rem;
+    }
   }
 
   .footer-inner {
@@ -137,6 +144,30 @@ const currentYear = new Date().getFullYear();
     .footer-links {
       flex-wrap: wrap;
       justify-content: center;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .footer-inner {
+      gap: 1.25rem;
+      padding-top: 1.25rem;
+    }
+
+    .footer-name {
+      font-size: 1.05rem;
+    }
+
+    .footer-tagline,
+    .footer-links a {
+      font-size: 0.8rem;
+    }
+
+    .footer-copyright {
+      font-size: 0.78rem;
+    }
+
+    .footer-links {
+      gap: 0.875rem;
     }
   }
 </style>

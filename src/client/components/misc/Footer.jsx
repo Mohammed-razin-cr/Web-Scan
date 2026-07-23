@@ -8,6 +8,7 @@ const FooterContainer = styled.footer`
   z-index: 10;
   width: 100%;
   padding: clamp(1.75rem, 5vw, 2.75rem) 0;
+  padding-bottom: calc(clamp(1.75rem, 5vw, 2.75rem) + env(safe-area-inset-bottom, 0px));
   margin-top: clamp(2.5rem, 5vw, 4.5rem);
 `;
 
@@ -18,14 +19,22 @@ const FooterInner = styled.div`
   justify-content: space-between;
   align-items: center;
   padding-top: clamp(1.5rem, 4vw, 2.25rem);
-  gap: 2rem;
+  gap: 1.5rem;
   border-top: 1px solid ${colors.border};
   flex-wrap: wrap;
   
   @media (max-width: 768px) {
     flex-direction: column;
     justify-content: center;
+    align-items: center;
     text-align: center;
+    gap: 1rem;
+  }
+
+  @media (max-width: 480px) {
+    width: min(1200px, 96vw);
+    gap: 0.75rem;
+    padding-top: 1.25rem;
   }
 `;
 
@@ -60,14 +69,20 @@ const ProjectName = styled.span`
 const FooterLinks = styled.div`
   display: flex;
   align-items: center;
-  gap: 1.25rem;
+  gap: 1rem;
   flex-wrap: wrap;
   justify-content: center;
+
+  @media (max-width: 480px) {
+    gap: 0.65rem;
+    flex-direction: column;
+    align-items: center;
+  }
 `;
 
 const FooterText = styled.span`
   font-size: clamp(0.825rem, 2vw, 0.9rem);
-  color: ${colors.textColorSecondary};
+  color: ${colors.textSecondary};
   font-weight: 400;
   line-height: 1.5;
   display: inline-flex;
@@ -75,6 +90,10 @@ const FooterText = styled.span`
   gap: 0.35rem;
   flex-wrap: wrap;
   justify-content: center;
+
+  @media (max-width: 480px) {
+    font-size: 0.8rem;
+  }
 `;
 
 const StyledLink = styled.a`
