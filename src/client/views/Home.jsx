@@ -141,32 +141,6 @@ const GhostBtn = styled(motion.a)`
 const MenuBtn = styled(motion.button)`
   width: 2.75rem; height: 2.75rem;
   display: grid; place-items: center;
-
-const HeaderActions = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-`;
-
-const GhostBtn = styled(motion.a)`
-  color: #4ce1d3;
-  border: 1px solid rgba(76,225,211,0.22);
-  background: rgba(76,225,211,0.06);
-  padding: 0.55rem 1.1rem;
-  border-radius: 8px;
-  font-size: 0.72rem;
-  font-weight: 700;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  text-decoration: none;
-  transition: background 0.2s, border-color 0.2s;
-  &:hover { background: rgba(76,225,211,0.14); border-color: rgba(76,225,211,0.5); text-decoration: none; }
-  @media (max-width: 768px) { display: none; }
-`;
-
-const MenuBtn = styled(motion.button)`
-  width: 2.75rem; height: 2.75rem;
-  display: grid; place-items: center;
   color: #4ce1d3;
   border: 1px solid rgba(76,225,211,0.2);
   background: rgba(44,53,49,0.5);
