@@ -67,9 +67,14 @@ const makeBreadcrumbs = () => {
 
 <!-- Page info, viewport, Astro credit -->
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
 <meta name="generator" content={Astro.generator} />
 <meta name="robots" content="index, follow" />
+<meta name="mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="apple-mobile-web-app-title" content={siteInfo.title} />
+<meta name="format-detection" content="telephone=no" />
 
 <!-- Icons and colors -->
 <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
