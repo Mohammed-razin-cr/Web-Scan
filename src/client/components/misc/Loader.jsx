@@ -55,6 +55,10 @@ const Inner = styled.div`
     gap: 2rem;
     padding: 2rem 1.5rem;
   }
+  @media (max-width: 360px) {
+    gap: 1.5rem;
+    padding: 1.5rem 1rem;
+  }
 `;
 
 /* ── Radar ── */
@@ -62,6 +66,10 @@ const RadarBox = styled.div`
   position: relative;
   width: 140px; height: 140px;
   flex-shrink: 0;
+  @media (max-width: 360px) {
+    width: 110px;
+    height: 110px;
+  }
 `;
 
 const RadarBg = styled.div`
@@ -224,6 +232,9 @@ const HintText = styled.p`
   color: rgba(209,232,226,0.3);
   font-family: 'JetBrains Mono', monospace;
   letter-spacing: 0.02em;
+  @media (max-width: 360px) {
+    font-size: 0.65rem;
+  }
 `;
 
 const ROTATING_LINES = [
