@@ -83,4 +83,89 @@ const { preloadBodyFont = true } = Astro.props;
     background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
     mix-blend-mode: overlay;
   }
+
+  /* ── Astro View Transitions ── */
+  @keyframes fade-in {
+    from { opacity: 0; transform: translateY(10px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fade-out {
+    from { opacity: 1; transform: translateY(0); }
+    to   { opacity: 0; transform: translateY(-8px); }
+  }
+
+  ::view-transition-old(root) {
+    animation: fade-out 0.22s cubic-bezier(0.4, 0, 1, 1) both;
+  }
+  ::view-transition-new(root) {
+    animation: fade-in 0.38s cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+
+  /* ── Top progress bar for Astro page loads ── */
+  #astro-progress {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 2.5px;
+    width: 0%;
+    z-index: 9999;
+    pointer-events: none;
+    border-radius: 0 2px 2px 0;
+    background: linear-gradient(
+      90deg,
+      #116466 0%,
+      #4ce1d3 40%,
+      #8ef5ec 60%,
+      #4ce1d3 80%,
+      #ffcb9a 100%
+    );
+    background-size: 200% 100%;
+    box-shadow: 0 0 8px rgba(76,225,211,0.7), 0 0 20px rgba(76,225,211,0.3);
+    transition: width 0.3s ease, opacity 0.4s ease;
+    animation: pg-shimmer 1.4s linear infinite;
+  }
+  @keyframes pg-shimmer {
+    0%   { background-position: -200% 0; }
+    100% { background-position:  200% 0; }
+  }
 </style>
+
+<div id="astro-progress"></div>
+
+<script>
+  (() => {
+    const bar = document.getElementById('astro-progress');
+    if (!bar) return;
+
+    let timer = null;
+    let prog  = 0;
+
+    const set = (w) => {
+      prog = w;
+      bar.style.width   = w + '%';
+      bar.style.opacity = w > 0 && w < 100 ? '1' : '0';
+    };
+
+    const tick = () => {
+      const step = (90 - prog) * 0.06 + 0.5;
+      prog = Math.min(prog + step, 90);
+      bar.style.width = prog + '%';
+    };
+
+    const start = () => {
+      clearInterval(timer);
+      set(5);
+      setTimeout(() => set(25), 80);
+      timer = setInterval(tick, 200);
+    };
+
+    const done = () => {
+      clearInterval(timer);
+      set(100);
+      setTimeout(() => set(0), 500);
+    };
+
+    document.addEventListener('astro:before-preparation', start);
+    document.addEventListener('astro:page-load', done);
+  })();
+</script>

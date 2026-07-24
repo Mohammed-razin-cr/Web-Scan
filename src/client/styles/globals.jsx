@@ -74,6 +74,26 @@ const GlobalStyles = () => (
         html {
           scroll-behavior: auto;
         }
+        *, *::before, *::after {
+          animation-duration: 0.01ms !important;
+          animation-iteration-count: 1 !important;
+          transition-duration: 0.01ms !important;
+        }
+      }
+
+      /* ── Progress bar shimmer ── */
+      @keyframes pg-shimmer {
+        0%   { background-position: -200% 0; }
+        100% { background-position:  200% 0; }
+      }
+
+      /* ── Smooth initial app mount ── */
+      @keyframes root-mount {
+        from { opacity: 0; transform: translateY(6px); }
+        to   { opacity: 1; transform: translateY(0);   }
+      }
+      #root {
+        animation: root-mount 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
       }
     `}
   />
