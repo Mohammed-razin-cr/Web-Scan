@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
 import { Link } from 'react-router-dom';
 import colors from 'client/styles/colors';
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 
 
 
@@ -50,14 +50,18 @@ const CloseButton = styled.button`
   background: rgba(209, 232, 226, 0.05);
   border: 1px solid rgba(209, 232, 226, 0.12);
   color: ${colors.primary};
-  width: 2.7rem;
-  height: 2.7rem;
+  width: 2.9rem;
+  height: 2.9rem;
+  min-width: 44px;
+  min-height: 44px;
   display: grid;
   place-items: center;
   border-radius: 6px;
   cursor: pointer;
   align-self: flex-end;
   transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
   &:hover {
     background: rgba(76, 225, 211, 0.12);
     border-color: rgba(76, 225, 211, 0.35);
@@ -191,11 +195,11 @@ const DrawerFooter = styled.div`
 `;
 
 export default function NavigationDrawer({ isOpen, onClose }) {
+  const startXRef = useRef(null);
+
   useEffect(() => {
     const handleKeyDown = (e) => {
-      if (e.key === 'Escape') {
-        onClose();
-      }
+      if (e.key === 'Escape') onClose();
     };
     if (isOpen) {
       document.addEventListener('keydown', handleKeyDown);
@@ -207,10 +211,28 @@ export default function NavigationDrawer({ isOpen, onClose }) {
     };
   }, [isOpen, onClose]);
 
+  // Swipe-right to close on touch devices
+  const handleTouchStart = (e) => {
+    startXRef.current = e.touches[0].clientX;
+  };
+  const handleTouchEnd = (e) => {
+    if (startXRef.current === null) return;
+    const dx = e.changedTouches[0].clientX - startXRef.current;
+    if (dx > 60) onClose();
+    startXRef.current = null;
+  };
+
   return (
     <>
       <Overlay isOpen={isOpen} onClick={onClose} />
-      <DrawerContainer isOpen={isOpen} aria-modal="true" role="dialog" aria-label="Navigation Menu">
+      <DrawerContainer
+        isOpen={isOpen}
+        aria-modal="true"
+        role="dialog"
+        aria-label="Navigation Menu"
+        onTouchStart={handleTouchStart}
+        onTouchEnd={handleTouchEnd}
+      >
         <CloseButton onClick={onClose} aria-label="Close menu">
           <svg viewBox="0 0 24 24" fill="none" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             <line x1="18" y1="6" x2="6" y2="18" />
