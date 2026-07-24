@@ -10,6 +10,7 @@ import NotFound from 'client/views/NotFound.jsx';
 import ErrorBoundary from 'client/components/boundaries/PageError.jsx';
 import GlobalStyles  from './styles/globals.jsx';
 import PageProgress  from 'client/components/misc/PageProgress.jsx';
+import ScrollToTop   from 'client/components/misc/ScrollToTop.jsx';
 
 /* ── Page transition variants ── */
 const pageVariants = {
@@ -52,6 +53,8 @@ const Layout = () => {
       <GlobalStyles />
       {/* Thin top progress bar on every navigation */}
       <PageProgress />
+      {/* Floating scroll-to-top */}
+      <ScrollToTop />
 
       <AnimatePresence mode="wait" initial={false}>
         <motion.div
