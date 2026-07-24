@@ -28,6 +28,9 @@ const { preloadBodyFont = true } = Astro.props;
     <ClientRouter />
     <MetaTags {...Astro.props} />
     <slot name="head" />
+    <!-- Preconnect to font origins for faster loading -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     {
       preloadBodyFont && (
         <link
@@ -41,6 +44,15 @@ const { preloadBodyFont = true } = Astro.props;
     }
   </head>
   <body>
+    <noscript>
+      <style>
+        body { display: flex; align-items: center; justify-content: center; min-height: 100vh; text-align: center; padding: 2rem; }
+      </style>
+      <div style="max-width:28rem;margin:0 auto">
+        <h1 style="color:#4ce1d3;font-size:2rem;font-family:sans-serif">JavaScript Required</h1>
+        <p style="color:#d1e8e2;font-family:sans-serif;line-height:1.6">WebScan requires JavaScript to run. Please enable JavaScript in your browser settings to use this application.</p>
+      </div>
+    </noscript>
     <div class="background-gradient"></div>
     <div class="background-noise"></div>
     <slot />
