@@ -202,6 +202,10 @@ const Stage = styled.div`
     padding-top: 1.5rem;
   }
 `;
+
+/* Corner-bracket frame decoration */
+const Frame = styled.div`
+  position: absolute;
   left: clamp(1rem, 5vw, 5.5rem);
   right: clamp(1rem, 5vw, 5.5rem);
   top: 2.5rem;
