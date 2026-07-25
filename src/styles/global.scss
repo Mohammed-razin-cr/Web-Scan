@@ -159,6 +159,32 @@ select {
   box-shadow: 0 0 20px rgba(76, 225, 211, 0.3), 0 0 60px rgba(76, 225, 211, 0.1);
 }
 
+/* ── Print styles for audit reports ── */
+@media print {
+  body {
+    background: #ffffff !important;
+    color: #111111 !important;
+  }
+
+  header,
+  footer,
+  nav,
+  button,
+  .background-gradient,
+  .background-noise,
+  #astro-progress {
+    display: none !important;
+  }
+
+  .card-body {
+    break-inside: avoid;
+    border: 1px solid #cccccc !important;
+    box-shadow: none !important;
+    background: #ffffff !important;
+    color: #111111 !important;
+  }
+}
+
 /* ── Smooth reduced-motion override ── */
 @media (prefers-reduced-motion: reduce) {
   *,
