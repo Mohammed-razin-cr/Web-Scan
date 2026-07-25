@@ -252,6 +252,11 @@ const Results = (props) => {
     errorKind = 'api-down';
   }
 
+  const copyScanUrl = () => {
+    navigator.clipboard.writeText(window.location.href);
+    toast.success('Scan results URL copied to clipboard!');
+  };
+
   const jumpToCard = (id) => {
     const el = document.getElementById(`card-${id}`);
     if (!el) return;
