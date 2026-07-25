@@ -262,14 +262,12 @@ body {
   text-rendering: optimizeLegibility;
 }
 
-/* ── Better touch targets for interactive elements ── */
+/* ── Better touch feedback ── */
 button,
 a,
 [role='button'],
 [role='tab'],
 summary {
-  min-height: 44px;
-  min-width: 44px;
   touch-action: manipulation;
   -webkit-tap-highlight-color: transparent;
 }

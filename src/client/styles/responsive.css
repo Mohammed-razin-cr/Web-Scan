@@ -313,14 +313,8 @@ fieldset {
   }
 }
 
-/* ── Pointer: coarse (touch devices) — bigger tap targets ── */
+/* ── Pointer: coarse (touch devices) — bigger form tap targets ── */
 @media (pointer: coarse) {
-  button,
-  a,
-  [role='button'] {
-    min-height: 44px;
-  }
-
   input,
   select,
   textarea {

@@ -56,18 +56,15 @@ const Layout = () => {
       {/* Floating scroll-to-top */}
       <ScrollToTop />
 
-      <AnimatePresence mode="wait" initial={false}>
-        <motion.div
-          key={location.pathname}
-          variants={variants}
-          initial="initial"
-          animate="enter"
-          exit="exit"
-          style={{ minHeight: '100vh' }}
-        >
-          <Outlet />
-        </motion.div>
-      </AnimatePresence>
+      <motion.div
+        key={location.pathname}
+        initial={{ opacity: 0, y: 6 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: reduceMotion ? 0 : 0.25, ease: [0.16, 1, 0.3, 1] }}
+        style={{ minHeight: '100vh' }}
+      >
+        <Outlet />
+      </motion.div>
     </>
   );
 };
