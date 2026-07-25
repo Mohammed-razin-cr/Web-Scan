@@ -649,6 +649,22 @@ const Home = () => {
   }, []);
 
   useEffect(() => {
+    const handleKeyDown = (e) => {
+      const activeEl = document.activeElement;
+      const isInputActive = activeEl && (activeEl.tagName === 'INPUT' || activeEl.tagName === 'TEXTAREA');
+      if ((e.key === '/' || (e.ctrlKey && e.key === 'k')) && !isInputActive) {
+        e.preventDefault();
+        const input = document.getElementById('scan-input');
+        if (input) input.focus();
+      } else if (e.key === 'Escape' && isInputActive) {
+        activeEl.blur();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
+
+  useEffect(() => {
     const query = new URLSearchParams(location.search);
     const urlFromQuery = query.get('url');
     if (urlFromQuery) {
