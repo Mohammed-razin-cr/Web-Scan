@@ -26,6 +26,12 @@ const colors = {
   info: '#3b82f6',
   infoLight: '#60a5fa',
   neutral: '#2C3531',
+  danger: '#ef4444',
+  dangerLight: '#f87171',
+  textSecondary: '#94a3b8',
+  accent: '#4ce1d3',
+  accentLight: '#8ef5ec',
+  accentDark: '#116466',
 };
 
 export default colors;
