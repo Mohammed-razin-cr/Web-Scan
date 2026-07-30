@@ -53,6 +53,11 @@ const GlobalStyles = () => (
         -webkit-tap-highlight-color: transparent;
       }
 
+      :focus-visible {
+        outline: 2px solid rgba(76, 225, 211, 0.65);
+        outline-offset: 3px;
+      }
+
       #fancy-background p span {
         color: transparent;
       }
