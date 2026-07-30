@@ -35,6 +35,11 @@ export const StyledRow = styled.div`
     background: rgba(76, 225, 211, 0.04);
   }
 
+  @media (max-width: 360px) {
+    padding: 0.35rem 0.4rem;
+    gap: 0.35rem;
+  }
+
   &li {
     border-bottom: 1px dashed rgba(76, 225, 211, 0.1) !important;
   }
