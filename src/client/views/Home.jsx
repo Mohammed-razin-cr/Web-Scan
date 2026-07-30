@@ -847,32 +847,6 @@ const Home = () => {
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" style={{ flexShrink: 0 }}>
                           <circle cx="11" cy="11" r="8"/>
                           <path d="m21 21-4.35-4.35"/>
-                <ScanForm onSubmit={(e) => { e.preventDefault(); submit(); }}>
-                  <label htmlFor="scan-input">Website or IP</label>
-                  {/* Premium TypewriterInput replaces plain ScanInput */}
-                  <TypewriterInput
-                    id="scan-input"
-                    name="url"
-                    value={userInput}
-                    onChange={inputChange}
-                    onKeyDown={(e) => e.key === 'Enter' && (e.preventDefault(), submit())}
-                  />
-                  {/* Magnetic + ShimmerButton for the scan CTA */}
-                  <ScanBtnWrap>
-                    <MagneticButton strength={0.28} radius={100} style={{ width: '100%' }}>
-                      <ShimmerButton
-                        type="submit"
-                        style={{
-                          width: '100%',
-                          height: '3.5rem',
-                          borderRadius: '12px',
-                          fontSize: '0.97rem',
-                          letterSpacing: '0.05em',
-                        }}
-                      >
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" style={{ flexShrink: 0 }}>
-                          <circle cx="11" cy="11" r="8"/>
-                          <path d="m21 21-4.35-4.35"/>
                         </svg>
                         Analyze Website
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" style={{ flexShrink: 0, opacity: 0.7 }}>
