@@ -61,6 +61,11 @@ const StyledHeading = styled.h1`
   }};
   ${(props) => (props.color ? `color: ${props.color};` : '')}
   ${(props) => (props.inline ? 'display: inline;' : '')}
+
+  @media (max-width: 360px) {
+    gap: 0.5rem;
+    img { width: 2rem; }
+  }
 `;
 
 const makeAnchor = (title) => {
