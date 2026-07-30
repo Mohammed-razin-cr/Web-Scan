@@ -101,7 +101,17 @@ const PageProgress = () => {
     return () => { clear(); clearTimeout(t); };
   }, [location.pathname, location.search]);
 
-  return <Bar progress={progress} visible={visible} />;
+  return (
+    <Bar
+      role="progressbar"
+      aria-label="Page loading progress"
+      aria-valuenow={Math.round(progress)}
+      aria-valuemin={0}
+      aria-valuemax={100}
+      progress={progress}
+      visible={visible}
+    />
+  );
 };
 
 export default PageProgress;
