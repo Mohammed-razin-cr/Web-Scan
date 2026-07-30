@@ -42,6 +42,7 @@ const CanvasHost = styled.div`
     width: 100% !important;
     height: 100% !important;
     transform: translateZ(0);
+    will-change: transform;
   }
 `;
 
