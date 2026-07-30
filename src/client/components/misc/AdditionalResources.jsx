@@ -327,7 +327,7 @@ const AdditionalResources = (props) => {
               <a
                 className="resource-wrap"
                 target="_blank"
-                rel="noreferrer"
+                rel="noopener noreferrer"
                 href={makeLink(resource, props.url)}
               >
                 <p className="resource-title">{resource.title}</p>
@@ -354,7 +354,7 @@ const AdditionalResources = (props) => {
         <br />
         At the time of listing, all of the above were available and free to use - if this changes,
         please report it via GitHub (
-        <a target="_blank" rel="noreferrer" href="https://github.com/Mohammed-razin-cr/Web-Scan">
+        <a target="_blank" rel="noopener noreferrer" href="https://github.com/Mohammed-razin-cr/Web-Scan">
           Mohammed-razin-cr/Web-Scan
         </a>
         ).
