@@ -142,7 +142,7 @@ const Footer = (props) => {
   const currentYear = new Date().getFullYear();
   
   return (
-    <FooterContainer style={props.isFixed ? { position: 'fixed', bottom: 0, marginTop: 0 } : {}}>
+    <FooterContainer aria-label="Site footer" style={props.isFixed ? { position: 'fixed', bottom: 0, marginTop: 0 } : {}}>
       <FooterInner>
         <FooterLeft>
           <LogoWrapper>
