@@ -977,6 +977,10 @@ const TrustSection = styled.section`
   @media (max-width: 640px) {
     padding: 4rem 0;
   }
+
+  @media (max-width: 360px) {
+    padding: 2.5rem 0;
+  }
 `;
 
 const TrustIntro = styled.div`
