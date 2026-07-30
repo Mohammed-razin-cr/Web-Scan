@@ -212,6 +212,11 @@ const SevSummary = styled.summary`
     background: rgba(255, 255, 255, 0.03);
   }
 
+  &:focus-visible {
+    outline: 2px solid rgba(76, 225, 211, 0.6);
+    outline-offset: -2px;
+  }
+
   .sev-icon {
     display: flex;
     align-items: center;
