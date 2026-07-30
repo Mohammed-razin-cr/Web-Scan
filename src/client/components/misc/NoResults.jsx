@@ -92,7 +92,7 @@ const VARIANT = {
 const NoResults = ({ address, error, kind = 'unreachable' }) => {
   const { title, description, reasons } = VARIANT[kind];
   return (
-    <Wrapper role="alert">
+    <Wrapper role="alert" aria-live="assertive" aria-atomic="true">
       <Heading as="h2" align="left" color={colors.danger}>
         {title}
       </Heading>
