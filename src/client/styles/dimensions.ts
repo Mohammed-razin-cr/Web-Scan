@@ -3,10 +3,10 @@ export type InputSize = 'small' | 'medium' | 'large';
 export const applySize = (inputSize?: InputSize) => {
   const sizeSpecificStyles = {
     small: `
-      font-size: 1rem;
+      font-size: 0.95rem;
       border-radius: 0.25rem;
-      padding: 0.5rem 1rem;
-      margin: 0.5rem;
+      padding: 0.5rem 0.85rem;
+      margin: 0.4rem;
     `,
     medium: `
       font-size: 1.5rem;
