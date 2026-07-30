@@ -74,6 +74,13 @@ const Header = styled.header`
     gap: 0.5rem;
     top: 0.5rem;
   }
+
+  @media (max-width: 360px) {
+    padding: 0.5rem 0.6rem;
+    gap: 0.35rem;
+    border-radius: 10px;
+    top: 0.35rem;
+  }
 `;
 
 /* Horizontal scan-line that sweeps across the whole nav */
