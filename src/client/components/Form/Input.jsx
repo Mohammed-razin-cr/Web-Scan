@@ -51,6 +51,11 @@ const StyledInput = styled.input`
     box-shadow: 0 0 0 4px rgba(255, 203, 154, 0.1);
   }
 
+  &:focus-visible {
+    border-color: rgba(76, 225, 211, 0.8);
+    box-shadow: 0 0 0 4px rgba(76, 225, 211, 0.2);
+  }
+
   ${(props) => applySize(props.inputSize)};
 `;
 
