@@ -71,6 +71,10 @@ const CloseButton = styled.button`
   &:active {
     transform: scale(0.95);
   }
+  &:focus-visible {
+    outline: 2px solid rgba(76, 225, 211, 0.6);
+    outline-offset: 2px;
+  }
   svg {
     width: 1.25rem;
     height: 1.25rem;
