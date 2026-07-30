@@ -81,6 +81,11 @@ const StyledButton = styled.button`
     outline: none;
     box-shadow: 0 0 0 3px ${colors.primary}55, 0 10px 28px ${colors.primary}44;
   }
+
+  &:focus-visible {
+    outline: 2px solid ${colors.primary};
+    outline-offset: 3px;
+  }
   
   ${(props) => applySize(props.size)};
   ${(props) => props.bgColor ? `background: ${props.bgColor};` : `background: linear-gradient(135deg, ${colors.primary} 0%, ${colors.primaryDark} 100%);`}
