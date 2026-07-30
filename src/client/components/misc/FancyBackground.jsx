@@ -313,8 +313,10 @@ const FancyBackground = () => {
   };
 
   useEffect(() => {
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     App.setup();
     App.draw();
+    if (prefersReducedMotion) return;
     const frameInterval = 25;
     let lastTime = 0;
     const frame = (now) => {
