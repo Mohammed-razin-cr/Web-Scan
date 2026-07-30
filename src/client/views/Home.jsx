@@ -761,6 +761,7 @@ const Home = () => {
             href="https://github.com/Mohammed-razin-cr/"
             target="_blank"
             rel="noreferrer"
+            aria-label="GitHub Repository"
             whileHover={{ scale: 1.04 }}
             whileTap={{ scale: 0.97 }}
           >
