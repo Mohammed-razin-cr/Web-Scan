@@ -107,6 +107,10 @@ const HeadRight = styled.div`
     justify-content: space-between;
     width: 100%;
   }
+
+  @media (max-width: 360px) {
+    gap: 0.4rem;
+  }
 `;
 
 const HeadLabel = styled.span`
@@ -115,6 +119,10 @@ const HeadLabel = styled.span`
   color: rgba(209,232,226,0.5);
   font-family: 'JetBrains Mono', monospace;
   white-space: nowrap;
+
+  @media (max-width: 360px) {
+    font-size: 0.7rem;
+  }
 `;
 
 const ChevronBtn = styled(motion.button)`
