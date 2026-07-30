@@ -14,6 +14,7 @@ const MapChart = (location) => {
 
   return (
     <ComposableMap
+      aria-label="Server location map"
       projection="geoAzimuthalEqualArea"
       projectionConfig={{
         rotate: [0, 0, 0],
