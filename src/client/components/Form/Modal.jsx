@@ -90,7 +90,7 @@ const Modal = ({ children, isOpen, closeModal }) => {
 
   return ReactDOM.createPortal(
     <Overlay onClick={handleOverlayClick}>
-      <ModalWindow>
+      <ModalWindow role="dialog" aria-modal="true">
         {children}
         <Button onClick={closeModal} styles="width: fit-content;float: right;">
           Close
