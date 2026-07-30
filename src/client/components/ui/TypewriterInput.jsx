@@ -212,6 +212,25 @@ const PhText = styled(motion.span)`
     left: 3.1rem;
     font-size: 0.9rem;
   }
+const ClearBtn = styled(motion.button)`
+  background: rgba(209, 232, 226, 0.06);
+  border: 1px solid rgba(209, 232, 226, 0.12);
+  color: rgba(209, 232, 226, 0.6);
+  width: 1.8rem;
+  height: 1.8rem;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  margin-right: 0.85rem;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: all 0.2s ease;
+  z-index: 2;
+  &:hover {
+    color: #4ce1d3;
+    background: rgba(76, 225, 211, 0.15);
+    border-color: rgba(76, 225, 211, 0.3);
+  }
 `;
 
 export const TypewriterInput = ({
@@ -302,6 +321,27 @@ export const TypewriterInput = ({
           <PhLabel style={{ opacity: 0.55 }}>domain.com, IP, or full URL…</PhLabel>
         </PhWrap>
       )}
+
+      {/* clear text button */}
+      <AnimatePresence>
+        {value && (
+          <ClearBtn
+            type="button"
+            onClick={() => onChange({ target: { value: '' } })}
+            initial={{ opacity: 0, scale: 0.6 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.6 }}
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.9 }}
+            aria-label="Clear input text"
+          >
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+              <line x1="18" y1="6" x2="6" y2="18" />
+              <line x1="6" y1="6" x2="18" y2="18" />
+            </svg>
+          </ClearBtn>
+        )}
+      </AnimatePresence>
     </Shell>
   );
 };
