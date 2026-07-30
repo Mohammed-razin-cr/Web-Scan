@@ -212,6 +212,7 @@ const PhText = styled(motion.span)`
     left: 3.1rem;
     font-size: 0.9rem;
   }
+`;
 const ClearBtn = styled(motion.button)`
   background: rgba(209, 232, 226, 0.06);
   border: 1px solid rgba(209, 232, 226, 0.12);
