@@ -227,6 +227,10 @@ const GhostBtn = styled(motion.button)`
     svg { transform: scale(1.15); }
   }
   &:active { transform: scale(0.97); }
+  &:focus-visible {
+    outline: 2px solid rgba(76,225,211,0.6);
+    outline-offset: 2px;
+  }
 `;
 
 /* Danger close button */
