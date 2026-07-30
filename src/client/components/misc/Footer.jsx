@@ -163,16 +163,16 @@ const Footer = (props) => {
         <FooterLinks>
           <FooterText>
             View source at
-            <AnimatedLink href={githubUrl}>
+            <AnimatedLink href={githubUrl} target="_blank" rel="noopener noreferrer">
               github.com/Mohammed-razin-cr/Web-Scan
             </AnimatedLink>
           </FooterText>
           <FooterText>•</FooterText>
           <FooterText>
             <AnimatedLink to="/about">WebScan</AnimatedLink> is licensed under
-            <AnimatedLink href={licenseUrl}>MIT</AnimatedLink>
+            <AnimatedLink href={licenseUrl} target="_blank" rel="noopener noreferrer">MIT</AnimatedLink>
             <span>© {currentYear}</span>
-            <AnimatedLink href={authorUrl}>Mohammed Razin</AnimatedLink>
+            <AnimatedLink href={authorUrl} target="_blank" rel="noopener noreferrer">Mohammed Razin</AnimatedLink>
           </FooterText>
         </FooterLinks>
       </FooterInner>
