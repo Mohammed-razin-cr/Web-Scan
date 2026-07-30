@@ -48,13 +48,13 @@ const DocContent = (id) => {
         {doc.resources.map((resource, index) =>
           typeof resource === 'string' ? (
             <li id={`link-${index}`}>
-              <a target="_blank" rel="noreferrer" href={resource}>
+              <a target="_blank" rel="noopener noreferrer" href={resource}>
                 {resource}
               </a>
             </li>
           ) : (
             <li id={`link-${index}`}>
-              <a target="_blank" rel="noreferrer" href={resource.link}>
+              <a target="_blank" rel="noopener noreferrer" href={resource.link}>
                 {resource.title}
               </a>
             </li>
