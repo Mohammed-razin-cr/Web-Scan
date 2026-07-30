@@ -71,9 +71,10 @@ export const StyledCard = styled(motion.section)`
     max-height: calc(54rem - 3.25rem);
     position: relative;
     z-index: 2;
-    &::-webkit-scrollbar { width: 4px; }
-    &::-webkit-scrollbar-track { background: transparent; }
-    &::-webkit-scrollbar-thumb { background: rgba(76,225,211,0.2); border-radius: 2px; }
+    &::-webkit-scrollbar { width: 5px; }
+    &::-webkit-scrollbar-track { background: rgba(0,0,0,0.15); border-radius: 3px; }
+    &::-webkit-scrollbar-thumb { background: rgba(76,225,211,0.25); border-radius: 3px; }
+    &::-webkit-scrollbar-thumb:hover { background: rgba(76,225,211,0.45); }
   }
 
   .inner-heading {
