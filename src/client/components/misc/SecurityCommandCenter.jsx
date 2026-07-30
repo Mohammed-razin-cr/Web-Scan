@@ -208,6 +208,11 @@ const Tab = styled.button`
   color: ${(props) => (props.active ? '#d9fff7' : '#6f928c')};
   font: inherit;
   font-size: 0.76rem;
+
+  &:focus-visible {
+    outline: 2px solid rgba(76, 225, 211, 0.6);
+    outline-offset: -2px;
+  }
   font-weight: 700;
   white-space: nowrap;
   cursor: pointer;
