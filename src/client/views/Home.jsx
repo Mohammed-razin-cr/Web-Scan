@@ -439,6 +439,8 @@ const Suggestions = styled(motion.div)`
     width: 100%;
     > span:first-of-type { display: none; }
   }
+`;
+
 const KbdBadge = styled.span`
   display: inline-flex;
   align-items: center;
