@@ -29,6 +29,7 @@ const GradientSpan = styled.span`
   -webkit-text-fill-color: transparent;
   color: transparent;
   animation: ${pan} 3s linear infinite;
+  will-change: background-position;
 
   @media (prefers-reduced-motion: reduce), (max-width: 768px), (max-height: 720px) {
     animation: none;
