@@ -26,6 +26,7 @@ const Outer = styled.div`
       transparent 65%
     );
     z-index: 1;
+    will-change: opacity;
   }
 
   &:hover::before {
