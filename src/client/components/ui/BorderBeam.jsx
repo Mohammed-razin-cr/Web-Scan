@@ -74,6 +74,7 @@ const Ring = styled.div`
   -webkit-mask-composite: destination-out;
   mask-composite: exclude;
   animation: ring-pulse ${(p) => p.dur * 0.7}s ease-in-out infinite alternate;
+  will-change: opacity;
 
   @keyframes ring-pulse {
     from { opacity: 0.35; }
