@@ -168,6 +168,11 @@ const NavLinkStyled = styled(Link)`
       color: #e2f7f1;
     }
   }
+
+  &:focus-visible {
+    outline: 2px solid rgba(76, 225, 211, 0.6);
+    outline-offset: 2px;
+  }
   @media (max-width: 600px) {
     gap: 0.9rem;
     padding: 0.8rem;
