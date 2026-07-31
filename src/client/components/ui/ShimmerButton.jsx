@@ -46,6 +46,10 @@ const Btn = styled(motion.button)`
   will-change: transform;
 
   &:hover { filter: brightness(1.12); }
+  &:focus-visible {
+    outline: 2px solid rgba(76, 225, 211, 0.8);
+    outline-offset: 3px;
+  }
   &:disabled { opacity: 0.45; cursor: not-allowed; animation: none; }
 
   &::before {
