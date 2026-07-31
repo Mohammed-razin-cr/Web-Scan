@@ -7,6 +7,11 @@ const StyledSelfScanMsg = styled(StyledCard)`
   width: 95vw;
   a {
     color: ${colors.primary};
+    &:focus-visible {
+      outline: 2px solid rgba(76, 225, 211, 0.6);
+      outline-offset: 2px;
+      border-radius: 2px;
+    }
   }
   b {
     font-weight: extra-bold;
