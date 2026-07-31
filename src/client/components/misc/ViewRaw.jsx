@@ -446,6 +446,7 @@ const ViewerContainer = styled.div`
   &::-webkit-scrollbar { width: 6px; height: 6px; }
   &::-webkit-scrollbar-track { background: transparent; }
   &::-webkit-scrollbar-thumb { background: rgba(76,225,211,0.15); border-radius: 3px; }
+  &::-webkit-scrollbar-thumb:hover { background: rgba(76,225,211,0.45); }
 `;
 
 const TreeNode = styled.div`
