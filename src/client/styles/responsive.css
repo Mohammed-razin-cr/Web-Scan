@@ -325,3 +325,14 @@ fieldset {
     min-height: 40px;
   }
 }
+
+/* ── Forced colors: high-contrast accessibility mode ── */
+@media (forced-colors: active) {
+  button,
+  a,
+  input,
+  select,
+  textarea {
+    border: 1px solid ButtonText !important;
+  }
+}
