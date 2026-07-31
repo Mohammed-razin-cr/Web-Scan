@@ -283,6 +283,10 @@ const FindingItem = styled.li`
     background: rgba(255, 255, 255, 0.03);
   }
 
+  &:focus-within {
+    background: rgba(76, 225, 211, 0.04);
+  }
+
   .fi-dot {
     margin-top: 0.4rem;
     width: 5px;
