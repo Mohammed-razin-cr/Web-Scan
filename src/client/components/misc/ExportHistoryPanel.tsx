@@ -40,6 +40,11 @@ const Button = styled.button`
     transform: translateY(0);
   }
 
+  &:focus-visible {
+    outline: 2px solid #4ce1d3;
+    outline-offset: 2px;
+  }
+
   svg {
     width: 18px;
     height: 18px;
