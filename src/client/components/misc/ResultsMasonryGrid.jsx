@@ -19,6 +19,7 @@ const Column = styled.div`
   display: flex;
   flex-direction: column;
   gap: ${(props) => props.gap}px;
+  contain: layout style;
 `;
 
 // Round-robin distribution so we keep each item's column position stable as new items append
