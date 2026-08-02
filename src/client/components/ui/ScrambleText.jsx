@@ -23,6 +23,11 @@ export const ScrambleText = ({
   const revealedRef = useRef(0);
 
   useEffect(() => {
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (prefersReducedMotion) {
+      setDisplayed(text);
+      return;
+    }
     revealedRef.current = 0;
     setDisplayed(text.replace(/./g, rand));
 
