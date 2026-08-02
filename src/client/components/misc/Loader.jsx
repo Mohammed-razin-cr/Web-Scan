@@ -267,6 +267,8 @@ const Loader = ({ show }) => {
     <AnimatePresence>
       {show && (
         <Wrap
+          role="status"
+          aria-live="polite"
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -8 }}
