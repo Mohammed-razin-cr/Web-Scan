@@ -39,7 +39,7 @@ class ErrorBoundary extends Component {
       return (
         <Card>
           {this.props.title && <Heading color={colors.primary}>{this.props.title}</Heading>}
-          <ErrorText>This component errored unexpectedly</ErrorText>
+          <ErrorText role="alert" aria-live="assertive">This component errored unexpectedly</ErrorText>
           <p>
             Usually this happens if the result from the server was not what was expected. Check the
             logs for more info. If you continue to experience this issue, please raise a ticket on
