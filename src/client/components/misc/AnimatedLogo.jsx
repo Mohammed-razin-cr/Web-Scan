@@ -24,6 +24,8 @@ export const AnimatedLogo = ({ size = 40 }) => {
 
   return (
     <motion.div
+      role="img"
+      aria-label="WebScan Animated Logo"
       variants={containerVariants}
       whileHover="hover"
       style={{ 
