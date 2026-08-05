@@ -146,10 +146,10 @@ const { preloadBodyFont = true } = Astro.props;
     const bar = document.getElementById('astro-progress');
     if (!bar) return;
 
-    let timer = null;
+    let timer: any = null;
     let prog  = 0;
 
-    const set = (w) => {
+    const set = (w: number) => {
       prog = w;
       bar.style.width   = w + '%';
       bar.style.opacity = w > 0 && w < 100 ? '1' : '0';
