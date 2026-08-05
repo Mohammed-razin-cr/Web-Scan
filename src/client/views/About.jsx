@@ -303,6 +303,11 @@ const actionStyles = `
   &:hover {
     transform: translateY(-2px);
   }
+
+  &:focus-visible {
+    outline: 2px solid #4ce1d3;
+    outline-offset: 2px;
+  }
 `;
 
 const PrimaryAction = styled(Link)`
