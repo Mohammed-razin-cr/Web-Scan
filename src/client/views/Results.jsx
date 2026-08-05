@@ -46,6 +46,7 @@ const ResultsOuter = styled.div`
   padding: 1.25rem 0 3rem;
   max-width: 100vw;
   overflow-x: hidden;
+  will-change: transform, opacity;
 
   @media (max-width: 480px) {
     gap: 0.875rem;
