@@ -238,48 +238,6 @@ const DangerBtn = styled(GhostBtn)`
     color: #ff6b6b;
   }
 `;
-  display: flex;
-  align-items: center;
-  gap: 0.6rem;
-  padding: 0.55rem 1rem;
-  background: rgba(4,12,11,0.9);
-  border-bottom: 1px solid rgba(76,225,211,0.1);
-
-  .dots { display: flex; gap: 5px; }
-  .dot  {
-    width: 10px; height: 10px; border-radius: 50%;
-    &.r { background: #ff6b6b; }
-    &.y { background: #ffcb9a; }
-    &.g { background: #4ce1d3; }
-  }
-
-  .url-pill {
-    flex: 1;
-    font-size: 0.72rem;
-    font-weight: 600;
-    color: rgba(209,232,226,0.38);
-    letter-spacing: 0.04em;
-    background: rgba(76,225,211,0.04);
-    border: 1px solid rgba(76,225,211,0.1);
-    border-radius: 6px;
-    padding: 0.22rem 0.65rem;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-
-  @media (max-width: 520px) {
-    padding: 0.5rem 0.65rem;
-
-    .dots { display: none; }
-    .url-pill {
-      width: auto !important;
-      flex: 1 !important;
-      margin: 0 !important;
-      text-align: left !important;
-    }
-  }
-`;
 
 /* ── Success toast ── */
 const SuccessTag = styled(motion.div)`
