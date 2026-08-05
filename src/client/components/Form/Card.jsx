@@ -145,6 +145,7 @@ export const Card = (props) => {
           variants={cardEntrance}
           initial="hidden"
           animate="show"
+          aria-label={heading || 'Diagnostic Card'}
           layout
         >
           {(heading || actionButtons) && (
