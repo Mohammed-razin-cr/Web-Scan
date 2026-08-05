@@ -88,15 +88,6 @@ const ResultsContent = styled.section`
   }
 `;
 
-const makeSiteName = (address) => {
-  try {
-    const withScheme = /^https?:\/\//i.test(address) ? address : `https://${address}`;
-    return new URL(withScheme).hostname.replace(/^www\./, '');
-  } catch {
-    return address;
-  }
-};
-
 const makeActionButtons = (title, refresh, showInfo) => (
   <ActionButtons
     actions={[
@@ -252,11 +243,6 @@ const Results = (props) => {
   } else if (apiUnreachable) {
     errorKind = 'api-down';
   }
-
-  const copyScanUrl = () => {
-    navigator.clipboard.writeText(window.location.href);
-    toast.success('Scan results URL copied to clipboard!');
-  };
 
   const jumpToCard = (id) => {
     const el = document.getElementById(`card-${id}`);

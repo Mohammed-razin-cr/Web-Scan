@@ -8,21 +8,15 @@ import styled from '@emotion/styled';
 import { keyframes } from '@emotion/react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
-  Download,
   FileText,
   Eye,
   EyeOff,
   Code2,
   Database,
   FileJson,
-  ExternalLink,
   CheckCircle2,
-  Loader2,
   Braces,
-  Share2,
 } from 'lucide-react';
-
-import colors from 'client/styles/colors';
 import BorderBeam    from 'client/components/ui/BorderBeam';
 import ShimmerButton from 'client/components/ui/ShimmerButton';
 import SpotlightCard from 'client/components/ui/SpotlightCard';
@@ -244,86 +238,6 @@ const DangerBtn = styled(GhostBtn)`
     color: #ff6b6b;
   }
 `;
-
-/* Spinning loader icon */
-const SpinIcon = styled(Loader2)`
-  animation: ${spinKf} 1s linear infinite;
-`;
-
-/* ── Result meta strip (shown when iframe is open) ── */
-const ResultStrip = styled(motion.div)`
-  display: flex;
-  align-items: center;
-  gap: 1.5rem;
-  padding: 0.75rem 1rem;
-  border-radius: 10px;
-  background: rgba(76,225,211,0.04);
-  border: 1px solid rgba(76,225,211,0.1);
-  flex-wrap: wrap;
-`;
-
-const StripItem = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 0.45rem;
-  font-size: 0.75rem;
-  font-weight: 600;
-  color: rgba(209,232,226,0.55);
-  letter-spacing: 0.06em;
-
-  .val {
-    color: #4ce1d3;
-    font-weight: 800;
-    font-variant-numeric: tabular-nums;
-  }
-  svg { color: rgba(76,225,211,0.6); flex-shrink: 0; }
-`;
-
-const OpenLink = styled.a`
-  display: inline-flex;
-  align-items: center;
-  gap: 0.35rem;
-  font-size: 0.72rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: rgba(76,225,211,0.7);
-  text-decoration: none;
-  margin-left: auto;
-  padding: 0.28rem 0.7rem;
-  border-radius: 6px;
-  border: 1px solid rgba(76,225,211,0.18);
-  background: rgba(76,225,211,0.04);
-  transition: all 0.2s ease;
-  &:hover {
-    color: #4ce1d3;
-    background: rgba(76,225,211,0.1);
-    border-color: rgba(76,225,211,0.4);
-    text-decoration: none;
-  }
-  svg { flex-shrink: 0; }
-`;
-
-/* ── iFrame wrapper ── */
-const IFrameWrap = styled(motion.div)`
-  position: relative;
-  border-radius: 12px;
-  overflow: hidden;
-  border: 1px solid rgba(76,225,211,0.12);
-  box-shadow: 0 8px 32px rgba(0,0,0,0.3);
-`;
-
-const StyledIframe = styled.iframe`
-  width: 100%;
-  min-height: 54vh;
-  height: 100%;
-  border: none;
-  display: block;
-  background: #0b1f1d;
-`;
-
-/* top bar of the iframe */
-const IFrameBar = styled.div`
   display: flex;
   align-items: center;
   gap: 0.6rem;

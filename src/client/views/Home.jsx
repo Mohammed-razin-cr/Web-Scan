@@ -138,17 +138,6 @@ const GhostBtn = styled(motion.a)`
   @media (max-width: 768px) { display: none; }
 `;
 
-const KbdTag = styled.kbd`
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 0.65rem;
-  padding: 0.2rem 0.4rem;
-  border-radius: 4px;
-  background: rgba(76,225,211,0.08);
-  border: 1px solid rgba(76,225,211,0.2);
-  color: #4ce1d3;
-  @media (max-width: 768px) { display: none; }
-`;
-
 const MenuBtn = styled(motion.button)`
   width: 2.75rem; height: 2.75rem;
   display: grid; place-items: center;
