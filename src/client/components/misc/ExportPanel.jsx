@@ -111,7 +111,7 @@ export const ExportPanel = memo(({ onExportPDF, onExportCSV, onExportHistory, is
   };
 
   return (
-    <ExportPanelContainer>
+    <ExportPanelContainer aria-label="Export report options">
       <Label>📥 Export Report:</Label>
       <ExportButtonGroup>
         <ExportButton
