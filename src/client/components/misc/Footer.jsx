@@ -106,6 +106,12 @@ const StyledLink = styled.a`
   &:hover {
     color: ${colors.primary};
   }
+
+  &:focus-visible {
+    outline: 2px solid ${colors.primary};
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
 `;
 
 const StyledRouterLink = styled(Link)`
@@ -117,6 +123,12 @@ const StyledRouterLink = styled(Link)`
   
   &:hover {
     color: ${colors.primary};
+  }
+
+  &:focus-visible {
+    outline: 2px solid ${colors.primary};
+    outline-offset: 2px;
+    border-radius: 2px;
   }
 `;
 
