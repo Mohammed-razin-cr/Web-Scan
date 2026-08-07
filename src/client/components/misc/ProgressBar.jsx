@@ -130,7 +130,12 @@ const ChevronBtn = styled(motion.button)`
   color: rgba(76,225,211,0.6);
   display: flex; align-items: center;
   padding: 0.15rem;
+  border-radius: 4px;
   svg { width: 14px; height: 14px; stroke: currentColor; transition: transform 0.25s ease; }
+  &:focus-visible {
+    outline: 2px solid rgba(76, 225, 211, 0.6);
+    outline-offset: 2px;
+  }
 `;
 
 const StatChips = styled.div`
