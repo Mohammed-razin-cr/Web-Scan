@@ -232,6 +232,10 @@ const ClearBtn = styled(motion.button)`
     background: rgba(76, 225, 211, 0.15);
     border-color: rgba(76, 225, 211, 0.3);
   }
+  &:focus-visible {
+    outline: 2px solid rgba(76, 225, 211, 0.6);
+    outline-offset: 2px;
+  }
 `;
 
 export const TypewriterInput = ({
