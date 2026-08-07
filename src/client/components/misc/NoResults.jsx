@@ -97,7 +97,7 @@ const NoResults = ({ address, error, kind = 'unreachable' }) => {
         {title}
       </Heading>
       <p>{description}</p>
-      <code className="target">{address}</code>
+      <code className="target" aria-label={`Target address: ${address}`}>{address}</code>
       <p>Possible reasons:</p>
       <ul className="reasons">
         {reasons.map((r) => (
